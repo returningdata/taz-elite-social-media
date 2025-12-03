@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import TwitchStatus from '../components/TwitchStatus.astro';
+import DiscordPresence from '../components/DiscordPresence.astro';
 ---
 
 <Layout title="TazElite Plays | Gaming & Community">
@@ -42,6 +43,13 @@ import TwitchStatus from '../components/TwitchStatus.astro';
                     </div>
                 </a>
             </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <section class="w-full max-w-md mb-12">
+            <h2 class="glow-text mb-6">Discord Status</h2>
+            <DiscordPresence userId="1000470631688712243" />
         </section>
 
         <div class="divider"></div>

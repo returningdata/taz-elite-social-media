@@ -157,4 +157,146 @@
         @apply w-8 h-8;
         filter: drop-shadow(0 0 8px rgba(255, 154, 60, 0.5));
     }
+
+    /* Discord Presence Card Styles */
+    .discord-presence-card {
+        @apply w-full rounded-2xl p-6 backdrop-blur-sm;
+        background: rgba(30, 27, 75, 0.8);
+        border: 1px solid rgba(88, 101, 242, 0.4);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .discord-presence-card:hover {
+        border-color: rgba(88, 101, 242, 0.6);
+        box-shadow: 0 8px 40px rgba(88, 101, 242, 0.2);
+    }
+
+    .discord-loading {
+        @apply flex flex-col items-center justify-center py-8 gap-3;
+    }
+
+    .loading-spinner {
+        @apply w-8 h-8 rounded-full border-2 border-gray-600;
+        border-top-color: #5865f2;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .discord-user-section {
+        @apply flex items-center gap-4 mb-4;
+    }
+
+    .avatar-container {
+        @apply relative flex-shrink-0;
+    }
+
+    .discord-avatar {
+        @apply w-20 h-20 rounded-full;
+        border: 3px solid rgba(88, 101, 242, 0.5);
+    }
+
+    .status-indicator {
+        @apply absolute bottom-0 right-0 w-6 h-6 rounded-full;
+        border: 3px solid rgba(30, 27, 75, 0.9);
+    }
+
+    .status-indicator.online {
+        background-color: #23a55a;
+        box-shadow: 0 0 10px rgba(35, 165, 90, 0.6);
+    }
+
+    .status-indicator.idle {
+        background-color: #f0b232;
+        box-shadow: 0 0 10px rgba(240, 178, 50, 0.6);
+    }
+
+    .status-indicator.dnd {
+        background-color: #f23f43;
+        box-shadow: 0 0 10px rgba(242, 63, 67, 0.6);
+    }
+
+    .status-indicator.offline {
+        background-color: #80848e;
+    }
+
+    .user-info {
+        @apply flex flex-col text-left;
+    }
+
+    .display-name {
+        @apply text-xl font-bold text-white m-0;
+    }
+
+    .username {
+        @apply text-sm text-gray-400;
+    }
+
+    .custom-status {
+        @apply text-sm text-gray-300 mt-1 flex items-center gap-1;
+    }
+
+    .activity-section,
+    .spotify-section {
+        @apply mt-4 pt-4;
+        border-top: 1px solid rgba(88, 101, 242, 0.2);
+    }
+
+    .activity-header {
+        @apply flex items-center gap-2 mb-3;
+    }
+
+    .activity-type-label {
+        @apply text-sm font-medium text-gray-400 uppercase tracking-wide;
+    }
+
+    .activity-content {
+        @apply flex items-start gap-3;
+    }
+
+    .activity-image,
+    .spotify-album-art {
+        @apply w-16 h-16 rounded-lg flex-shrink-0;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .activity-details {
+        @apply flex flex-col text-left;
+    }
+
+    .activity-name {
+        @apply font-semibold text-white;
+    }
+
+    .activity-details-text,
+    .activity-state {
+        @apply text-sm text-gray-400;
+    }
+
+    .activity-time {
+        @apply text-xs text-gray-500 mt-1;
+    }
+
+    .platform-section {
+        @apply mt-4 pt-4 flex items-center gap-2;
+        border-top: 1px solid rgba(88, 101, 242, 0.2);
+    }
+
+    .platform-label {
+        @apply text-xs text-gray-500;
+    }
+
+    .platform-icons {
+        @apply flex items-center gap-2;
+    }
+
+    .platform-icon {
+        @apply text-gray-400;
+    }
+
+    .discord-error {
+        @apply flex flex-col items-center justify-center py-8;
+    }
 }
