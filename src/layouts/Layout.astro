@@ -8,7 +8,7 @@ interface Props {
     description?: string;
 }
 
-const { title, description = "Gaming Content Creator & Community Builder" } = Astro.props;
+const { title, description = "Gaming Content Creator & Community Builder - Stranger Things Season 5" } = Astro.props;
 ---
 
 <!doctype html>
@@ -22,13 +22,53 @@ const { title, description = "Gaming Content Creator & Community Builder" } = As
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="preload" as="font" type="font/woff2" href={interWoff2} crossorigin />
 
+        <!-- Stranger Things style font (Benguiat-like) -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet" />
+
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
+
+        <style>
+            /* Stranger Things Title Font */
+            .stranger-things-title {
+                font-family: 'Cinzel', Georgia, serif;
+                font-weight: 900;
+                color: #e50914;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                text-shadow:
+                    0 0 10px rgba(229, 9, 20, 0.9),
+                    0 0 20px rgba(229, 9, 20, 0.7),
+                    0 0 30px rgba(229, 9, 20, 0.5),
+                    0 0 40px rgba(229, 9, 20, 0.3),
+                    2px 2px 4px rgba(0, 0, 0, 0.8);
+                animation: stranger-flicker 4s infinite alternate;
+            }
+
+            @keyframes stranger-flicker {
+                0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                    opacity: 1;
+                    text-shadow:
+                        0 0 10px rgba(229, 9, 20, 0.9),
+                        0 0 20px rgba(229, 9, 20, 0.7),
+                        0 0 30px rgba(229, 9, 20, 0.5),
+                        0 0 40px rgba(229, 9, 20, 0.3);
+                }
+                20%, 24%, 55% {
+                    opacity: 0.8;
+                    text-shadow: 0 0 5px rgba(229, 9, 20, 0.5);
+                }
+            }
+        </style>
     </head>
     <body class="antialiased text-white gradient-bg">
-        <div class="flex flex-col min-h-screen px-6 sm:px-12">
+        <div class="upside-down-particles"></div>
+        <div class="upside-down-overlay"></div>
+        <div class="flex flex-col min-h-screen px-6 sm:px-12 relative z-10">
             <div class="flex flex-col w-full max-w-4xl mx-auto grow">
                 <main class="grow py-8"><slot /></main>
             </div>

@@ -1,0 +1,100 @@
+---
+// Falling Monsters Component - Stranger Things themed
+// Creates falling Demogorgons and monsters like snow
+---
+
+<div class="falling-monsters-container" id="monsters-container">
+    <!-- Monsters will be generated via JavaScript -->
+</div>
+
+<script>
+    const monstersContainer = document.getElementById('monsters-container');
+
+    // Monster SVG definitions - Demogorgon head/face shape and other creatures
+    const monsterTypes = [
+        // Demogorgon face (petal-like mouth)
+        `<svg viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M25 5 L30 20 L45 25 L30 30 L25 45 L20 30 L5 25 L20 20 Z" fill="#e50914" opacity="0.8"/>
+            <path d="M25 10 L28 20 L38 25 L28 30 L25 40 L22 30 L12 25 L22 20 Z" fill="#1a0505"/>
+            <circle cx="25" cy="25" r="3" fill="#000"/>
+        </svg>`,
+
+        // Mind Flayer tentacle
+        `<svg viewBox="0 0 40 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 0 Q25 15 15 30 Q5 45 20 60" stroke="#e50914" stroke-width="3" fill="none" opacity="0.7"/>
+            <path d="M20 0 Q15 15 25 30 Q35 45 20 60" stroke="#b81c24" stroke-width="2" fill="none" opacity="0.5"/>
+        </svg>`,
+
+        // Demobat
+        `<svg viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M25 15 L5 5 L10 15 L5 25 L25 15" fill="#e50914" opacity="0.7"/>
+            <path d="M25 15 L45 5 L40 15 L45 25 L25 15" fill="#e50914" opacity="0.7"/>
+            <circle cx="25" cy="15" r="5" fill="#1a0505"/>
+            <circle cx="23" cy="14" r="1" fill="#ff3d47"/>
+            <circle cx="27" cy="14" r="1" fill="#ff3d47"/>
+        </svg>`,
+
+        // Upside Down particle
+        `<svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="10" cy="10" r="8" fill="#e50914" opacity="0.5"/>
+            <circle cx="10" cy="10" r="4" fill="#b81c24" opacity="0.7"/>
+        </svg>`,
+
+        // Vecna vine
+        `<svg viewBox="0 0 30 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 0 C20 10 10 20 15 30 C20 40 10 50 15 60" stroke="#4a0d0d" stroke-width="4" fill="none" opacity="0.6"/>
+            <path d="M15 0 C10 10 20 20 15 30 C10 40 20 50 15 60" stroke="#e50914" stroke-width="2" fill="none" opacity="0.4"/>
+        </svg>`,
+
+        // Small Demogorgon petal
+        `<svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 2 L18 12 L28 15 L18 18 L15 28 L12 18 L2 15 L12 12 Z" fill="#e50914" opacity="0.6"/>
+        </svg>`
+    ];
+
+    function createMonster() {
+        const monster = document.createElement('div');
+        monster.className = 'monster';
+
+        // Random monster type
+        const monsterSvg = monsterTypes[Math.floor(Math.random() * monsterTypes.length)];
+        monster.innerHTML = monsterSvg;
+
+        // Random size between 20px and 60px
+        const size = Math.random() * 40 + 20;
+        monster.style.width = `${size}px`;
+        monster.style.height = `${size}px`;
+
+        // Random horizontal position
+        monster.style.left = `${Math.random() * 100}vw`;
+
+        // Random animation duration between 8 and 20 seconds
+        const duration = Math.random() * 12 + 8;
+        monster.style.animationDuration = `${duration}s`;
+
+        // Random delay
+        monster.style.animationDelay = `${Math.random() * 5}s`;
+
+        // Random opacity
+        monster.style.opacity = (Math.random() * 0.4 + 0.2).toString();
+
+        monstersContainer?.appendChild(monster);
+
+        // Remove monster after animation completes
+        setTimeout(() => {
+            monster.remove();
+        }, (duration + 5) * 1000);
+    }
+
+    // Create initial batch of monsters
+    for (let i = 0; i < 15; i++) {
+        setTimeout(() => createMonster(), Math.random() * 3000);
+    }
+
+    // Continuously create monsters
+    setInterval(() => {
+        if (document.querySelectorAll('.monster').length < 25) {
+            createMonster();
+        }
+    }, 1500);
+</script>

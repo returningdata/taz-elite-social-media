@@ -1,14 +1,14 @@
 @import 'tailwindcss';
 
 @theme {
-    --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --color-primary: #ff9a3c;
-    --color-primary-content: #101828;
-    --color-accent: #7c3aed;
-    --color-accent-light: #a78bfa;
-    --color-bg-start: #1e1b4b;
-    --color-bg-end: #0f172a;
-    --background-gradient: linear-gradient(135deg, #7c3aed 0%, #1e1b4b 40%, #0f172a 70%, #1e3a5f 100%);
+    --font-sans: 'ITC Benguiat', 'Inter Variable', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --color-primary: #e50914;
+    --color-primary-content: #ffffff;
+    --color-accent: #b81c24;
+    --color-accent-light: #ff3d47;
+    --color-bg-start: #0a0a0a;
+    --color-bg-end: #1a0505;
+    --background-gradient: linear-gradient(180deg, #0a0a0a 0%, #1a0505 30%, #0d0101 70%, #000000 100%);
 }
 
 @layer base {
@@ -40,52 +40,155 @@
 
 @layer components {
     .gradient-bg {
-        background: linear-gradient(135deg, #7c3aed 0%, #1e1b4b 40%, #0f172a 70%, #1e3a5f 100%);
+        background: linear-gradient(180deg, #0a0a0a 0%, #1a0505 30%, #0d0101 70%, #000000 100%);
         min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     .glow-text {
-        text-shadow: 0 0 20px rgba(124, 58, 237, 0.6), 0 0 40px rgba(124, 58, 237, 0.4);
+        text-shadow: 0 0 20px rgba(229, 9, 20, 0.8), 0 0 40px rgba(229, 9, 20, 0.6), 0 0 60px rgba(229, 9, 20, 0.4);
     }
 
     .glow-orange {
-        text-shadow: 0 0 20px rgba(255, 154, 60, 0.6), 0 0 40px rgba(255, 154, 60, 0.4);
+        text-shadow: 0 0 20px rgba(229, 9, 20, 0.8), 0 0 40px rgba(229, 9, 20, 0.6), 0 0 60px rgba(229, 9, 20, 0.4);
+    }
+
+    /* Stranger Things Title Style */
+    .stranger-things-title {
+        font-family: 'ITC Benguiat', Georgia, serif;
+        font-weight: bold;
+        color: #e50914;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        text-shadow:
+            0 0 10px rgba(229, 9, 20, 0.9),
+            0 0 20px rgba(229, 9, 20, 0.7),
+            0 0 30px rgba(229, 9, 20, 0.5),
+            0 0 40px rgba(229, 9, 20, 0.3),
+            2px 2px 4px rgba(0, 0, 0, 0.8);
+        animation: stranger-flicker 3s infinite alternate;
+    }
+
+    @keyframes stranger-flicker {
+        0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+            opacity: 1;
+            text-shadow:
+                0 0 10px rgba(229, 9, 20, 0.9),
+                0 0 20px rgba(229, 9, 20, 0.7),
+                0 0 30px rgba(229, 9, 20, 0.5),
+                0 0 40px rgba(229, 9, 20, 0.3);
+        }
+        20%, 24%, 55% {
+            opacity: 0.7;
+            text-shadow: none;
+        }
+    }
+
+    /* Falling Monsters Animation */
+    .falling-monsters-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+    }
+
+    .monster {
+        position: absolute;
+        top: -100px;
+        animation: fall-monster linear infinite;
+        opacity: 0.6;
+        filter: drop-shadow(0 0 10px rgba(229, 9, 20, 0.5));
+    }
+
+    @keyframes fall-monster {
+        0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 0.6;
+        }
+        100% {
+            transform: translateY(calc(100vh + 100px)) rotate(360deg);
+            opacity: 0.2;
+        }
+    }
+
+    /* Upside Down Effect */
+    .upside-down-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(ellipse at center, transparent 0%, rgba(10, 10, 10, 0.3) 100%);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .upside-down-particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        background-image:
+            radial-gradient(2px 2px at 20px 30px, rgba(229, 9, 20, 0.3), transparent),
+            radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.1), transparent),
+            radial-gradient(1px 1px at 90px 40px, rgba(229, 9, 20, 0.2), transparent),
+            radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.1), transparent);
+        background-size: 200px 200px;
+        animation: particle-float 20s linear infinite;
+    }
+
+    @keyframes particle-float {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(200px);
+        }
     }
 
     .card {
         @apply p-6 rounded-2xl backdrop-blur-sm;
-        background: rgba(30, 27, 75, 0.6);
-        border: 1px solid rgba(124, 58, 237, 0.3);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        background: rgba(26, 5, 5, 0.8);
+        border: 1px solid rgba(229, 9, 20, 0.3);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
     }
 
     .card:hover {
-        border-color: rgba(124, 58, 237, 0.5);
-        box-shadow: 0 8px 40px rgba(124, 58, 237, 0.2);
+        border-color: rgba(229, 9, 20, 0.6);
+        box-shadow: 0 8px 40px rgba(229, 9, 20, 0.2);
     }
 
     .social-link {
         @apply flex items-center gap-3 px-6 py-4 rounded-xl transition-all duration-300 no-underline;
-        background: rgba(124, 58, 237, 0.2);
-        border: 1px solid rgba(124, 58, 237, 0.4);
+        background: rgba(229, 9, 20, 0.15);
+        border: 1px solid rgba(229, 9, 20, 0.4);
     }
 
     .social-link:hover {
         transform: translateY(-2px);
-        background: rgba(124, 58, 237, 0.3);
-        border-color: rgba(124, 58, 237, 0.6);
-        box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+        background: rgba(229, 9, 20, 0.25);
+        border-color: rgba(229, 9, 20, 0.7);
+        box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
     }
 
     .live-indicator {
         @apply flex items-center gap-3 px-6 py-4 rounded-xl transition-all duration-300 no-underline relative overflow-hidden;
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(124, 58, 237, 0.2));
-        border: 1px solid rgba(239, 68, 68, 0.4);
+        background: linear-gradient(135deg, rgba(229, 9, 20, 0.3), rgba(184, 28, 36, 0.2));
+        border: 1px solid rgba(229, 9, 20, 0.5);
     }
 
     .live-indicator:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+        box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
     }
 
     .live-indicator.offline {
@@ -135,7 +238,7 @@
     .btn:hover {
         @apply bg-primary/85;
         transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(255, 154, 60, 0.3);
+        box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
     }
 
     .btn:disabled {
@@ -150,25 +253,25 @@
 
     .divider {
         @apply w-full h-px my-8;
-        background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.5), transparent);
+        background: linear-gradient(90deg, transparent, rgba(229, 9, 20, 0.5), transparent);
     }
 
     .icon-gaming {
         @apply w-8 h-8;
-        filter: drop-shadow(0 0 8px rgba(255, 154, 60, 0.5));
+        filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.5));
     }
 
     /* Discord Presence Card Styles */
     .discord-presence-card {
         @apply w-full rounded-2xl p-6 backdrop-blur-sm;
-        background: rgba(30, 27, 75, 0.8);
-        border: 1px solid rgba(88, 101, 242, 0.4);
+        background: rgba(26, 5, 5, 0.8);
+        border: 1px solid rgba(229, 9, 20, 0.4);
         box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
     }
 
     .discord-presence-card:hover {
-        border-color: rgba(88, 101, 242, 0.6);
-        box-shadow: 0 8px 40px rgba(88, 101, 242, 0.2);
+        border-color: rgba(229, 9, 20, 0.6);
+        box-shadow: 0 8px 40px rgba(229, 9, 20, 0.2);
     }
 
     .discord-loading {
@@ -177,7 +280,7 @@
 
     .loading-spinner {
         @apply w-8 h-8 rounded-full border-2 border-gray-600;
-        border-top-color: #5865f2;
+        border-top-color: #e50914;
         animation: spin 1s linear infinite;
     }
 
@@ -195,12 +298,12 @@
 
     .discord-avatar {
         @apply w-20 h-20 rounded-full;
-        border: 3px solid rgba(88, 101, 242, 0.5);
+        border: 3px solid rgba(229, 9, 20, 0.5);
     }
 
     .status-indicator {
         @apply absolute bottom-0 right-0 w-6 h-6 rounded-full;
-        border: 3px solid rgba(30, 27, 75, 0.9);
+        border: 3px solid rgba(26, 5, 5, 0.9);
     }
 
     .status-indicator.online {
@@ -241,7 +344,7 @@
     .activity-section,
     .spotify-section {
         @apply mt-4 pt-4;
-        border-top: 1px solid rgba(88, 101, 242, 0.2);
+        border-top: 1px solid rgba(229, 9, 20, 0.2);
     }
 
     .activity-header {
@@ -281,7 +384,7 @@
 
     .platform-section {
         @apply mt-4 pt-4 flex items-center gap-2;
-        border-top: 1px solid rgba(88, 101, 242, 0.2);
+        border-top: 1px solid rgba(229, 9, 20, 0.2);
     }
 
     .platform-label {
