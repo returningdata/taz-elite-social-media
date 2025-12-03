@@ -1,0 +1,279 @@
+---
+interface Props {
+    userId: string;
+}
+
+const { userId } = Astro.props;
+---
+
+<div class="discord-presence-card" id="discord-presence" data-user-id={userId}>
+    <div class="discord-loading">
+        <div class="loading-spinner"></div>
+        <span class="text-gray-400">Loading Discord presence...</span>
+    </div>
+
+    <div class="discord-content hidden">
+        <!-- User Info Section -->
+        <div class="discord-user-section">
+            <div class="avatar-container">
+                <img id="discord-avatar" src="" alt="Discord Avatar" class="discord-avatar" />
+                <div id="status-indicator" class="status-indicator offline"></div>
+            </div>
+            <div class="user-info">
+                <h3 id="discord-display-name" class="display-name"></h3>
+                <span id="discord-username" class="username"></span>
+                <div id="discord-custom-status" class="custom-status hidden"></div>
+            </div>
+        </div>
+
+        <!-- Activity Section -->
+        <div id="activity-section" class="activity-section hidden">
+            <div class="activity-header">
+                <span id="activity-type-label" class="activity-type-label"></span>
+            </div>
+            <div class="activity-content">
+                <img id="activity-image" src="" alt="Activity" class="activity-image hidden" />
+                <div class="activity-details">
+                    <span id="activity-name" class="activity-name"></span>
+                    <span id="activity-details" class="activity-details-text"></span>
+                    <span id="activity-state" class="activity-state"></span>
+                    <span id="activity-time" class="activity-time"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Spotify Section -->
+        <div id="spotify-section" class="spotify-section hidden">
+            <div class="activity-header">
+                <svg class="w-4 h-4 text-green-500" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                </svg>
+                <span class="text-green-500 text-sm font-medium">Listening to Spotify</span>
+            </div>
+            <div class="activity-content">
+                <img id="spotify-album-art" src="" alt="Album Art" class="spotify-album-art" />
+                <div class="activity-details">
+                    <span id="spotify-song" class="activity-name"></span>
+                    <span id="spotify-artist" class="activity-details-text"></span>
+                    <span id="spotify-album" class="activity-state"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform indicators -->
+        <div id="platform-section" class="platform-section">
+            <span class="platform-label">Active on:</span>
+            <div class="platform-icons">
+                <span id="platform-desktop" class="platform-icon hidden" title="Desktop">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 3H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 12H4V5h16v10zm-6 4v2H10v-2H2v2h20v-2h-8z"/>
+                    </svg>
+                </span>
+                <span id="platform-mobile" class="platform-icon hidden" title="Mobile">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M15.5 1h-8C6.12 1 5 2.12 5 3.5v17C5 21.88 6.12 23 7.5 23h8c1.38 0 2.5-1.12 2.5-2.5v-17C18 2.12 16.88 1 15.5 1zm-4 21c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5-4H7V4h9v14z"/>
+                    </svg>
+                </span>
+                <span id="platform-web" class="platform-icon hidden" title="Web">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error/Offline State -->
+    <div class="discord-error hidden">
+        <svg class="w-12 h-12 text-gray-500 mb-2" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+        </svg>
+        <span id="discord-error-message" class="text-gray-400 text-sm text-center"></span>
+    </div>
+</div>
+
+<script>
+    const ACTIVITY_TYPES: Record<number, string> = {
+        0: 'Playing',
+        1: 'Streaming',
+        2: 'Listening to',
+        3: 'Watching',
+        5: 'Competing in'
+    };
+
+    const STATUS_COLORS: Record<string, string> = {
+        online: '#23a55a',
+        idle: '#f0b232',
+        dnd: '#f23f43',
+        offline: '#80848e'
+    };
+
+    function formatElapsedTime(startTimestamp: number): string {
+        const elapsed = Date.now() - startTimestamp;
+        const seconds = Math.floor(elapsed / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+
+        if (hours > 0) {
+            return `${hours}h ${minutes % 60}m elapsed`;
+        } else if (minutes > 0) {
+            return `${minutes}m ${seconds % 60}s elapsed`;
+        }
+        return `${seconds}s elapsed`;
+    }
+
+    async function fetchDiscordPresence() {
+        const container = document.getElementById('discord-presence');
+        const loading = container?.querySelector('.discord-loading');
+        const content = container?.querySelector('.discord-content');
+        const error = container?.querySelector('.discord-error');
+        const userId = container?.getAttribute('data-user-id');
+
+        if (!userId) return;
+
+        try {
+            const response = await fetch(`/api/discord-presence?userId=${userId}`);
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error(data.message || data.error || 'Failed to fetch presence');
+            }
+
+            // Hide loading, show content
+            loading?.classList.add('hidden');
+            error?.classList.add('hidden');
+            content?.classList.remove('hidden');
+
+            // Update avatar
+            const avatar = document.getElementById('discord-avatar') as HTMLImageElement;
+            if (avatar) avatar.src = data.user.avatar;
+
+            // Update status indicator
+            const statusIndicator = document.getElementById('status-indicator');
+            if (statusIndicator) {
+                statusIndicator.className = `status-indicator ${data.status}`;
+                statusIndicator.style.backgroundColor = STATUS_COLORS[data.status] || STATUS_COLORS.offline;
+            }
+
+            // Update user info
+            const displayName = document.getElementById('discord-display-name');
+            const username = document.getElementById('discord-username');
+            if (displayName) displayName.textContent = data.user.displayName;
+            if (username) username.textContent = `@${data.user.username}`;
+
+            // Update custom status
+            const customStatusEl = document.getElementById('discord-custom-status');
+            if (customStatusEl) {
+                if (data.customStatus?.text) {
+                    let statusText = '';
+                    if (data.customStatus.emoji?.name) {
+                        statusText = data.customStatus.emoji.id
+                            ? `<img src="https://cdn.discordapp.com/emojis/${data.customStatus.emoji.id}.${data.customStatus.emoji.animated ? 'gif' : 'png'}?size=16" class="inline w-4 h-4 mr-1" alt="${data.customStatus.emoji.name}" />`
+                            : data.customStatus.emoji.name + ' ';
+                    }
+                    statusText += data.customStatus.text;
+                    customStatusEl.innerHTML = statusText;
+                    customStatusEl.classList.remove('hidden');
+                } else {
+                    customStatusEl.classList.add('hidden');
+                }
+            }
+
+            // Update activity section
+            const activitySection = document.getElementById('activity-section');
+            if (activitySection) {
+                if (data.activity) {
+                    activitySection.classList.remove('hidden');
+
+                    const typeLabel = document.getElementById('activity-type-label');
+                    const activityName = document.getElementById('activity-name');
+                    const activityDetails = document.getElementById('activity-details');
+                    const activityState = document.getElementById('activity-state');
+                    const activityTime = document.getElementById('activity-time');
+                    const activityImage = document.getElementById('activity-image') as HTMLImageElement;
+
+                    if (typeLabel) typeLabel.textContent = ACTIVITY_TYPES[data.activity.type] || 'Playing';
+                    if (activityName) activityName.textContent = data.activity.name;
+                    if (activityDetails) {
+                        activityDetails.textContent = data.activity.details || '';
+                        activityDetails.classList.toggle('hidden', !data.activity.details);
+                    }
+                    if (activityState) {
+                        activityState.textContent = data.activity.state || '';
+                        activityState.classList.toggle('hidden', !data.activity.state);
+                    }
+                    if (activityTime && data.activity.timestamps?.start) {
+                        activityTime.textContent = formatElapsedTime(data.activity.timestamps.start);
+                        activityTime.classList.remove('hidden');
+                    } else if (activityTime) {
+                        activityTime.classList.add('hidden');
+                    }
+                    if (activityImage && data.activity.image) {
+                        activityImage.src = data.activity.image;
+                        activityImage.classList.remove('hidden');
+                    } else if (activityImage) {
+                        activityImage.classList.add('hidden');
+                    }
+                } else {
+                    activitySection.classList.add('hidden');
+                }
+            }
+
+            // Update Spotify section
+            const spotifySection = document.getElementById('spotify-section');
+            if (spotifySection) {
+                if (data.spotify) {
+                    spotifySection.classList.remove('hidden');
+
+                    const albumArt = document.getElementById('spotify-album-art') as HTMLImageElement;
+                    const song = document.getElementById('spotify-song');
+                    const artist = document.getElementById('spotify-artist');
+                    const album = document.getElementById('spotify-album');
+
+                    if (albumArt) albumArt.src = data.spotify.albumArt;
+                    if (song) song.textContent = data.spotify.song;
+                    if (artist) artist.textContent = `by ${data.spotify.artist}`;
+                    if (album) album.textContent = `on ${data.spotify.album}`;
+                } else {
+                    spotifySection.classList.add('hidden');
+                }
+            }
+
+            // Update platform indicators
+            const platformSection = document.getElementById('platform-section');
+            const platformDesktop = document.getElementById('platform-desktop');
+            const platformMobile = document.getElementById('platform-mobile');
+            const platformWeb = document.getElementById('platform-web');
+
+            if (platformDesktop) platformDesktop.classList.toggle('hidden', !data.platforms.desktop);
+            if (platformMobile) platformMobile.classList.toggle('hidden', !data.platforms.mobile);
+            if (platformWeb) platformWeb.classList.toggle('hidden', !data.platforms.web);
+
+            // Hide platform section if all offline
+            const anyPlatformActive = data.platforms.desktop || data.platforms.mobile || data.platforms.web;
+            if (platformSection) platformSection.classList.toggle('hidden', !anyPlatformActive);
+
+        } catch (err) {
+            loading?.classList.add('hidden');
+            content?.classList.add('hidden');
+            error?.classList.remove('hidden');
+
+            const errorMessage = document.getElementById('discord-error-message');
+            if (errorMessage) {
+                errorMessage.textContent = err instanceof Error ? err.message : 'Unable to load Discord presence';
+            }
+        }
+    }
+
+    // Fetch on load and every 15 seconds
+    fetchDiscordPresence();
+    setInterval(fetchDiscordPresence, 15000);
+
+    // Update elapsed time every second for activities
+    setInterval(() => {
+        const activityTime = document.getElementById('activity-time');
+        if (activityTime && !activityTime.classList.contains('hidden')) {
+            // Re-fetch to update time (this is a simple approach)
+        }
+    }, 1000);
+</script>

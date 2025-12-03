@@ -1,0 +1,66 @@
+---
+interface Props {
+    username: string;
+}
+
+const { username } = Astro.props;
+const twitchUrl = `https://www.twitch.tv/${username}`;
+---
+
+<a
+    href={twitchUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    id="twitch-status"
+    class="live-indicator offline"
+    data-username={username}
+>
+    <div class="flex items-center gap-3">
+        <div class="relative">
+            <svg class="w-8 h-8 text-purple-400" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
+            </svg>
+            <span id="live-dot" class="absolute -top-1 -right-1 w-3 h-3 bg-gray-500 rounded-full hidden"></span>
+        </div>
+        <div class="flex flex-col">
+            <span class="font-semibold text-white" id="status-text">Watch on Twitch</span>
+            <span class="text-sm text-gray-400" id="status-subtext">Click to visit channel</span>
+        </div>
+    </div>
+</a>
+
+<script>
+    async function checkTwitchStatus() {
+        const statusElement = document.getElementById('twitch-status');
+        const liveDot = document.getElementById('live-dot');
+        const statusText = document.getElementById('status-text');
+        const statusSubtext = document.getElementById('status-subtext');
+
+        if (!statusElement) return;
+
+        const username = statusElement.getAttribute('data-username');
+
+        try {
+            const response = await fetch(`/api/twitch-status?username=${username}`);
+            const data = await response.json();
+
+            if (data.isLive) {
+                statusElement.classList.remove('offline');
+                liveDot?.classList.remove('hidden', 'bg-gray-500');
+                liveDot?.classList.add('bg-red-500', 'pulse-live');
+                if (statusText) statusText.textContent = 'LIVE NOW';
+                if (statusSubtext) statusSubtext.textContent = data.title || 'Click to watch!';
+            } else {
+                statusElement.classList.add('offline');
+                liveDot?.classList.add('hidden');
+                if (statusText) statusText.textContent = 'Currently Offline';
+                if (statusSubtext) statusSubtext.textContent = 'Click to visit channel';
+            }
+        } catch (error) {
+            console.log('Could not check Twitch status');
+        }
+    }
+
+    checkTwitchStatus();
+    setInterval(checkTwitchStatus, 60000);
+</script>
