@@ -1,0 +1,573 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Admin Dashboard | TazElite Plays">
+    <div id="loading" class="flex flex-col items-center justify-center min-h-[80vh]">
+        <div class="loading-spinner"></div>
+        <p class="text-gray-400 mt-4">Loading admin panel...</p>
+    </div>
+
+    <div id="admin-content" class="hidden max-w-6xl mx-auto">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+            <div>
+                <h1 class="stranger-things-title text-3xl sm:text-4xl mb-2">Admin Dashboard</h1>
+                <p class="text-gray-400">Welcome back, <span id="admin-username" class="text-red-400"></span></p>
+            </div>
+            <div class="flex items-center gap-4 mt-4 sm:mt-0">
+                <a href="/" class="text-gray-400 hover:text-white transition-colors">&larr; View Site</a>
+                <a href="/api/admin/logout" class="btn text-sm">Logout</a>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <section class="mb-8">
+            <h2 class="stranger-things-title text-xl sm:text-2xl mb-4">Real-Time Stats</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="card text-center">
+                    <div class="text-3xl font-bold text-red-400" id="stat-total-views">-</div>
+                    <div class="text-sm text-gray-400">Total Views</div>
+                </div>
+                <div class="card text-center">
+                    <div class="text-3xl font-bold text-red-400" id="stat-today-views">-</div>
+                    <div class="text-sm text-gray-400">Views Today</div>
+                </div>
+                <div class="card text-center">
+                    <div class="text-3xl font-bold text-red-400" id="stat-total-visitors">-</div>
+                    <div class="text-sm text-gray-400">Total Visitors</div>
+                </div>
+                <div class="card text-center">
+                    <div class="text-3xl font-bold text-red-400" id="stat-today-visitors">-</div>
+                    <div class="text-sm text-gray-400">Visitors Today</div>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Last updated: <span id="stats-updated">-</span></p>
+        </section>
+
+        <!-- Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-red-900/50 pb-4">
+            <button class="tab-btn active" data-tab="site">Site Content</button>
+            <button class="tab-btn" data-tab="social">Social Links</button>
+            <button class="tab-btn" data-tab="theme">Theme</button>
+            <button class="tab-btn" data-tab="features">Features</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="tab-site" class="tab-content">
+            <div class="card">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Site Content</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Site Title</label>
+                        <input type="text" id="config-site-title" class="admin-input" placeholder="TazElite Plays">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Subtitle</label>
+                        <input type="text" id="config-site-subtitle" class="admin-input" placeholder="Gaming Content Creator & Community Builder">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Tagline</label>
+                        <input type="text" id="config-site-tagline" class="admin-input" placeholder="Welcome to The Upside Down">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">About Title</label>
+                        <input type="text" id="config-site-aboutTitle" class="admin-input" placeholder="About Me">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">About Text (Paragraph 1)</label>
+                        <textarea id="config-site-aboutText" class="admin-input h-24" placeholder="First paragraph..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">About Text (Paragraph 2)</label>
+                        <textarea id="config-site-aboutText2" class="admin-input h-24" placeholder="Second paragraph..."></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-social" class="tab-content hidden">
+            <div class="card">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Social Links</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Twitch Username</label>
+                        <input type="text" id="config-social-twitch" class="admin-input" placeholder="tazeliteplays">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Discord Invite URL</label>
+                        <input type="text" id="config-social-discord" class="admin-input" placeholder="https://discord.gg/...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">YouTube URL</label>
+                        <input type="text" id="config-social-youtube" class="admin-input" placeholder="https://www.youtube.com/@...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-theme" class="tab-content hidden">
+            <div class="card">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Theme Settings</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Theme Preset</label>
+                        <select id="config-theme-name" class="admin-input">
+                            <option value="stranger-things">Stranger Things (Red/Dark)</option>
+                            <option value="cyberpunk">Cyberpunk (Neon/Purple)</option>
+                            <option value="forest">Forest (Green/Dark)</option>
+                            <option value="ocean">Ocean (Blue/Dark)</option>
+                            <option value="sunset">Sunset (Orange/Dark)</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div id="custom-theme-options" class="space-y-4 pt-4 border-t border-red-900/30">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Primary Color</label>
+                            <div class="flex items-center gap-2">
+                                <input type="color" id="config-theme-primaryColor" class="w-12 h-10 rounded cursor-pointer">
+                                <input type="text" id="config-theme-primaryColor-text" class="admin-input flex-1" placeholder="#e50914">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Accent Color</label>
+                            <div class="flex items-center gap-2">
+                                <input type="color" id="config-theme-accentColor" class="w-12 h-10 rounded cursor-pointer">
+                                <input type="text" id="config-theme-accentColor-text" class="admin-input flex-1" placeholder="#b81c24">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Background Start</label>
+                            <div class="flex items-center gap-2">
+                                <input type="color" id="config-theme-backgroundStart" class="w-12 h-10 rounded cursor-pointer">
+                                <input type="text" id="config-theme-backgroundStart-text" class="admin-input flex-1" placeholder="#0a0a0a">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Background End</label>
+                            <div class="flex items-center gap-2">
+                                <input type="color" id="config-theme-backgroundEnd" class="w-12 h-10 rounded cursor-pointer">
+                                <input type="text" id="config-theme-backgroundEnd-text" class="admin-input flex-1" placeholder="#1a0505">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theme Preview -->
+                <div class="mt-6 pt-4 border-t border-red-900/30">
+                    <h4 class="text-sm font-medium text-gray-300 mb-3">Preview</h4>
+                    <div id="theme-preview" class="p-4 rounded-lg" style="background: linear-gradient(180deg, #0a0a0a, #1a0505);">
+                        <div class="text-center">
+                            <h5 id="preview-title" class="text-xl font-bold mb-2" style="color: #e50914; text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);">TazElite Plays</h5>
+                            <p class="text-gray-300 text-sm">Preview of your theme</p>
+                            <button id="preview-btn" class="mt-3 px-4 py-2 rounded text-white text-sm" style="background: #e50914;">Sample Button</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tab-features" class="tab-content hidden">
+            <div class="card">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Feature Toggles</h3>
+                <div class="space-y-4">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-features-fallingMonsters" class="admin-checkbox">
+                        <span class="text-gray-300">Falling Monsters Animation</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-features-musicPlayer" class="admin-checkbox">
+                        <span class="text-gray-300">Music Player</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-features-discordPresence" class="admin-checkbox">
+                        <span class="text-gray-300">Discord Presence Display</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-features-twitchStatus" class="admin-checkbox">
+                        <span class="text-gray-300">Twitch Status Display</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="mt-6 flex items-center gap-4">
+            <button id="save-config" class="btn btn-lg">
+                Save Changes
+            </button>
+            <span id="save-status" class="text-sm text-gray-400"></span>
+        </div>
+    </div>
+</Layout>
+
+<style>
+    .tab-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        background: rgba(229, 9, 20, 0.1);
+        border: 1px solid rgba(229, 9, 20, 0.3);
+        color: #9ca3af;
+    }
+
+    .tab-btn:hover {
+        background: rgba(229, 9, 20, 0.2);
+        color: white;
+    }
+
+    .tab-btn.active {
+        background: rgba(229, 9, 20, 0.3);
+        border-color: rgba(229, 9, 20, 0.6);
+        color: white;
+    }
+
+    .admin-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(229, 9, 20, 0.3);
+    }
+
+    .admin-input:focus {
+        outline: none;
+        border-color: rgba(229, 9, 20, 0.6);
+        box-shadow: 0 0 10px rgba(229, 9, 20, 0.2);
+    }
+
+    .admin-checkbox {
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 0.25rem;
+        accent-color: #e50914;
+    }
+</style>
+
+<script>
+    // Theme presets
+    const themePresets: Record<string, { primaryColor: string; accentColor: string; backgroundStart: string; backgroundEnd: string }> = {
+        'stranger-things': {
+            primaryColor: '#e50914',
+            accentColor: '#b81c24',
+            backgroundStart: '#0a0a0a',
+            backgroundEnd: '#1a0505',
+        },
+        'cyberpunk': {
+            primaryColor: '#00f0ff',
+            accentColor: '#ff00ff',
+            backgroundStart: '#0a0a1a',
+            backgroundEnd: '#1a0520',
+        },
+        'forest': {
+            primaryColor: '#22c55e',
+            accentColor: '#15803d',
+            backgroundStart: '#0a0f0a',
+            backgroundEnd: '#051a05',
+        },
+        'ocean': {
+            primaryColor: '#0ea5e9',
+            accentColor: '#0369a1',
+            backgroundStart: '#0a0a0f',
+            backgroundEnd: '#051520',
+        },
+        'sunset': {
+            primaryColor: '#f97316',
+            accentColor: '#ea580c',
+            backgroundStart: '#0f0a0a',
+            backgroundEnd: '#1a1005',
+        },
+    };
+
+    interface SiteConfig {
+        site: {
+            title: string;
+            subtitle: string;
+            tagline: string;
+            aboutTitle: string;
+            aboutText: string;
+            aboutText2: string;
+        };
+        theme: {
+            name: string;
+            primaryColor: string;
+            accentColor: string;
+            backgroundStart: string;
+            backgroundEnd: string;
+        };
+        social: {
+            twitch: string;
+            discord: string;
+            youtube: string;
+        };
+        features: {
+            fallingMonsters: boolean;
+            musicPlayer: boolean;
+            discordPresence: boolean;
+            twitchStatus: boolean;
+        };
+    }
+
+    let currentConfig: SiteConfig;
+
+    // Check authentication
+    async function checkAuth() {
+        try {
+            const response = await fetch('/api/admin/session');
+            if (!response.ok) {
+                window.location.href = '/admin/login';
+                return null;
+            }
+            return await response.json();
+        } catch (e) {
+            window.location.href = '/admin/login';
+            return null;
+        }
+    }
+
+    // Load config
+    async function loadConfig() {
+        try {
+            const response = await fetch('/api/admin/config');
+            return await response.json();
+        } catch (e) {
+            console.error('Failed to load config:', e);
+            return null;
+        }
+    }
+
+    // Load stats
+    async function loadStats() {
+        try {
+            const response = await fetch('/api/admin/stats');
+            if (response.ok) {
+                const stats = await response.json();
+                const el = (id: string) => document.getElementById(id);
+                if (el('stat-total-views')) el('stat-total-views')!.textContent = stats.pageViews?.total?.toString() || '0';
+                if (el('stat-today-views')) el('stat-today-views')!.textContent = stats.pageViews?.today?.toString() || '0';
+                if (el('stat-total-visitors')) el('stat-total-visitors')!.textContent = stats.uniqueVisitors?.total?.toString() || '0';
+                if (el('stat-today-visitors')) el('stat-today-visitors')!.textContent = stats.uniqueVisitors?.today?.toString() || '0';
+                if (el('stats-updated')) el('stats-updated')!.textContent = new Date(stats.lastUpdated).toLocaleString();
+            }
+        } catch (e) {
+            console.error('Failed to load stats:', e);
+        }
+    }
+
+    // Populate form
+    function populateForm(config: SiteConfig) {
+        const el = (id: string) => document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+
+        // Site content
+        if (el('config-site-title')) el('config-site-title')!.value = config.site?.title || '';
+        if (el('config-site-subtitle')) el('config-site-subtitle')!.value = config.site?.subtitle || '';
+        if (el('config-site-tagline')) el('config-site-tagline')!.value = config.site?.tagline || '';
+        if (el('config-site-aboutTitle')) el('config-site-aboutTitle')!.value = config.site?.aboutTitle || '';
+        if (el('config-site-aboutText')) el('config-site-aboutText')!.value = config.site?.aboutText || '';
+        if (el('config-site-aboutText2')) el('config-site-aboutText2')!.value = config.site?.aboutText2 || '';
+
+        // Social links
+        if (el('config-social-twitch')) el('config-social-twitch')!.value = config.social?.twitch || '';
+        if (el('config-social-discord')) el('config-social-discord')!.value = config.social?.discord || '';
+        if (el('config-social-youtube')) el('config-social-youtube')!.value = config.social?.youtube || '';
+
+        // Theme
+        if (el('config-theme-name')) (el('config-theme-name') as HTMLSelectElement).value = config.theme?.name || 'stranger-things';
+        updateThemeColors(config.theme);
+
+        // Features
+        if (el('config-features-fallingMonsters')) (el('config-features-fallingMonsters') as HTMLInputElement).checked = config.features?.fallingMonsters ?? true;
+        if (el('config-features-musicPlayer')) (el('config-features-musicPlayer') as HTMLInputElement).checked = config.features?.musicPlayer ?? true;
+        if (el('config-features-discordPresence')) (el('config-features-discordPresence') as HTMLInputElement).checked = config.features?.discordPresence ?? true;
+        if (el('config-features-twitchStatus')) (el('config-features-twitchStatus') as HTMLInputElement).checked = config.features?.twitchStatus ?? true;
+
+        updateThemePreview();
+    }
+
+    function updateThemeColors(theme: SiteConfig['theme']) {
+        const el = (id: string) => document.getElementById(id) as HTMLInputElement | null;
+
+        const colors = {
+            primaryColor: theme?.primaryColor || '#e50914',
+            accentColor: theme?.accentColor || '#b81c24',
+            backgroundStart: theme?.backgroundStart || '#0a0a0a',
+            backgroundEnd: theme?.backgroundEnd || '#1a0505',
+        };
+
+        if (el('config-theme-primaryColor')) el('config-theme-primaryColor')!.value = colors.primaryColor;
+        if (el('config-theme-primaryColor-text')) el('config-theme-primaryColor-text')!.value = colors.primaryColor;
+        if (el('config-theme-accentColor')) el('config-theme-accentColor')!.value = colors.accentColor;
+        if (el('config-theme-accentColor-text')) el('config-theme-accentColor-text')!.value = colors.accentColor;
+        if (el('config-theme-backgroundStart')) el('config-theme-backgroundStart')!.value = colors.backgroundStart;
+        if (el('config-theme-backgroundStart-text')) el('config-theme-backgroundStart-text')!.value = colors.backgroundStart;
+        if (el('config-theme-backgroundEnd')) el('config-theme-backgroundEnd')!.value = colors.backgroundEnd;
+        if (el('config-theme-backgroundEnd-text')) el('config-theme-backgroundEnd-text')!.value = colors.backgroundEnd;
+    }
+
+    function updateThemePreview() {
+        const preview = document.getElementById('theme-preview');
+        const previewTitle = document.getElementById('preview-title');
+        const previewBtn = document.getElementById('preview-btn');
+
+        const primaryColor = (document.getElementById('config-theme-primaryColor') as HTMLInputElement)?.value || '#e50914';
+        const backgroundStart = (document.getElementById('config-theme-backgroundStart') as HTMLInputElement)?.value || '#0a0a0a';
+        const backgroundEnd = (document.getElementById('config-theme-backgroundEnd') as HTMLInputElement)?.value || '#1a0505';
+
+        if (preview) {
+            preview.style.background = `linear-gradient(180deg, ${backgroundStart}, ${backgroundEnd})`;
+        }
+        if (previewTitle) {
+            previewTitle.style.color = primaryColor;
+            previewTitle.style.textShadow = `0 0 10px ${primaryColor}80`;
+        }
+        if (previewBtn) {
+            previewBtn.style.background = primaryColor;
+        }
+    }
+
+    // Collect form data
+    function collectFormData(): SiteConfig {
+        const el = (id: string) => document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+
+        return {
+            site: {
+                title: el('config-site-title')?.value || '',
+                subtitle: el('config-site-subtitle')?.value || '',
+                tagline: el('config-site-tagline')?.value || '',
+                aboutTitle: el('config-site-aboutTitle')?.value || '',
+                aboutText: el('config-site-aboutText')?.value || '',
+                aboutText2: el('config-site-aboutText2')?.value || '',
+            },
+            theme: {
+                name: (el('config-theme-name') as HTMLSelectElement)?.value || 'stranger-things',
+                primaryColor: el('config-theme-primaryColor')?.value || '#e50914',
+                accentColor: el('config-theme-accentColor')?.value || '#b81c24',
+                backgroundStart: el('config-theme-backgroundStart')?.value || '#0a0a0a',
+                backgroundEnd: el('config-theme-backgroundEnd')?.value || '#1a0505',
+            },
+            social: {
+                twitch: el('config-social-twitch')?.value || '',
+                discord: el('config-social-discord')?.value || '',
+                youtube: el('config-social-youtube')?.value || '',
+            },
+            features: {
+                fallingMonsters: (el('config-features-fallingMonsters') as HTMLInputElement)?.checked ?? true,
+                musicPlayer: (el('config-features-musicPlayer') as HTMLInputElement)?.checked ?? true,
+                discordPresence: (el('config-features-discordPresence') as HTMLInputElement)?.checked ?? true,
+                twitchStatus: (el('config-features-twitchStatus') as HTMLInputElement)?.checked ?? true,
+            },
+        };
+    }
+
+    // Save config
+    async function saveConfig() {
+        const saveBtn = document.getElementById('save-config') as HTMLButtonElement;
+        const saveStatus = document.getElementById('save-status');
+
+        try {
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+
+            const config = collectFormData();
+
+            const response = await fetch('/api/admin/config', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(config),
+            });
+
+            if (response.ok) {
+                if (saveStatus) {
+                    saveStatus.textContent = 'Saved successfully!';
+                    saveStatus.className = 'text-sm text-green-400';
+                    setTimeout(() => {
+                        saveStatus.textContent = '';
+                    }, 3000);
+                }
+            } else {
+                throw new Error('Save failed');
+            }
+        } catch (e) {
+            console.error('Save error:', e);
+            if (saveStatus) {
+                saveStatus.textContent = 'Failed to save. Please try again.';
+                saveStatus.className = 'text-sm text-red-400';
+            }
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Changes';
+        }
+    }
+
+    // Initialize
+    async function init() {
+        const session = await checkAuth();
+        if (!session) return;
+
+        const usernameEl = document.getElementById('admin-username');
+        if (usernameEl) usernameEl.textContent = session.user.username;
+
+        currentConfig = await loadConfig();
+        if (currentConfig) {
+            populateForm(currentConfig);
+        }
+
+        // Show content
+        document.getElementById('loading')?.classList.add('hidden');
+        document.getElementById('admin-content')?.classList.remove('hidden');
+
+        // Load stats
+        loadStats();
+        setInterval(loadStats, 30000); // Refresh every 30 seconds
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.getAttribute('data-tab');
+                if (!tabName) return;
+
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+
+                btn.classList.add('active');
+                document.getElementById(`tab-${tabName}`)?.classList.remove('hidden');
+            });
+        });
+
+        // Theme preset change
+        document.getElementById('config-theme-name')?.addEventListener('change', (e) => {
+            const themeName = (e.target as HTMLSelectElement).value;
+            if (themeName !== 'custom' && themePresets[themeName]) {
+                updateThemeColors(themePresets[themeName] as any);
+                updateThemePreview();
+            }
+        });
+
+        // Color input sync
+        ['primaryColor', 'accentColor', 'backgroundStart', 'backgroundEnd'].forEach(colorName => {
+            const colorPicker = document.getElementById(`config-theme-${colorName}`) as HTMLInputElement;
+            const textInput = document.getElementById(`config-theme-${colorName}-text`) as HTMLInputElement;
+
+            colorPicker?.addEventListener('input', () => {
+                if (textInput) textInput.value = colorPicker.value;
+                document.getElementById('config-theme-name')!.setAttribute('value', 'custom');
+                (document.getElementById('config-theme-name') as HTMLSelectElement).value = 'custom';
+                updateThemePreview();
+            });
+
+            textInput?.addEventListener('input', () => {
+                if (colorPicker && /^#[0-9A-Fa-f]{6}$/.test(textInput.value)) {
+                    colorPicker.value = textInput.value;
+                    updateThemePreview();
+                }
+            });
+        });
+
+        // Save button
+        document.getElementById('save-config')?.addEventListener('click', saveConfig);
+    }
+
+    init();
+</script>
