@@ -73,5 +73,93 @@ const { title, description = "Gaming Content Creator & Community Builder - Stran
                 <main class="grow py-8"><slot /></main>
             </div>
         </div>
+        <!-- Dynamic theme loading and page tracking -->
+        <script>
+            // Generate or get visitor ID
+            function getVisitorId() {
+                let visitorId = localStorage.getItem('visitorId');
+                if (!visitorId) {
+                    visitorId = 'v_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+                    localStorage.setItem('visitorId', visitorId);
+                }
+                return visitorId;
+            }
+
+            // Track page view
+            async function trackPageView() {
+                try {
+                    await fetch('/api/track', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ visitorId: getVisitorId() }),
+                    });
+                } catch (e) {
+                    // Silently fail
+                }
+            }
+
+            // Load and apply dynamic theme
+            async function loadTheme() {
+                try {
+                    const response = await fetch('/api/admin/config');
+                    if (!response.ok) return;
+
+                    const config = await response.json();
+                    if (!config?.theme) return;
+
+                    const { primaryColor, accentColor, backgroundStart, backgroundEnd } = config.theme;
+
+                    // Apply CSS custom properties
+                    const root = document.documentElement;
+                    if (primaryColor) {
+                        root.style.setProperty('--dynamic-primary', primaryColor);
+                        root.style.setProperty('--color-primary', primaryColor);
+                    }
+                    if (accentColor) {
+                        root.style.setProperty('--dynamic-accent', accentColor);
+                        root.style.setProperty('--color-accent', accentColor);
+                    }
+                    if (backgroundStart && backgroundEnd) {
+                        root.style.setProperty('--dynamic-bg-start', backgroundStart);
+                        root.style.setProperty('--dynamic-bg-end', backgroundEnd);
+                    }
+
+                    // Apply background gradient
+                    const gradientBg = document.querySelector('.gradient-bg') as HTMLElement;
+                    if (gradientBg && backgroundStart && backgroundEnd) {
+                        gradientBg.style.background = `linear-gradient(180deg, ${backgroundStart} 0%, ${backgroundEnd} 30%, ${backgroundStart} 70%, #000000 100%)`;
+                    }
+
+                    // Apply title colors
+                    document.querySelectorAll('.stranger-things-title').forEach((el) => {
+                        const element = el as HTMLElement;
+                        if (primaryColor) {
+                            element.style.color = primaryColor;
+                            element.style.textShadow = `0 0 10px ${primaryColor}E6, 0 0 20px ${primaryColor}B3, 0 0 30px ${primaryColor}80, 0 0 40px ${primaryColor}4D, 2px 2px 4px rgba(0, 0, 0, 0.8)`;
+                        }
+                    });
+
+                    // Apply particle colors
+                    const particles = document.querySelector('.upside-down-particles') as HTMLElement;
+                    if (particles && primaryColor) {
+                        particles.style.backgroundImage = `
+                            radial-gradient(2px 2px at 20px 30px, ${primaryColor}4D, transparent),
+                            radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.1), transparent),
+                            radial-gradient(1px 1px at 90px 40px, ${primaryColor}33, transparent),
+                            radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.1), transparent)
+                        `;
+                    }
+
+                } catch (e) {
+                    // Use default theme
+                }
+            }
+
+            // Run on page load
+            if (!window.location.pathname.startsWith('/admin')) {
+                trackPageView();
+            }
+            loadTheme();
+        </script>
     </body>
 </html>
