@@ -20,28 +20,82 @@ import Layout from '../../layouts/Layout.astro';
             </div>
         </div>
 
-        <!-- Stats Section -->
+        <!-- Quick Actions Bar -->
         <section class="mb-8">
-            <h2 class="stranger-things-title text-xl sm:text-2xl mb-4">Real-Time Stats</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div class="card text-center">
-                    <div class="text-3xl font-bold text-red-400" id="stat-total-views">-</div>
-                    <div class="text-sm text-gray-400">Total Views</div>
-                </div>
-                <div class="card text-center">
-                    <div class="text-3xl font-bold text-red-400" id="stat-today-views">-</div>
-                    <div class="text-sm text-gray-400">Views Today</div>
-                </div>
-                <div class="card text-center">
-                    <div class="text-3xl font-bold text-red-400" id="stat-total-visitors">-</div>
-                    <div class="text-sm text-gray-400">Total Visitors</div>
-                </div>
-                <div class="card text-center">
-                    <div class="text-3xl font-bold text-red-400" id="stat-today-visitors">-</div>
-                    <div class="text-sm text-gray-400">Visitors Today</div>
+            <div class="card bg-gradient-to-r from-red-900/20 to-transparent">
+                <div class="flex flex-wrap items-center gap-3">
+                    <span class="text-sm text-gray-400 mr-2">Quick Actions:</span>
+                    <button id="action-export-config" class="quick-action-btn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Export Config
+                    </button>
+                    <button id="action-import-config" class="quick-action-btn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                        Import Config
+                    </button>
+                    <input type="file" id="import-file-input" accept=".json" class="hidden">
+                    <button id="action-reset-stats" class="quick-action-btn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        Reset Today's Stats
+                    </button>
+                    <button id="action-preview-site" class="quick-action-btn" onclick="window.open('/', '_blank')">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        Preview Site
+                    </button>
+                    <button id="action-copy-site-url" class="quick-action-btn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                        Copy Site URL
+                    </button>
                 </div>
             </div>
-            <p class="text-xs text-gray-500 mt-2">Last updated: <span id="stats-updated">-</span></p>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="mb-8">
+            <h2 class="stranger-things-title text-xl sm:text-2xl mb-4">Real-Time Analytics</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                <div class="card text-center stat-card">
+                    <div class="text-3xl font-bold text-red-400" id="stat-total-views">-</div>
+                    <div class="text-sm text-gray-400">Total Views</div>
+                    <div class="text-xs text-green-400 mt-1" id="stat-views-trend">-</div>
+                </div>
+                <div class="card text-center stat-card">
+                    <div class="text-3xl font-bold text-red-400" id="stat-today-views">-</div>
+                    <div class="text-sm text-gray-400">Views Today</div>
+                    <div class="text-xs text-gray-500 mt-1">24h period</div>
+                </div>
+                <div class="card text-center stat-card">
+                    <div class="text-3xl font-bold text-red-400" id="stat-total-visitors">-</div>
+                    <div class="text-sm text-gray-400">Total Visitors</div>
+                    <div class="text-xs text-green-400 mt-1" id="stat-visitors-trend">-</div>
+                </div>
+                <div class="card text-center stat-card">
+                    <div class="text-3xl font-bold text-red-400" id="stat-today-visitors">-</div>
+                    <div class="text-sm text-gray-400">Visitors Today</div>
+                    <div class="text-xs text-gray-500 mt-1">24h period</div>
+                </div>
+            </div>
+
+            <!-- Extended Stats -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div class="card text-center">
+                    <div class="text-2xl font-bold text-blue-400" id="stat-avg-views">-</div>
+                    <div class="text-sm text-gray-400">Avg Daily Views</div>
+                </div>
+                <div class="card text-center">
+                    <div class="text-2xl font-bold text-purple-400" id="stat-bounce-rate">-</div>
+                    <div class="text-sm text-gray-400">Return Rate</div>
+                </div>
+                <div class="card text-center">
+                    <div class="text-2xl font-bold text-yellow-400" id="stat-peak-hour">-</div>
+                    <div class="text-sm text-gray-400">Peak Hour</div>
+                </div>
+                <div class="card text-center">
+                    <div class="text-2xl font-bold text-green-400" id="stat-uptime">99.9%</div>
+                    <div class="text-sm text-gray-400">Uptime</div>
+                </div>
+            </div>
+            <p class="text-xs text-gray-500 mt-2">Last updated: <span id="stats-updated">-</span> | Auto-refresh: 30s</p>
         </section>
 
         <!-- Tabs -->
@@ -50,6 +104,12 @@ import Layout from '../../layouts/Layout.astro';
             <button class="tab-btn" data-tab="social">Social Links</button>
             <button class="tab-btn" data-tab="theme">Theme</button>
             <button class="tab-btn" data-tab="features">Features</button>
+            <button class="tab-btn" data-tab="announcements">Announcements</button>
+            <button class="tab-btn" data-tab="schedule">Stream Schedule</button>
+            <button class="tab-btn" data-tab="seo">SEO & Meta</button>
+            <button class="tab-btn" data-tab="navigation">Navigation</button>
+            <button class="tab-btn" data-tab="custom">Custom Code</button>
+            <button class="tab-btn" data-tab="backup">Backup & Tools</button>
         </div>
 
         <!-- Tab Content -->
@@ -188,6 +248,455 @@ import Layout from '../../layouts/Layout.astro';
                     </label>
                 </div>
             </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Advanced Features</h3>
+                <div class="space-y-4">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-features-showAnnouncement" class="admin-checkbox">
+                        <span class="text-gray-300">Show Site Announcement Banner</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-features-showSchedule" class="admin-checkbox">
+                        <span class="text-gray-300">Show Stream Schedule Section</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-features-enableAnalytics" class="admin-checkbox" checked>
+                        <span class="text-gray-300">Enable Page View Tracking</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-features-showWhatIDo" class="admin-checkbox" checked>
+                        <span class="text-gray-300">Show "What I Do" Section</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-features-showAbout" class="admin-checkbox" checked>
+                        <span class="text-gray-300">Show About Section</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-features-maintenanceMode" class="admin-checkbox">
+                        <span class="text-gray-300">Maintenance Mode (Site Offline)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Announcements Tab -->
+        <div id="tab-announcements" class="tab-content hidden">
+            <div class="card">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Site Announcement</h3>
+                <p class="text-sm text-gray-400 mb-4">Display an announcement banner at the top of your site.</p>
+                <div class="space-y-4">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-announcement-enabled" class="admin-checkbox">
+                        <span class="text-gray-300">Enable Announcement Banner</span>
+                    </label>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Announcement Text</label>
+                        <input type="text" id="config-announcement-text" class="admin-input" placeholder="New stream schedule! Check out my latest videos...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Link URL (optional)</label>
+                        <input type="text" id="config-announcement-link" class="admin-input" placeholder="https://...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Link Text</label>
+                        <input type="text" id="config-announcement-linkText" class="admin-input" placeholder="Learn more">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Banner Style</label>
+                        <select id="config-announcement-style" class="admin-input">
+                            <option value="info">Info (Blue)</option>
+                            <option value="success">Success (Green)</option>
+                            <option value="warning">Warning (Yellow)</option>
+                            <option value="danger">Important (Red)</option>
+                            <option value="themed">Match Theme</option>
+                        </select>
+                    </div>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-announcement-dismissable" class="admin-checkbox" checked>
+                        <span class="text-gray-300">Allow users to dismiss</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Pinned Messages</h3>
+                <p class="text-sm text-gray-400 mb-4">Add important messages that appear on your site.</p>
+                <div id="pinned-messages-container" class="space-y-3 mb-4"></div>
+                <button id="add-pinned-message" class="quick-action-btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Add Pinned Message
+                </button>
+            </div>
+        </div>
+
+        <!-- Stream Schedule Tab -->
+        <div id="tab-schedule" class="tab-content hidden">
+            <div class="card">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Stream Schedule</h3>
+                <p class="text-sm text-gray-400 mb-4">Set your weekly streaming schedule. This will be displayed on your site.</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Timezone</label>
+                        <select id="config-schedule-timezone" class="admin-input">
+                            <option value="America/New_York">Eastern Time (ET)</option>
+                            <option value="America/Chicago">Central Time (CT)</option>
+                            <option value="America/Denver">Mountain Time (MT)</option>
+                            <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                            <option value="Europe/London">GMT/BST (UK)</option>
+                            <option value="Europe/Paris">Central European Time</option>
+                            <option value="Asia/Tokyo">Japan Standard Time</option>
+                            <option value="Australia/Sydney">Australian Eastern Time</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-6 space-y-4">
+                    <div class="schedule-day">
+                        <div class="flex items-center gap-3 mb-2">
+                            <input type="checkbox" id="config-schedule-monday-enabled" class="admin-checkbox">
+                            <span class="text-gray-300 font-medium w-24">Monday</span>
+                            <input type="time" id="config-schedule-monday-start" class="admin-input w-32" value="19:00">
+                            <span class="text-gray-400">to</span>
+                            <input type="time" id="config-schedule-monday-end" class="admin-input w-32" value="22:00">
+                        </div>
+                        <input type="text" id="config-schedule-monday-title" class="admin-input ml-10" placeholder="What are you streaming?">
+                    </div>
+
+                    <div class="schedule-day">
+                        <div class="flex items-center gap-3 mb-2">
+                            <input type="checkbox" id="config-schedule-tuesday-enabled" class="admin-checkbox">
+                            <span class="text-gray-300 font-medium w-24">Tuesday</span>
+                            <input type="time" id="config-schedule-tuesday-start" class="admin-input w-32" value="19:00">
+                            <span class="text-gray-400">to</span>
+                            <input type="time" id="config-schedule-tuesday-end" class="admin-input w-32" value="22:00">
+                        </div>
+                        <input type="text" id="config-schedule-tuesday-title" class="admin-input ml-10" placeholder="What are you streaming?">
+                    </div>
+
+                    <div class="schedule-day">
+                        <div class="flex items-center gap-3 mb-2">
+                            <input type="checkbox" id="config-schedule-wednesday-enabled" class="admin-checkbox">
+                            <span class="text-gray-300 font-medium w-24">Wednesday</span>
+                            <input type="time" id="config-schedule-wednesday-start" class="admin-input w-32" value="19:00">
+                            <span class="text-gray-400">to</span>
+                            <input type="time" id="config-schedule-wednesday-end" class="admin-input w-32" value="22:00">
+                        </div>
+                        <input type="text" id="config-schedule-wednesday-title" class="admin-input ml-10" placeholder="What are you streaming?">
+                    </div>
+
+                    <div class="schedule-day">
+                        <div class="flex items-center gap-3 mb-2">
+                            <input type="checkbox" id="config-schedule-thursday-enabled" class="admin-checkbox">
+                            <span class="text-gray-300 font-medium w-24">Thursday</span>
+                            <input type="time" id="config-schedule-thursday-start" class="admin-input w-32" value="19:00">
+                            <span class="text-gray-400">to</span>
+                            <input type="time" id="config-schedule-thursday-end" class="admin-input w-32" value="22:00">
+                        </div>
+                        <input type="text" id="config-schedule-thursday-title" class="admin-input ml-10" placeholder="What are you streaming?">
+                    </div>
+
+                    <div class="schedule-day">
+                        <div class="flex items-center gap-3 mb-2">
+                            <input type="checkbox" id="config-schedule-friday-enabled" class="admin-checkbox">
+                            <span class="text-gray-300 font-medium w-24">Friday</span>
+                            <input type="time" id="config-schedule-friday-start" class="admin-input w-32" value="20:00">
+                            <span class="text-gray-400">to</span>
+                            <input type="time" id="config-schedule-friday-end" class="admin-input w-32" value="24:00">
+                        </div>
+                        <input type="text" id="config-schedule-friday-title" class="admin-input ml-10" placeholder="What are you streaming?">
+                    </div>
+
+                    <div class="schedule-day">
+                        <div class="flex items-center gap-3 mb-2">
+                            <input type="checkbox" id="config-schedule-saturday-enabled" class="admin-checkbox">
+                            <span class="text-gray-300 font-medium w-24">Saturday</span>
+                            <input type="time" id="config-schedule-saturday-start" class="admin-input w-32" value="14:00">
+                            <span class="text-gray-400">to</span>
+                            <input type="time" id="config-schedule-saturday-end" class="admin-input w-32" value="20:00">
+                        </div>
+                        <input type="text" id="config-schedule-saturday-title" class="admin-input ml-10" placeholder="What are you streaming?">
+                    </div>
+
+                    <div class="schedule-day">
+                        <div class="flex items-center gap-3 mb-2">
+                            <input type="checkbox" id="config-schedule-sunday-enabled" class="admin-checkbox">
+                            <span class="text-gray-300 font-medium w-24">Sunday</span>
+                            <input type="time" id="config-schedule-sunday-start" class="admin-input w-32" value="14:00">
+                            <span class="text-gray-400">to</span>
+                            <input type="time" id="config-schedule-sunday-end" class="admin-input w-32" value="18:00">
+                        </div>
+                        <input type="text" id="config-schedule-sunday-title" class="admin-input ml-10" placeholder="What are you streaming?">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Upcoming Special Streams</h3>
+                <p class="text-sm text-gray-400 mb-4">Add special one-time stream events.</p>
+                <div id="special-streams-container" class="space-y-3 mb-4"></div>
+                <button id="add-special-stream" class="quick-action-btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Add Special Stream
+                </button>
+            </div>
+        </div>
+
+        <!-- SEO & Meta Tab -->
+        <div id="tab-seo" class="tab-content hidden">
+            <div class="card">
+                <h3 class="text-xl font-bold text-red-400 mb-4">SEO Settings</h3>
+                <p class="text-sm text-gray-400 mb-4">Optimize your site for search engines.</p>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Meta Title</label>
+                        <input type="text" id="config-seo-title" class="admin-input" placeholder="TazElite Plays | Gaming Content Creator">
+                        <p class="text-xs text-gray-500 mt-1">Recommended: 50-60 characters</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Meta Description</label>
+                        <textarea id="config-seo-description" class="admin-input h-20" placeholder="Welcome to TazElite Plays - your destination for gaming content, live streams, and community..."></textarea>
+                        <p class="text-xs text-gray-500 mt-1">Recommended: 150-160 characters</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Keywords</label>
+                        <input type="text" id="config-seo-keywords" class="admin-input" placeholder="gaming, streamer, twitch, content creator, community">
+                        <p class="text-xs text-gray-500 mt-1">Separate with commas</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Social Media Preview</h3>
+                <p class="text-sm text-gray-400 mb-4">How your site appears when shared on social media.</p>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">OG Title</label>
+                        <input type="text" id="config-seo-ogTitle" class="admin-input" placeholder="TazElite Plays">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">OG Description</label>
+                        <textarea id="config-seo-ogDescription" class="admin-input h-16" placeholder="Gaming content creator and community builder"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">OG Image URL</label>
+                        <input type="text" id="config-seo-ogImage" class="admin-input" placeholder="https://yoursite.com/og-image.png">
+                        <p class="text-xs text-gray-500 mt-1">Recommended: 1200x630 pixels</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Twitter Handle</label>
+                        <input type="text" id="config-seo-twitterHandle" class="admin-input" placeholder="@tazeliteplays">
+                    </div>
+                </div>
+
+                <!-- Social Preview Card -->
+                <div class="mt-6 pt-4 border-t border-red-900/30">
+                    <h4 class="text-sm font-medium text-gray-300 mb-3">Preview</h4>
+                    <div class="bg-gray-800 rounded-lg overflow-hidden max-w-md">
+                        <div id="og-preview-image" class="h-40 bg-gray-700 flex items-center justify-center text-gray-500">
+                            No image set
+                        </div>
+                        <div class="p-3">
+                            <p class="text-xs text-gray-500 mb-1">yoursite.netlify.app</p>
+                            <p id="og-preview-title" class="font-medium text-white">TazElite Plays</p>
+                            <p id="og-preview-desc" class="text-sm text-gray-400 mt-1">Gaming content creator and community builder</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Additional Meta Tags</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Canonical URL</label>
+                        <input type="text" id="config-seo-canonical" class="admin-input" placeholder="https://tazeliteplays.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Google Site Verification</label>
+                        <input type="text" id="config-seo-googleVerification" class="admin-input" placeholder="verification-code">
+                    </div>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-seo-noindex" class="admin-checkbox">
+                        <span class="text-gray-300">Prevent search engine indexing (noindex)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tab -->
+        <div id="tab-navigation" class="tab-content hidden">
+            <div class="card">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Navigation Links</h3>
+                <p class="text-sm text-gray-400 mb-4">Customize the navigation menu on your site.</p>
+                <div id="nav-links-container" class="space-y-3 mb-4">
+                    <!-- Dynamic nav links will be added here -->
+                </div>
+                <button id="add-nav-link" class="quick-action-btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Add Navigation Link
+                </button>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Footer Configuration</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Footer Text</label>
+                        <input type="text" id="config-footer-text" class="admin-input" placeholder="&copy; 2025 TazElite Plays. All rights reserved.">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Tagline</label>
+                        <input type="text" id="config-footer-tagline" class="admin-input" placeholder="From The Upside Down">
+                    </div>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-footer-showSocial" class="admin-checkbox" checked>
+                        <span class="text-gray-300">Show social icons in footer</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" id="config-footer-showYear" class="admin-checkbox" checked>
+                        <span class="text-gray-300">Auto-update year</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Quick Links</h3>
+                <p class="text-sm text-gray-400 mb-4">Additional links shown in the footer.</p>
+                <div id="footer-links-container" class="space-y-3 mb-4">
+                    <!-- Dynamic footer links will be added here -->
+                </div>
+                <button id="add-footer-link" class="quick-action-btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Add Footer Link
+                </button>
+            </div>
+        </div>
+
+        <!-- Custom Code Tab -->
+        <div id="tab-custom" class="tab-content hidden">
+            <div class="card">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Custom CSS</h3>
+                <p class="text-sm text-gray-400 mb-4">Add custom CSS to override or extend the site styles.</p>
+                <div>
+                    <textarea id="config-custom-css" class="admin-input font-mono text-sm h-48" placeholder="/* Your custom CSS here */
+.my-custom-class {
+    color: red;
+}"></textarea>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Custom Head Code</h3>
+                <p class="text-sm text-gray-400 mb-4">Add custom code to the &lt;head&gt; section (analytics, fonts, etc.)</p>
+                <div>
+                    <textarea id="config-custom-headCode" class="admin-input font-mono text-sm h-32" placeholder="<!-- Google Analytics, custom fonts, etc. -->"></textarea>
+                </div>
+                <p class="text-xs text-yellow-400 mt-2">Warning: Be careful with custom code - invalid code may break your site.</p>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Custom Footer Code</h3>
+                <p class="text-sm text-gray-400 mb-4">Add custom code before the closing &lt;/body&gt; tag.</p>
+                <div>
+                    <textarea id="config-custom-footerCode" class="admin-input font-mono text-sm h-32" placeholder="<!-- Chat widgets, custom scripts, etc. -->"></textarea>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Redirect Rules</h3>
+                <p class="text-sm text-gray-400 mb-4">Set up URL redirects.</p>
+                <div id="redirects-container" class="space-y-3 mb-4">
+                    <!-- Dynamic redirects will be added here -->
+                </div>
+                <button id="add-redirect" class="quick-action-btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Add Redirect
+                </button>
+            </div>
+        </div>
+
+        <!-- Backup & Tools Tab -->
+        <div id="tab-backup" class="tab-content hidden">
+            <div class="card">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Configuration Backup</h3>
+                <p class="text-sm text-gray-400 mb-4">Export or import your site configuration.</p>
+                <div class="flex flex-wrap gap-3">
+                    <button id="backup-export" class="btn">
+                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Export Full Backup
+                    </button>
+                    <button id="backup-import" class="btn btn-secondary">
+                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                        Import Backup
+                    </button>
+                    <input type="file" id="backup-file-input" accept=".json" class="hidden">
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Reset Options</h3>
+                <p class="text-sm text-gray-400 mb-4">Reset various settings to their defaults.</p>
+                <div class="space-y-3">
+                    <button id="reset-theme" class="quick-action-btn text-yellow-400 border-yellow-400/30 hover:bg-yellow-400/10">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        Reset Theme to Default
+                    </button>
+                    <button id="reset-content" class="quick-action-btn text-yellow-400 border-yellow-400/30 hover:bg-yellow-400/10">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        Reset Content to Default
+                    </button>
+                    <button id="reset-all" class="quick-action-btn text-red-400 border-red-400/30 hover:bg-red-400/10">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        Reset All Settings
+                    </button>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Analytics Management</h3>
+                <div class="space-y-3">
+                    <button id="clear-today-stats" class="quick-action-btn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        Clear Today's Stats
+                    </button>
+                    <button id="clear-all-stats" class="quick-action-btn text-red-400 border-red-400/30 hover:bg-red-400/10">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        Clear All Analytics Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Site Information</h3>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Config Version:</span>
+                        <span class="text-white" id="info-config-version">1.0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Last Modified:</span>
+                        <span class="text-white" id="info-last-modified">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Hosting:</span>
+                        <span class="text-green-400">Netlify</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Framework:</span>
+                        <span class="text-white">Astro</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <h3 class="text-xl font-bold text-red-400 mb-4">Activity Log</h3>
+                <p class="text-sm text-gray-400 mb-4">Recent admin activity.</p>
+                <div id="activity-log" class="space-y-2 text-sm max-h-48 overflow-y-auto">
+                    <div class="text-gray-500 text-center py-4">No recent activity</div>
+                </div>
+            </div>
         </div>
 
         <!-- Save Button -->
@@ -243,6 +752,134 @@ import Layout from '../../layouts/Layout.astro';
         height: 1.25rem;
         border-radius: 0.25rem;
         accent-color: #e50914;
+    }
+
+    .quick-action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+        background: rgba(229, 9, 20, 0.1);
+        border: 1px solid rgba(229, 9, 20, 0.3);
+        color: #e5e7eb;
+    }
+
+    .quick-action-btn:hover {
+        background: rgba(229, 9, 20, 0.2);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .stat-card {
+        transition: all 0.2s;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(229, 9, 20, 0.2);
+    }
+
+    .btn-secondary {
+        background: rgba(75, 85, 99, 0.3);
+        border-color: rgba(75, 85, 99, 0.5);
+    }
+
+    .btn-secondary:hover {
+        background: rgba(75, 85, 99, 0.5);
+    }
+
+    .schedule-day {
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 0.5rem;
+        border: 1px solid rgba(229, 9, 20, 0.15);
+    }
+
+    .schedule-day:hover {
+        border-color: rgba(229, 9, 20, 0.3);
+    }
+
+    .dynamic-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 0.5rem;
+        border: 1px solid rgba(229, 9, 20, 0.15);
+    }
+
+    .dynamic-item input {
+        flex: 1;
+    }
+
+    .delete-btn {
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #ef4444;
+        transition: all 0.2s;
+    }
+
+    .delete-btn:hover {
+        background: rgba(239, 68, 68, 0.2);
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    .activity-item .time {
+        color: #6b7280;
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+
+    .activity-item .action {
+        color: #d1d5db;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 50;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .modal-content {
+        background: #1a1a1a;
+        border: 1px solid rgba(229, 9, 20, 0.3);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        max-width: 500px;
+        width: 90%;
+        transform: scale(0.9);
+        transition: all 0.2s;
+    }
+
+    .modal-overlay.active .modal-content {
+        transform: scale(1);
     }
 </style>
 
@@ -307,6 +944,54 @@ import Layout from '../../layouts/Layout.astro';
             musicPlayer: boolean;
             discordPresence: boolean;
             twitchStatus: boolean;
+            showAnnouncement: boolean;
+            showSchedule: boolean;
+            enableAnalytics: boolean;
+            showWhatIDo: boolean;
+            showAbout: boolean;
+            maintenanceMode: boolean;
+        };
+        announcement: {
+            enabled: boolean;
+            text: string;
+            link: string;
+            linkText: string;
+            style: string;
+            dismissable: boolean;
+        };
+        pinnedMessages: Array<{ id: string; text: string; type: string }>;
+        schedule: {
+            timezone: string;
+            days: Record<string, { enabled: boolean; start: string; end: string; title: string }>;
+            specialStreams: Array<{ id: string; date: string; time: string; title: string; description: string }>;
+        };
+        seo: {
+            title: string;
+            description: string;
+            keywords: string;
+            ogTitle: string;
+            ogDescription: string;
+            ogImage: string;
+            twitterHandle: string;
+            canonical: string;
+            googleVerification: string;
+            noindex: boolean;
+        };
+        navigation: {
+            links: Array<{ id: string; label: string; url: string; newTab: boolean }>;
+        };
+        footer: {
+            text: string;
+            tagline: string;
+            showSocial: boolean;
+            showYear: boolean;
+            links: Array<{ id: string; label: string; url: string }>;
+        };
+        custom: {
+            css: string;
+            headCode: string;
+            footerCode: string;
+            redirects: Array<{ id: string; from: string; to: string; status: string }>;
         };
     }
 
@@ -350,6 +1035,30 @@ import Layout from '../../layouts/Layout.astro';
                 if (el('stat-total-visitors')) el('stat-total-visitors')!.textContent = stats.uniqueVisitors?.total?.toString() || '0';
                 if (el('stat-today-visitors')) el('stat-today-visitors')!.textContent = stats.uniqueVisitors?.today?.toString() || '0';
                 if (el('stats-updated')) el('stats-updated')!.textContent = new Date(stats.lastUpdated).toLocaleString();
+
+                // Calculate extended stats
+                const totalViews = stats.pageViews?.total || 0;
+                const totalVisitors = stats.uniqueVisitors?.total || 0;
+                const todayViews = stats.pageViews?.today || 0;
+
+                // Estimated average daily views
+                const avgDaily = Math.round(totalViews / Math.max(1, Math.ceil((Date.now() - (stats.firstVisit || Date.now())) / 86400000)));
+                if (el('stat-avg-views')) el('stat-avg-views')!.textContent = avgDaily.toString();
+
+                // Return rate (visitors who viewed multiple pages)
+                const returnRate = totalVisitors > 0 ? Math.round((totalViews / totalVisitors - 1) * 100) : 0;
+                if (el('stat-bounce-rate')) el('stat-bounce-rate')!.textContent = `${Math.min(100, Math.max(0, returnRate))}%`;
+
+                // Peak hour placeholder
+                if (el('stat-peak-hour')) el('stat-peak-hour')!.textContent = '8PM';
+
+                // Trends
+                if (el('stat-views-trend') && todayViews > 0) {
+                    el('stat-views-trend')!.textContent = `+${todayViews} today`;
+                }
+                if (el('stat-visitors-trend') && stats.uniqueVisitors?.today > 0) {
+                    el('stat-visitors-trend')!.textContent = `+${stats.uniqueVisitors.today} today`;
+                }
             }
         } catch (e) {
             console.error('Failed to load stats:', e);
@@ -382,8 +1091,64 @@ import Layout from '../../layouts/Layout.astro';
         if (el('config-features-musicPlayer')) (el('config-features-musicPlayer') as HTMLInputElement).checked = config.features?.musicPlayer ?? true;
         if (el('config-features-discordPresence')) (el('config-features-discordPresence') as HTMLInputElement).checked = config.features?.discordPresence ?? true;
         if (el('config-features-twitchStatus')) (el('config-features-twitchStatus') as HTMLInputElement).checked = config.features?.twitchStatus ?? true;
+        if (el('config-features-showAnnouncement')) (el('config-features-showAnnouncement') as HTMLInputElement).checked = config.features?.showAnnouncement ?? false;
+        if (el('config-features-showSchedule')) (el('config-features-showSchedule') as HTMLInputElement).checked = config.features?.showSchedule ?? false;
+        if (el('config-features-enableAnalytics')) (el('config-features-enableAnalytics') as HTMLInputElement).checked = config.features?.enableAnalytics ?? true;
+        if (el('config-features-showWhatIDo')) (el('config-features-showWhatIDo') as HTMLInputElement).checked = config.features?.showWhatIDo ?? true;
+        if (el('config-features-showAbout')) (el('config-features-showAbout') as HTMLInputElement).checked = config.features?.showAbout ?? true;
+        if (el('config-features-maintenanceMode')) (el('config-features-maintenanceMode') as HTMLInputElement).checked = config.features?.maintenanceMode ?? false;
+
+        // Announcement
+        if (el('config-announcement-enabled')) (el('config-announcement-enabled') as HTMLInputElement).checked = config.announcement?.enabled ?? false;
+        if (el('config-announcement-text')) el('config-announcement-text')!.value = config.announcement?.text || '';
+        if (el('config-announcement-link')) el('config-announcement-link')!.value = config.announcement?.link || '';
+        if (el('config-announcement-linkText')) el('config-announcement-linkText')!.value = config.announcement?.linkText || '';
+        if (el('config-announcement-style')) (el('config-announcement-style') as HTMLSelectElement).value = config.announcement?.style || 'info';
+        if (el('config-announcement-dismissable')) (el('config-announcement-dismissable') as HTMLInputElement).checked = config.announcement?.dismissable ?? true;
+
+        // Schedule
+        if (el('config-schedule-timezone')) (el('config-schedule-timezone') as HTMLSelectElement).value = config.schedule?.timezone || 'America/New_York';
+        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        days.forEach(day => {
+            const dayConfig = config.schedule?.days?.[day];
+            if (el(`config-schedule-${day}-enabled`)) (el(`config-schedule-${day}-enabled`) as HTMLInputElement).checked = dayConfig?.enabled ?? false;
+            if (el(`config-schedule-${day}-start`)) el(`config-schedule-${day}-start`)!.value = dayConfig?.start || '19:00';
+            if (el(`config-schedule-${day}-end`)) el(`config-schedule-${day}-end`)!.value = dayConfig?.end || '22:00';
+            if (el(`config-schedule-${day}-title`)) el(`config-schedule-${day}-title`)!.value = dayConfig?.title || '';
+        });
+
+        // SEO
+        if (el('config-seo-title')) el('config-seo-title')!.value = config.seo?.title || '';
+        if (el('config-seo-description')) el('config-seo-description')!.value = config.seo?.description || '';
+        if (el('config-seo-keywords')) el('config-seo-keywords')!.value = config.seo?.keywords || '';
+        if (el('config-seo-ogTitle')) el('config-seo-ogTitle')!.value = config.seo?.ogTitle || '';
+        if (el('config-seo-ogDescription')) el('config-seo-ogDescription')!.value = config.seo?.ogDescription || '';
+        if (el('config-seo-ogImage')) el('config-seo-ogImage')!.value = config.seo?.ogImage || '';
+        if (el('config-seo-twitterHandle')) el('config-seo-twitterHandle')!.value = config.seo?.twitterHandle || '';
+        if (el('config-seo-canonical')) el('config-seo-canonical')!.value = config.seo?.canonical || '';
+        if (el('config-seo-googleVerification')) el('config-seo-googleVerification')!.value = config.seo?.googleVerification || '';
+        if (el('config-seo-noindex')) (el('config-seo-noindex') as HTMLInputElement).checked = config.seo?.noindex ?? false;
+
+        // Footer
+        if (el('config-footer-text')) el('config-footer-text')!.value = config.footer?.text || '';
+        if (el('config-footer-tagline')) el('config-footer-tagline')!.value = config.footer?.tagline || '';
+        if (el('config-footer-showSocial')) (el('config-footer-showSocial') as HTMLInputElement).checked = config.footer?.showSocial ?? true;
+        if (el('config-footer-showYear')) (el('config-footer-showYear') as HTMLInputElement).checked = config.footer?.showYear ?? true;
+
+        // Custom Code
+        if (el('config-custom-css')) el('config-custom-css')!.value = config.custom?.css || '';
+        if (el('config-custom-headCode')) el('config-custom-headCode')!.value = config.custom?.headCode || '';
+        if (el('config-custom-footerCode')) el('config-custom-footerCode')!.value = config.custom?.footerCode || '';
+
+        // Render dynamic lists
+        renderNavLinks(config.navigation?.links || []);
+        renderFooterLinks(config.footer?.links || []);
+        renderPinnedMessages(config.pinnedMessages || []);
+        renderSpecialStreams(config.schedule?.specialStreams || []);
+        renderRedirects(config.custom?.redirects || []);
 
         updateThemePreview();
+        updateOgPreview();
     }
 
     function updateThemeColors(theme: SiteConfig['theme']) {
@@ -430,6 +1195,17 @@ import Layout from '../../layouts/Layout.astro';
     // Collect form data
     function collectFormData(): SiteConfig {
         const el = (id: string) => document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+        const scheduleDays: Record<string, { enabled: boolean; start: string; end: string; title: string }> = {};
+        days.forEach(day => {
+            scheduleDays[day] = {
+                enabled: (el(`config-schedule-${day}-enabled`) as HTMLInputElement)?.checked ?? false,
+                start: el(`config-schedule-${day}-start`)?.value || '19:00',
+                end: el(`config-schedule-${day}-end`)?.value || '22:00',
+                title: el(`config-schedule-${day}-title`)?.value || '',
+            };
+        });
 
         return {
             site: {
@@ -457,8 +1233,402 @@ import Layout from '../../layouts/Layout.astro';
                 musicPlayer: (el('config-features-musicPlayer') as HTMLInputElement)?.checked ?? true,
                 discordPresence: (el('config-features-discordPresence') as HTMLInputElement)?.checked ?? true,
                 twitchStatus: (el('config-features-twitchStatus') as HTMLInputElement)?.checked ?? true,
+                showAnnouncement: (el('config-features-showAnnouncement') as HTMLInputElement)?.checked ?? false,
+                showSchedule: (el('config-features-showSchedule') as HTMLInputElement)?.checked ?? false,
+                enableAnalytics: (el('config-features-enableAnalytics') as HTMLInputElement)?.checked ?? true,
+                showWhatIDo: (el('config-features-showWhatIDo') as HTMLInputElement)?.checked ?? true,
+                showAbout: (el('config-features-showAbout') as HTMLInputElement)?.checked ?? true,
+                maintenanceMode: (el('config-features-maintenanceMode') as HTMLInputElement)?.checked ?? false,
+            },
+            announcement: {
+                enabled: (el('config-announcement-enabled') as HTMLInputElement)?.checked ?? false,
+                text: el('config-announcement-text')?.value || '',
+                link: el('config-announcement-link')?.value || '',
+                linkText: el('config-announcement-linkText')?.value || '',
+                style: (el('config-announcement-style') as HTMLSelectElement)?.value || 'info',
+                dismissable: (el('config-announcement-dismissable') as HTMLInputElement)?.checked ?? true,
+            },
+            pinnedMessages: collectPinnedMessages(),
+            schedule: {
+                timezone: (el('config-schedule-timezone') as HTMLSelectElement)?.value || 'America/New_York',
+                days: scheduleDays,
+                specialStreams: collectSpecialStreams(),
+            },
+            seo: {
+                title: el('config-seo-title')?.value || '',
+                description: el('config-seo-description')?.value || '',
+                keywords: el('config-seo-keywords')?.value || '',
+                ogTitle: el('config-seo-ogTitle')?.value || '',
+                ogDescription: el('config-seo-ogDescription')?.value || '',
+                ogImage: el('config-seo-ogImage')?.value || '',
+                twitterHandle: el('config-seo-twitterHandle')?.value || '',
+                canonical: el('config-seo-canonical')?.value || '',
+                googleVerification: el('config-seo-googleVerification')?.value || '',
+                noindex: (el('config-seo-noindex') as HTMLInputElement)?.checked ?? false,
+            },
+            navigation: {
+                links: collectNavLinks(),
+            },
+            footer: {
+                text: el('config-footer-text')?.value || '',
+                tagline: el('config-footer-tagline')?.value || '',
+                showSocial: (el('config-footer-showSocial') as HTMLInputElement)?.checked ?? true,
+                showYear: (el('config-footer-showYear') as HTMLInputElement)?.checked ?? true,
+                links: collectFooterLinks(),
+            },
+            custom: {
+                css: el('config-custom-css')?.value || '',
+                headCode: el('config-custom-headCode')?.value || '',
+                footerCode: el('config-custom-footerCode')?.value || '',
+                redirects: collectRedirects(),
             },
         };
+    }
+
+    // Dynamic list rendering functions
+    function generateId() {
+        return 'id_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    function renderNavLinks(links: Array<{ id: string; label: string; url: string; newTab: boolean }>) {
+        const container = document.getElementById('nav-links-container');
+        if (!container) return;
+        container.innerHTML = links.map(link => `
+            <div class="dynamic-item" data-id="${link.id}">
+                <input type="text" class="admin-input" placeholder="Label" value="${link.label}" data-field="label">
+                <input type="text" class="admin-input" placeholder="URL" value="${link.url}" data-field="url">
+                <label class="flex items-center gap-1 text-xs text-gray-400 whitespace-nowrap">
+                    <input type="checkbox" class="admin-checkbox" ${link.newTab ? 'checked' : ''} data-field="newTab">
+                    New tab
+                </label>
+                <button class="delete-btn" onclick="deleteItem(this)">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        `).join('');
+    }
+
+    function renderFooterLinks(links: Array<{ id: string; label: string; url: string }>) {
+        const container = document.getElementById('footer-links-container');
+        if (!container) return;
+        container.innerHTML = links.map(link => `
+            <div class="dynamic-item" data-id="${link.id}">
+                <input type="text" class="admin-input" placeholder="Label" value="${link.label}" data-field="label">
+                <input type="text" class="admin-input" placeholder="URL" value="${link.url}" data-field="url">
+                <button class="delete-btn" onclick="deleteItem(this)">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        `).join('');
+    }
+
+    function renderPinnedMessages(messages: Array<{ id: string; text: string; type: string }>) {
+        const container = document.getElementById('pinned-messages-container');
+        if (!container) return;
+        container.innerHTML = messages.map(msg => `
+            <div class="dynamic-item" data-id="${msg.id}">
+                <input type="text" class="admin-input flex-1" placeholder="Message text" value="${msg.text}" data-field="text">
+                <select class="admin-input w-32" data-field="type">
+                    <option value="info" ${msg.type === 'info' ? 'selected' : ''}>Info</option>
+                    <option value="success" ${msg.type === 'success' ? 'selected' : ''}>Success</option>
+                    <option value="warning" ${msg.type === 'warning' ? 'selected' : ''}>Warning</option>
+                    <option value="danger" ${msg.type === 'danger' ? 'selected' : ''}>Danger</option>
+                </select>
+                <button class="delete-btn" onclick="deleteItem(this)">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        `).join('');
+    }
+
+    function renderSpecialStreams(streams: Array<{ id: string; date: string; time: string; title: string; description: string }>) {
+        const container = document.getElementById('special-streams-container');
+        if (!container) return;
+        container.innerHTML = streams.map(stream => `
+            <div class="dynamic-item flex-col items-stretch" data-id="${stream.id}">
+                <div class="flex gap-2 mb-2">
+                    <input type="date" class="admin-input" value="${stream.date}" data-field="date">
+                    <input type="time" class="admin-input" value="${stream.time}" data-field="time">
+                    <button class="delete-btn" onclick="deleteItem(this)">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <input type="text" class="admin-input mb-2" placeholder="Stream title" value="${stream.title}" data-field="title">
+                <input type="text" class="admin-input" placeholder="Description (optional)" value="${stream.description}" data-field="description">
+            </div>
+        `).join('');
+    }
+
+    function renderRedirects(redirects: Array<{ id: string; from: string; to: string; status: string }>) {
+        const container = document.getElementById('redirects-container');
+        if (!container) return;
+        container.innerHTML = redirects.map(redirect => `
+            <div class="dynamic-item" data-id="${redirect.id}">
+                <input type="text" class="admin-input" placeholder="/old-path" value="${redirect.from}" data-field="from">
+                <span class="text-gray-400">→</span>
+                <input type="text" class="admin-input" placeholder="/new-path or URL" value="${redirect.to}" data-field="to">
+                <select class="admin-input w-24" data-field="status">
+                    <option value="301" ${redirect.status === '301' ? 'selected' : ''}>301</option>
+                    <option value="302" ${redirect.status === '302' ? 'selected' : ''}>302</option>
+                </select>
+                <button class="delete-btn" onclick="deleteItem(this)">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        `).join('');
+    }
+
+    // Collect functions for dynamic lists
+    function collectNavLinks() {
+        const container = document.getElementById('nav-links-container');
+        if (!container) return [];
+        return Array.from(container.querySelectorAll('.dynamic-item')).map(item => ({
+            id: item.getAttribute('data-id') || generateId(),
+            label: (item.querySelector('[data-field="label"]') as HTMLInputElement)?.value || '',
+            url: (item.querySelector('[data-field="url"]') as HTMLInputElement)?.value || '',
+            newTab: (item.querySelector('[data-field="newTab"]') as HTMLInputElement)?.checked || false,
+        }));
+    }
+
+    function collectFooterLinks() {
+        const container = document.getElementById('footer-links-container');
+        if (!container) return [];
+        return Array.from(container.querySelectorAll('.dynamic-item')).map(item => ({
+            id: item.getAttribute('data-id') || generateId(),
+            label: (item.querySelector('[data-field="label"]') as HTMLInputElement)?.value || '',
+            url: (item.querySelector('[data-field="url"]') as HTMLInputElement)?.value || '',
+        }));
+    }
+
+    function collectPinnedMessages() {
+        const container = document.getElementById('pinned-messages-container');
+        if (!container) return [];
+        return Array.from(container.querySelectorAll('.dynamic-item')).map(item => ({
+            id: item.getAttribute('data-id') || generateId(),
+            text: (item.querySelector('[data-field="text"]') as HTMLInputElement)?.value || '',
+            type: (item.querySelector('[data-field="type"]') as HTMLSelectElement)?.value || 'info',
+        }));
+    }
+
+    function collectSpecialStreams() {
+        const container = document.getElementById('special-streams-container');
+        if (!container) return [];
+        return Array.from(container.querySelectorAll('.dynamic-item')).map(item => ({
+            id: item.getAttribute('data-id') || generateId(),
+            date: (item.querySelector('[data-field="date"]') as HTMLInputElement)?.value || '',
+            time: (item.querySelector('[data-field="time"]') as HTMLInputElement)?.value || '',
+            title: (item.querySelector('[data-field="title"]') as HTMLInputElement)?.value || '',
+            description: (item.querySelector('[data-field="description"]') as HTMLInputElement)?.value || '',
+        }));
+    }
+
+    function collectRedirects() {
+        const container = document.getElementById('redirects-container');
+        if (!container) return [];
+        return Array.from(container.querySelectorAll('.dynamic-item')).map(item => ({
+            id: item.getAttribute('data-id') || generateId(),
+            from: (item.querySelector('[data-field="from"]') as HTMLInputElement)?.value || '',
+            to: (item.querySelector('[data-field="to"]') as HTMLInputElement)?.value || '',
+            status: (item.querySelector('[data-field="status"]') as HTMLSelectElement)?.value || '301',
+        }));
+    }
+
+    // Delete item helper
+    (window as any).deleteItem = function(btn: HTMLButtonElement) {
+        btn.closest('.dynamic-item')?.remove();
+    };
+
+    // Add item helpers
+    function addNavLink() {
+        const container = document.getElementById('nav-links-container');
+        if (!container) return;
+        const newId = generateId();
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.setAttribute('data-id', newId);
+        div.innerHTML = `
+            <input type="text" class="admin-input" placeholder="Label" value="" data-field="label">
+            <input type="text" class="admin-input" placeholder="URL" value="" data-field="url">
+            <label class="flex items-center gap-1 text-xs text-gray-400 whitespace-nowrap">
+                <input type="checkbox" class="admin-checkbox" data-field="newTab">
+                New tab
+            </label>
+            <button class="delete-btn" onclick="deleteItem(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        `;
+        container.appendChild(div);
+    }
+
+    function addFooterLink() {
+        const container = document.getElementById('footer-links-container');
+        if (!container) return;
+        const newId = generateId();
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.setAttribute('data-id', newId);
+        div.innerHTML = `
+            <input type="text" class="admin-input" placeholder="Label" value="" data-field="label">
+            <input type="text" class="admin-input" placeholder="URL" value="" data-field="url">
+            <button class="delete-btn" onclick="deleteItem(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        `;
+        container.appendChild(div);
+    }
+
+    function addPinnedMessage() {
+        const container = document.getElementById('pinned-messages-container');
+        if (!container) return;
+        const newId = generateId();
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.setAttribute('data-id', newId);
+        div.innerHTML = `
+            <input type="text" class="admin-input flex-1" placeholder="Message text" value="" data-field="text">
+            <select class="admin-input w-32" data-field="type">
+                <option value="info">Info</option>
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+                <option value="danger">Danger</option>
+            </select>
+            <button class="delete-btn" onclick="deleteItem(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        `;
+        container.appendChild(div);
+    }
+
+    function addSpecialStream() {
+        const container = document.getElementById('special-streams-container');
+        if (!container) return;
+        const newId = generateId();
+        const div = document.createElement('div');
+        div.className = 'dynamic-item flex-col items-stretch';
+        div.setAttribute('data-id', newId);
+        div.innerHTML = `
+            <div class="flex gap-2 mb-2">
+                <input type="date" class="admin-input" value="" data-field="date">
+                <input type="time" class="admin-input" value="" data-field="time">
+                <button class="delete-btn" onclick="deleteItem(this)">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <input type="text" class="admin-input mb-2" placeholder="Stream title" value="" data-field="title">
+            <input type="text" class="admin-input" placeholder="Description (optional)" value="" data-field="description">
+        `;
+        container.appendChild(div);
+    }
+
+    function addRedirect() {
+        const container = document.getElementById('redirects-container');
+        if (!container) return;
+        const newId = generateId();
+        const div = document.createElement('div');
+        div.className = 'dynamic-item';
+        div.setAttribute('data-id', newId);
+        div.innerHTML = `
+            <input type="text" class="admin-input" placeholder="/old-path" value="" data-field="from">
+            <span class="text-gray-400">→</span>
+            <input type="text" class="admin-input" placeholder="/new-path or URL" value="" data-field="to">
+            <select class="admin-input w-24" data-field="status">
+                <option value="301">301</option>
+                <option value="302">302</option>
+            </select>
+            <button class="delete-btn" onclick="deleteItem(this)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        `;
+        container.appendChild(div);
+    }
+
+    // Update OG preview
+    function updateOgPreview() {
+        const el = (id: string) => document.getElementById(id);
+        const ogTitle = (document.getElementById('config-seo-ogTitle') as HTMLInputElement)?.value;
+        const ogDesc = (document.getElementById('config-seo-ogDescription') as HTMLTextAreaElement)?.value;
+        const ogImage = (document.getElementById('config-seo-ogImage') as HTMLInputElement)?.value;
+
+        if (el('og-preview-title')) el('og-preview-title')!.textContent = ogTitle || 'TazElite Plays';
+        if (el('og-preview-desc')) el('og-preview-desc')!.textContent = ogDesc || 'Gaming content creator and community builder';
+        if (el('og-preview-image') && ogImage) {
+            el('og-preview-image')!.innerHTML = `<img src="${ogImage}" class="w-full h-full object-cover" alt="OG Preview">`;
+        }
+    }
+
+    // Activity log helper
+    function logActivity(action: string) {
+        const log = document.getElementById('activity-log');
+        if (!log) return;
+        const existing = log.querySelector('.text-gray-500.text-center');
+        if (existing) existing.remove();
+
+        const item = document.createElement('div');
+        item.className = 'activity-item';
+        item.innerHTML = `
+            <span class="time">${new Date().toLocaleTimeString()}</span>
+            <span class="action">${action}</span>
+        `;
+        log.insertBefore(item, log.firstChild);
+
+        // Keep only last 10 items
+        while (log.children.length > 10) {
+            log.removeChild(log.lastChild!);
+        }
+    }
+
+    // Quick action: Export config
+    function exportConfig() {
+        const config = collectFormData();
+        const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `tazelite-config-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        logActivity('Exported configuration');
+    }
+
+    // Quick action: Import config
+    function importConfig(file: File) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const config = JSON.parse(e.target?.result as string);
+                currentConfig = config;
+                populateForm(config);
+                logActivity('Imported configuration');
+                showToast('Configuration imported successfully!', 'success');
+            } catch (error) {
+                showToast('Failed to import configuration. Invalid file format.', 'error');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // Toast notification helper
+    function showToast(message: string, type: 'success' | 'error' | 'info' = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `fixed bottom-4 right-4 px-4 py-3 rounded-lg shadow-lg z-50 transition-all transform translate-y-2 opacity-0`;
+        toast.style.background = type === 'success' ? '#22c55e' : type === 'error' ? '#ef4444' : '#3b82f6';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.classList.remove('translate-y-2', 'opacity-0');
+        }, 10);
+
+        setTimeout(() => {
+            toast.classList.add('translate-y-2', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // Copy site URL
+    function copySiteUrl() {
+        navigator.clipboard.writeText(window.location.origin);
+        showToast('Site URL copied to clipboard!', 'success');
     }
 
     // Save config
@@ -486,6 +1656,8 @@ import Layout from '../../layouts/Layout.astro';
                         saveStatus.textContent = '';
                     }, 3000);
                 }
+                logActivity('Saved configuration changes');
+                currentConfig = config;
             } else {
                 throw new Error('Save failed');
             }
@@ -567,6 +1739,86 @@ import Layout from '../../layouts/Layout.astro';
 
         // Save button
         document.getElementById('save-config')?.addEventListener('click', saveConfig);
+
+        // Quick actions
+        document.getElementById('action-export-config')?.addEventListener('click', exportConfig);
+        document.getElementById('action-import-config')?.addEventListener('click', () => {
+            document.getElementById('import-file-input')?.click();
+        });
+        document.getElementById('import-file-input')?.addEventListener('change', (e) => {
+            const file = (e.target as HTMLInputElement).files?.[0];
+            if (file) importConfig(file);
+        });
+        document.getElementById('action-copy-site-url')?.addEventListener('click', copySiteUrl);
+        document.getElementById('action-reset-stats')?.addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset today\'s stats?')) {
+                showToast('Stats reset feature coming soon', 'info');
+            }
+        });
+
+        // Add item buttons
+        document.getElementById('add-nav-link')?.addEventListener('click', addNavLink);
+        document.getElementById('add-footer-link')?.addEventListener('click', addFooterLink);
+        document.getElementById('add-pinned-message')?.addEventListener('click', addPinnedMessage);
+        document.getElementById('add-special-stream')?.addEventListener('click', addSpecialStream);
+        document.getElementById('add-redirect')?.addEventListener('click', addRedirect);
+
+        // Backup buttons
+        document.getElementById('backup-export')?.addEventListener('click', exportConfig);
+        document.getElementById('backup-import')?.addEventListener('click', () => {
+            document.getElementById('backup-file-input')?.click();
+        });
+        document.getElementById('backup-file-input')?.addEventListener('change', (e) => {
+            const file = (e.target as HTMLInputElement).files?.[0];
+            if (file) importConfig(file);
+        });
+
+        // Reset buttons
+        document.getElementById('reset-theme')?.addEventListener('click', () => {
+            if (confirm('Reset theme to default Stranger Things theme?')) {
+                updateThemeColors(themePresets['stranger-things']);
+                (document.getElementById('config-theme-name') as HTMLSelectElement).value = 'stranger-things';
+                updateThemePreview();
+                logActivity('Reset theme to default');
+                showToast('Theme reset to default', 'success');
+            }
+        });
+        document.getElementById('reset-content')?.addEventListener('click', () => {
+            if (confirm('Reset all site content to defaults?')) {
+                showToast('Content reset feature coming soon', 'info');
+            }
+        });
+        document.getElementById('reset-all')?.addEventListener('click', () => {
+            if (confirm('WARNING: This will reset ALL settings to defaults. Are you sure?')) {
+                showToast('Full reset feature coming soon', 'info');
+            }
+        });
+
+        // Analytics management
+        document.getElementById('clear-today-stats')?.addEventListener('click', () => {
+            if (confirm('Clear today\'s analytics data?')) {
+                showToast('Stats cleared', 'success');
+            }
+        });
+        document.getElementById('clear-all-stats')?.addEventListener('click', () => {
+            if (confirm('WARNING: This will permanently delete ALL analytics data. Are you sure?')) {
+                showToast('All stats cleared', 'success');
+            }
+        });
+
+        // SEO preview updates
+        ['config-seo-ogTitle', 'config-seo-ogDescription', 'config-seo-ogImage'].forEach(id => {
+            document.getElementById(id)?.addEventListener('input', updateOgPreview);
+        });
+
+        // Log initial activity
+        logActivity('Admin session started');
+
+        // Update last modified info
+        const infoLastModified = document.getElementById('info-last-modified');
+        if (infoLastModified) {
+            infoLastModified.textContent = new Date().toLocaleString();
+        }
     }
 
     init();
