@@ -8,8 +8,8 @@ import CaliforniaRoleplay from '../components/CaliforniaRoleplay.astro';
 ---
 
 <Layout title="TazElite Plays | The Upside Down">
-    <FallingMonsters />
-    <StrangerThingsMusic />
+    <div id="falling-monsters"><FallingMonsters /></div>
+    <div id="music-player"><StrangerThingsMusic /></div>
 
     <div class="flex flex-col items-center text-center">
         <div class="mb-8 float-animation">
@@ -21,11 +21,11 @@ import CaliforniaRoleplay from '../components/CaliforniaRoleplay.astro';
             />
         </div>
 
-        <h1 class="stranger-things-title mb-4">TazElite Plays</h1>
-        <p class="text-xl text-gray-300 mb-2 max-w-xl">
+        <h1 id="site-title" class="stranger-things-title mb-4">TazElite Plays</h1>
+        <p id="site-subtitle" class="text-xl text-gray-300 mb-2 max-w-xl">
             Gaming Content Creator & Community Builder
         </p>
-        <p class="text-sm text-red-400 mb-8 tracking-widest uppercase">
+        <p id="site-tagline" class="text-sm text-red-400 mb-8 tracking-widest uppercase">
             Welcome to The Upside Down
         </p>
 
@@ -38,6 +38,7 @@ import CaliforniaRoleplay from '../components/CaliforniaRoleplay.astro';
                 <TwitchStatus username="tazeliteplays" />
 
                 <a
+                    id="discord-link"
                     href="https://discord.gg/b36UJMhmT8"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -53,6 +54,7 @@ import CaliforniaRoleplay from '../components/CaliforniaRoleplay.astro';
                 </a>
 
                 <a
+                    id="youtube-link"
                     href="https://www.youtube.com/@tazelite-plays"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -78,22 +80,22 @@ import CaliforniaRoleplay from '../components/CaliforniaRoleplay.astro';
 
         <div class="divider"></div>
 
-        <section class="w-full max-w-2xl mb-12">
-            <h2 class="stranger-things-title text-2xl sm:text-3xl mb-6">About Me</h2>
+        <section id="about-section" class="w-full max-w-2xl mb-12">
+            <h2 id="about-title" class="stranger-things-title text-2xl sm:text-3xl mb-6">About Me</h2>
             <div class="card text-left">
-                <p class="text-gray-300 leading-relaxed">
+                <p id="about-text" class="text-gray-300 leading-relaxed">
                     Welcome to my corner of the internet! I'm TazElite, a passionate gamer and content creator
                     who loves bringing people together through gaming. Whether I'm streaming the latest titles
                     or building an awesome community on Discord, my goal is to create a fun and welcoming space
                     for everyone.
                 </p>
-                <p class="text-gray-300 leading-relaxed mt-4">
+                <p id="about-text-2" class="text-gray-300 leading-relaxed mt-4">
                     Come hang out, watch some streams, and join our growing community. Let's game together!
                 </p>
             </div>
         </section>
 
-        <section class="w-full max-w-2xl mb-12">
+        <section id="what-i-do-section" class="w-full max-w-2xl mb-12">
             <h2 class="stranger-things-title text-2xl sm:text-3xl mb-6">What I Do</h2>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="card text-center">
