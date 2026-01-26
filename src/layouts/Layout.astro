@@ -98,60 +98,113 @@ const { title, description = "Gaming Content Creator & Community Builder - Stran
                 }
             }
 
-            // Load and apply dynamic theme
+            // Load and apply dynamic theme and content
             async function loadTheme() {
                 try {
                     const response = await fetch('/api/admin/config');
                     if (!response.ok) return;
 
                     const config = await response.json();
-                    if (!config?.theme) return;
 
-                    const { primaryColor, accentColor, backgroundStart, backgroundEnd } = config.theme;
+                    // Apply theme if available
+                    if (config?.theme) {
+                        const { primaryColor, accentColor, backgroundStart, backgroundEnd } = config.theme;
 
-                    // Apply CSS custom properties
-                    const root = document.documentElement;
-                    if (primaryColor) {
-                        root.style.setProperty('--dynamic-primary', primaryColor);
-                        root.style.setProperty('--color-primary', primaryColor);
-                    }
-                    if (accentColor) {
-                        root.style.setProperty('--dynamic-accent', accentColor);
-                        root.style.setProperty('--color-accent', accentColor);
-                    }
-                    if (backgroundStart && backgroundEnd) {
-                        root.style.setProperty('--dynamic-bg-start', backgroundStart);
-                        root.style.setProperty('--dynamic-bg-end', backgroundEnd);
-                    }
-
-                    // Apply background gradient
-                    const gradientBg = document.querySelector('.gradient-bg') as HTMLElement;
-                    if (gradientBg && backgroundStart && backgroundEnd) {
-                        gradientBg.style.background = `linear-gradient(180deg, ${backgroundStart} 0%, ${backgroundEnd} 30%, ${backgroundStart} 70%, #000000 100%)`;
-                    }
-
-                    // Apply title colors
-                    document.querySelectorAll('.stranger-things-title').forEach((el) => {
-                        const element = el as HTMLElement;
+                        // Apply CSS custom properties
+                        const root = document.documentElement;
                         if (primaryColor) {
-                            element.style.color = primaryColor;
-                            element.style.textShadow = `0 0 10px ${primaryColor}E6, 0 0 20px ${primaryColor}B3, 0 0 30px ${primaryColor}80, 0 0 40px ${primaryColor}4D, 2px 2px 4px rgba(0, 0, 0, 0.8)`;
+                            root.style.setProperty('--dynamic-primary', primaryColor);
+                            root.style.setProperty('--color-primary', primaryColor);
                         }
-                    });
+                        if (accentColor) {
+                            root.style.setProperty('--dynamic-accent', accentColor);
+                            root.style.setProperty('--color-accent', accentColor);
+                        }
+                        if (backgroundStart && backgroundEnd) {
+                            root.style.setProperty('--dynamic-bg-start', backgroundStart);
+                            root.style.setProperty('--dynamic-bg-end', backgroundEnd);
+                        }
 
-                    // Apply particle colors
-                    const particles = document.querySelector('.upside-down-particles') as HTMLElement;
-                    if (particles && primaryColor) {
-                        particles.style.backgroundImage = `
-                            radial-gradient(2px 2px at 20px 30px, ${primaryColor}4D, transparent),
-                            radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.1), transparent),
-                            radial-gradient(1px 1px at 90px 40px, ${primaryColor}33, transparent),
-                            radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.1), transparent)
-                        `;
+                        // Apply background gradient
+                        const gradientBg = document.querySelector('.gradient-bg') as HTMLElement;
+                        if (gradientBg && backgroundStart && backgroundEnd) {
+                            gradientBg.style.background = `linear-gradient(180deg, ${backgroundStart} 0%, ${backgroundEnd} 30%, ${backgroundStart} 70%, #000000 100%)`;
+                        }
+
+                        // Apply title colors
+                        document.querySelectorAll('.stranger-things-title').forEach((el) => {
+                            const element = el as HTMLElement;
+                            if (primaryColor) {
+                                element.style.color = primaryColor;
+                                element.style.textShadow = `0 0 10px ${primaryColor}E6, 0 0 20px ${primaryColor}B3, 0 0 30px ${primaryColor}80, 0 0 40px ${primaryColor}4D, 2px 2px 4px rgba(0, 0, 0, 0.8)`;
+                            }
+                        });
+
+                        // Apply particle colors
+                        const particles = document.querySelector('.upside-down-particles') as HTMLElement;
+                        if (particles && primaryColor) {
+                            particles.style.backgroundImage = `
+                                radial-gradient(2px 2px at 20px 30px, ${primaryColor}4D, transparent),
+                                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.1), transparent),
+                                radial-gradient(1px 1px at 90px 40px, ${primaryColor}33, transparent),
+                                radial-gradient(2px 2px at 130px 80px, rgba(255, 255, 255, 0.1), transparent)
+                            `;
+                        }
+                    }
+
+                    // Apply site content if available
+                    if (config?.site) {
+                        const { title, subtitle, tagline, aboutTitle, aboutText, aboutText2 } = config.site;
+
+                        const siteTitle = document.getElementById('site-title');
+                        if (siteTitle && title) siteTitle.textContent = title;
+
+                        const siteSubtitle = document.getElementById('site-subtitle');
+                        if (siteSubtitle && subtitle) siteSubtitle.textContent = subtitle;
+
+                        const siteTagline = document.getElementById('site-tagline');
+                        if (siteTagline && tagline) siteTagline.textContent = tagline;
+
+                        const aboutTitleEl = document.getElementById('about-title');
+                        if (aboutTitleEl && aboutTitle) aboutTitleEl.textContent = aboutTitle;
+
+                        const aboutTextEl = document.getElementById('about-text');
+                        if (aboutTextEl && aboutText) aboutTextEl.textContent = aboutText;
+
+                        const aboutText2El = document.getElementById('about-text-2');
+                        if (aboutText2El && aboutText2) aboutText2El.textContent = aboutText2;
+                    }
+
+                    // Apply social links if available
+                    if (config?.social) {
+                        const { twitch, discord, youtube } = config.social;
+
+                        const discordLink = document.getElementById('discord-link') as HTMLAnchorElement;
+                        if (discordLink && discord) discordLink.href = discord;
+
+                        const youtubeLink = document.getElementById('youtube-link') as HTMLAnchorElement;
+                        if (youtubeLink && youtube) youtubeLink.href = youtube;
+                    }
+
+                    // Apply feature toggles if available
+                    if (config?.features) {
+                        const { showAbout, showWhatIDo, fallingMonsters, musicPlayer } = config.features;
+
+                        const aboutSection = document.getElementById('about-section');
+                        if (aboutSection) aboutSection.style.display = showAbout === false ? 'none' : '';
+
+                        const whatIdoSection = document.getElementById('what-i-do-section');
+                        if (whatIdoSection) whatIdoSection.style.display = showWhatIDo === false ? 'none' : '';
+
+                        const monstersContainer = document.getElementById('falling-monsters');
+                        if (monstersContainer) monstersContainer.style.display = fallingMonsters === false ? 'none' : '';
+
+                        const musicPlayerEl = document.getElementById('music-player');
+                        if (musicPlayerEl) musicPlayerEl.style.display = musicPlayer === false ? 'none' : '';
                     }
 
                 } catch (e) {
-                    // Use default theme
+                    // Use default theme and content
                 }
             }
 
