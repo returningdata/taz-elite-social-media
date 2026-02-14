@@ -1,0 +1,934 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+---
+
+<Layout title="COD Tracker | TazElite Plays">
+    <SiteHeader />
+
+    <div class="pt-20 flex flex-col items-center">
+        <!-- Hero Section -->
+        <div class="w-full max-w-6xl mx-auto text-center mb-10 px-4">
+            <h1 class="stranger-things-title text-3xl sm:text-5xl mb-3">COD Tracker</h1>
+            <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">
+                Weapon loadouts, meta builds, and player stat tracking for Call of Duty
+            </p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="w-full max-w-6xl mx-auto px-4 mb-8">
+            <div class="tracker-tabs">
+                <button class="tracker-tab active" data-tab="loadouts">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                    Weapon Loadouts
+                </button>
+                <button class="tracker-tab" data-tab="stats">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    Player Stats
+                </button>
+            </div>
+        </div>
+
+        <!-- Loadouts Tab -->
+        <div id="tab-loadouts" class="w-full max-w-6xl mx-auto px-4 tab-panel">
+            <!-- Search & Filter -->
+            <div class="search-container mb-8">
+                <div class="search-bar">
+                    <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <input type="text" id="weapon-search" placeholder="Search weapons by name..." class="search-input" autocomplete="off" />
+                    <div id="search-results-dropdown" class="search-dropdown hidden"></div>
+                </div>
+                <div class="filter-row">
+                    <button class="filter-btn active" data-category="all">All</button>
+                    <button class="filter-btn" data-category="Assault Rifle">ARs</button>
+                    <button class="filter-btn" data-category="SMG">SMGs</button>
+                    <button class="filter-btn" data-category="LMG">LMGs</button>
+                    <button class="filter-btn" data-category="Sniper">Snipers</button>
+                    <button class="filter-btn" data-category="Shotgun">Shotguns</button>
+                    <button class="filter-btn" data-category="Marksman Rifle">Marksman</button>
+                    <button class="filter-btn" data-category="Pistol">Pistols</button>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadouts-loading" class="flex flex-col items-center justify-center py-16">
+                <div class="loading-spinner"></div>
+                <p class="text-gray-400 mt-4">Loading loadouts...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div id="loadouts-empty" class="hidden text-center py-16">
+                <svg class="w-16 h-16 mx-auto text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                </svg>
+                <h3 class="text-xl font-semibold text-gray-400 mb-2">No Loadouts Yet</h3>
+                <p class="text-gray-500">Check back soon for weapon builds and loadouts!</p>
+            </div>
+
+            <!-- No Results State -->
+            <div id="loadouts-no-results" class="hidden text-center py-16">
+                <svg class="w-16 h-16 mx-auto text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <h3 class="text-xl font-semibold text-gray-400 mb-2">No Results Found</h3>
+                <p class="text-gray-500">Try a different search term or filter.</p>
+            </div>
+
+            <!-- Weapons Grid -->
+            <div id="loadouts-grid" class="hidden weapons-grid"></div>
+        </div>
+
+        <!-- Stats Tab -->
+        <div id="tab-stats" class="w-full max-w-6xl mx-auto px-4 tab-panel hidden">
+            <div class="stats-lookup-container">
+                <div class="card p-8">
+                    <h2 class="stranger-things-title text-xl sm:text-2xl mb-6 text-center">Player Lookup</h2>
+                    <div class="stats-search-row">
+                        <select id="stats-platform" class="stats-platform-select">
+                            <option value="battlenet">Battle.net</option>
+                            <option value="psn">PlayStation</option>
+                            <option value="xbl">Xbox</option>
+                            <option value="steam">Steam</option>
+                            <option value="uno">Activision ID</option>
+                        </select>
+                        <div class="stats-input-wrapper">
+                            <input type="text" id="stats-username" placeholder="Enter gamertag or username..." class="stats-input" />
+                        </div>
+                        <button id="stats-lookup-btn" class="btn">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                            Look Up
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3 text-center">Enter a player's username to view their stats, rank, K/D ratio, and more.</p>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="stats-error" class="hidden mt-4 max-w-2xl mx-auto card p-4 text-center text-sm text-red-400" style="border-color: rgba(239,68,68,0.3); background: rgba(127,29,29,0.1);"></div>
+
+            <!-- Stats Display -->
+            <div id="stats-result" class="hidden mt-8">
+                <div class="stats-profile-card card mb-6">
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                        <div class="stats-avatar">
+                            <svg class="w-16 h-16 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        </div>
+                        <div class="flex-1 text-center sm:text-left">
+                            <h3 id="stats-player-name" class="text-2xl font-bold text-white mb-1"></h3>
+                            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                                <span id="stats-player-platform" class="stats-badge"></span>
+                                <span id="stats-player-level" class="stats-badge stats-badge-accent"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                    <div class="card text-center stat-glow">
+                        <div class="text-2xl sm:text-3xl font-bold text-red-400" id="stats-kd">--</div>
+                        <div class="text-xs sm:text-sm text-gray-400">K/D Ratio</div>
+                    </div>
+                    <div class="card text-center stat-glow">
+                        <div class="text-2xl sm:text-3xl font-bold text-red-400" id="stats-wins">--</div>
+                        <div class="text-xs sm:text-sm text-gray-400">Wins</div>
+                    </div>
+                    <div class="card text-center stat-glow">
+                        <div class="text-2xl sm:text-3xl font-bold text-red-400" id="stats-kills">--</div>
+                        <div class="text-xs sm:text-sm text-gray-400">Kills</div>
+                    </div>
+                    <div class="card text-center stat-glow">
+                        <div class="text-2xl sm:text-3xl font-bold text-red-400" id="stats-wl">--</div>
+                        <div class="text-xs sm:text-sm text-gray-400">W/L Ratio</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="card text-center">
+                        <div class="text-xl font-bold text-blue-400" id="stats-matches">--</div>
+                        <div class="text-xs text-gray-400">Matches</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-xl font-bold text-purple-400" id="stats-deaths">--</div>
+                        <div class="text-xs text-gray-400">Deaths</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-xl font-bold text-yellow-400" id="stats-time">--</div>
+                        <div class="text-xs text-gray-400">Time Played</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-xl font-bold text-green-400" id="stats-accuracy">--</div>
+                        <div class="text-xs text-gray-400">Accuracy</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-xl font-bold text-pink-400" id="stats-headshots">--</div>
+                        <div class="text-xs text-gray-400">Headshots</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-xl font-bold text-orange-400" id="stats-streak">--</div>
+                        <div class="text-xs text-gray-400">Best Streak</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="text-lg font-semibold text-red-400 mb-4">Recent Matches</h3>
+                    <div id="stats-recent-matches" class="space-y-3"></div>
+                </div>
+            </div>
+
+            <!-- Stats empty/info state -->
+            <div id="stats-info" class="mt-8 text-center">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                    <div class="card text-center">
+                        <div class="text-3xl mb-3">📊</div>
+                        <h3 class="text-sm font-semibold text-red-400 mb-1">K/D Tracker</h3>
+                        <p class="text-xs text-gray-400">Track your kill/death ratio and improvement over time</p>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-3xl mb-3">🏆</div>
+                        <h3 class="text-sm font-semibold text-red-400 mb-1">Rank & Level</h3>
+                        <p class="text-xs text-gray-400">View current rank, prestige level, and XP progress</p>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-3xl mb-3">🎯</div>
+                        <h3 class="text-sm font-semibold text-red-400 mb-1">Accuracy Stats</h3>
+                        <p class="text-xs text-gray-400">See your accuracy, headshot percentage, and more</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="py-8 text-center text-gray-500 text-sm w-full mt-8">
+            <p>&copy; {new Date().getFullYear()} TazElite Plays. All rights reserved.</p>
+            <p class="text-xs mt-2 text-red-900">From The Upside Down</p>
+        </footer>
+    </div>
+</Layout>
+
+<style>
+    .tracker-tabs {
+        display: flex;
+        gap: 0.5rem;
+        background: rgba(26, 5, 5, 0.5);
+        padding: 0.375rem;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    .tracker-tab {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #9ca3af;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .tracker-tab:hover {
+        color: white;
+        background: rgba(229, 9, 20, 0.1);
+    }
+
+    .tracker-tab.active {
+        color: white;
+        background: rgba(229, 9, 20, 0.25);
+        box-shadow: 0 0 15px rgba(229, 9, 20, 0.2);
+    }
+
+    .search-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .search-bar {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1.25rem;
+        height: 1.25rem;
+        color: #6b7280;
+        pointer-events: none;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 0.875rem 1rem 0.875rem 3rem;
+        border-radius: 0.75rem;
+        background: rgba(26, 5, 5, 0.8);
+        border: 1px solid rgba(229, 9, 20, 0.3);
+        color: white;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: rgba(229, 9, 20, 0.6);
+        box-shadow: 0 0 20px rgba(229, 9, 20, 0.15);
+    }
+
+    .search-input::placeholder {
+        color: #6b7280;
+    }
+
+    .search-dropdown {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        left: 0;
+        right: 0;
+        background: rgba(20, 5, 5, 0.98);
+        border: 1px solid rgba(229, 9, 20, 0.3);
+        border-radius: 0.75rem;
+        max-height: 320px;
+        overflow-y: auto;
+        z-index: 30;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .search-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        cursor: pointer;
+        transition: background 0.15s;
+        text-decoration: none !important;
+        color: white;
+    }
+
+    .search-dropdown-item:hover {
+        background: rgba(229, 9, 20, 0.15);
+    }
+
+    .search-dropdown-item img {
+        width: 48px;
+        height: 32px;
+        object-fit: contain;
+        border-radius: 0.25rem;
+    }
+
+    .search-dropdown-item .weapon-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .search-dropdown-item .weapon-info span:first-child {
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .search-dropdown-item .weapon-info span:last-child {
+        font-size: 0.75rem;
+        color: #9ca3af;
+    }
+
+    .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.375rem;
+        justify-content: center;
+    }
+
+    .filter-btn {
+        padding: 0.375rem 0.875rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: #9ca3af;
+        background: rgba(229, 9, 20, 0.08);
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+        color: white;
+        background: rgba(229, 9, 20, 0.15);
+    }
+
+    .filter-btn.active {
+        color: white;
+        background: rgba(229, 9, 20, 0.25);
+        border-color: rgba(229, 9, 20, 0.5);
+    }
+
+    .weapons-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .weapon-card {
+        display: flex;
+        flex-direction: column;
+        border-radius: 1rem;
+        background: rgba(26, 5, 5, 0.8);
+        border: 1px solid rgba(229, 9, 20, 0.25);
+        overflow: hidden;
+        transition: all 0.3s;
+        cursor: pointer;
+        text-decoration: none !important;
+    }
+
+    .weapon-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(229, 9, 20, 0.6);
+        box-shadow: 0 15px 40px rgba(229, 9, 20, 0.2);
+    }
+
+    .weapon-card-image {
+        width: 100%;
+        height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(10, 10, 10, 0.9), rgba(26, 5, 5, 0.6));
+        border-bottom: 1px solid rgba(229, 9, 20, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .weapon-card-image img {
+        max-width: 85%;
+        max-height: 85%;
+        object-fit: contain;
+        filter: drop-shadow(0 0 8px rgba(229, 9, 20, 0.3));
+    }
+
+    .weapon-card-image .no-image {
+        color: #4b5563;
+        font-size: 0.75rem;
+    }
+
+    .weapon-card-badge {
+        position: absolute;
+        top: 0.75rem;
+        left: 0.75rem;
+        padding: 0.25rem 0.625rem;
+        border-radius: 2rem;
+        font-size: 0.625rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background: rgba(229, 9, 20, 0.25);
+        border: 1px solid rgba(229, 9, 20, 0.4);
+        color: #f87171;
+    }
+
+    .weapon-card-featured {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        color: #fbbf24;
+        filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.5));
+    }
+
+    .weapon-card-body {
+        padding: 1rem 1.25rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .weapon-card-name {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .weapon-card-game {
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-bottom: 0.75rem;
+    }
+
+    .weapon-card-attachments {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.375rem;
+        margin-top: auto;
+    }
+
+    .attachment-chip {
+        padding: 0.2rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.625rem;
+        background: rgba(229, 9, 20, 0.1);
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        color: #d1d5db;
+    }
+
+    .attachment-chip-more {
+        color: #6b7280;
+        font-size: 0.625rem;
+        padding: 0.2rem 0.25rem;
+    }
+
+    /* Stats Section */
+    .stats-search-row {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .stats-platform-select {
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(229, 9, 20, 0.3);
+        color: white;
+        font-size: 0.875rem;
+        cursor: pointer;
+    }
+
+    .stats-platform-select:focus {
+        outline: none;
+        border-color: rgba(229, 9, 20, 0.6);
+    }
+
+    .stats-input-wrapper {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .stats-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(229, 9, 20, 0.3);
+        color: white;
+        font-size: 0.875rem;
+    }
+
+    .stats-input:focus {
+        outline: none;
+        border-color: rgba(229, 9, 20, 0.6);
+        box-shadow: 0 0 15px rgba(229, 9, 20, 0.15);
+    }
+
+    .stats-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: rgba(229, 9, 20, 0.1);
+        border: 2px solid rgba(229, 9, 20, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .stats-badge {
+        display: inline-flex;
+        padding: 0.25rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background: rgba(229, 9, 20, 0.15);
+        border: 1px solid rgba(229, 9, 20, 0.3);
+        color: #d1d5db;
+    }
+
+    .stats-badge-accent {
+        background: rgba(251, 191, 36, 0.15);
+        border-color: rgba(251, 191, 36, 0.3);
+        color: #fbbf24;
+    }
+
+    .stat-glow:hover {
+        border-color: rgba(229, 9, 20, 0.5);
+        box-shadow: 0 0 25px rgba(229, 9, 20, 0.15);
+    }
+
+    .match-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(229, 9, 20, 0.1);
+    }
+
+    .match-item .match-result {
+        font-weight: 700;
+        font-size: 0.75rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 0.25rem;
+    }
+
+    .match-result.win {
+        background: rgba(34, 197, 94, 0.15);
+        color: #22c55e;
+    }
+
+    .match-result.loss {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+    }
+
+    .loading-spinner-small {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.6s linear infinite;
+        vertical-align: middle;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 640px) {
+        .weapons-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-search-row {
+            flex-direction: column;
+        }
+
+        .stats-platform-select {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    interface WeaponAttachment {
+        slot: string;
+        name: string;
+        tuning?: string;
+    }
+
+    interface WeaponLoadout {
+        id: string;
+        weaponName: string;
+        weaponSlug: string;
+        weaponCategory: string;
+        weaponImage: string;
+        game: string;
+        description: string;
+        attachments: WeaponAttachment[];
+        perks: string[];
+        equipment: { tactical: string; lethal: string };
+        tags: string[];
+        featured: boolean;
+        createdAt: string;
+        updatedAt: string;
+    }
+
+    let allLoadouts: WeaponLoadout[] = [];
+    let currentFilter = "all";
+
+    // Tab switching
+    document.querySelectorAll('.tracker-tab').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tab = btn.getAttribute('data-tab');
+            document.querySelectorAll('.tracker-tab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+            btn.classList.add('active');
+            document.getElementById(`tab-${tab}`)?.classList.remove('hidden');
+        });
+    });
+
+    // Load loadouts
+    async function loadLoadouts() {
+        try {
+            const resp = await fetch('/api/loadouts');
+            if (!resp.ok) throw new Error('Failed');
+            allLoadouts = await resp.json();
+        } catch {
+            allLoadouts = [];
+        }
+
+        document.getElementById('loadouts-loading')?.classList.add('hidden');
+
+        if (allLoadouts.length === 0) {
+            document.getElementById('loadouts-empty')?.classList.remove('hidden');
+        } else {
+            document.getElementById('loadouts-grid')?.classList.remove('hidden');
+            renderLoadouts(allLoadouts);
+        }
+    }
+
+    function renderLoadouts(loadouts: WeaponLoadout[]) {
+        const grid = document.getElementById('loadouts-grid');
+        if (!grid) return;
+
+        const noResults = document.getElementById('loadouts-no-results');
+        const empty = document.getElementById('loadouts-empty');
+
+        if (loadouts.length === 0) {
+            grid.classList.add('hidden');
+            noResults?.classList.remove('hidden');
+            empty?.classList.add('hidden');
+            return;
+        }
+
+        grid.classList.remove('hidden');
+        noResults?.classList.add('hidden');
+        empty?.classList.add('hidden');
+
+        grid.innerHTML = loadouts.map(l => `
+            <a href="/cod-tracker/${l.id}" class="weapon-card">
+                <div class="weapon-card-image">
+                    ${l.weaponImage
+                        ? `<img src="${l.weaponImage}" alt="${l.weaponName}" />`
+                        : `<span class="no-image">No Image</span>`
+                    }
+                    <span class="weapon-card-badge">${l.weaponCategory}</span>
+                    ${l.featured ? `<svg class="weapon-card-featured w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>` : ``}
+                </div>
+                <div class="weapon-card-body">
+                    <div class="weapon-card-name">${l.weaponName}</div>
+                    <div class="weapon-card-game">${l.game}</div>
+                    <div class="weapon-card-attachments">
+                        ${l.attachments.slice(0, 4).map(a => `<span class="attachment-chip">${a.name}</span>`).join('')}
+                        ${l.attachments.length > 4 ? `<span class="attachment-chip-more">+${l.attachments.length - 4} more</span>` : ''}
+                    </div>
+                </div>
+            </a>
+        `).join('');
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.getAttribute('data-category') || 'all';
+            applyFilters();
+        });
+    });
+
+    // Search
+    const searchInput = document.getElementById('weapon-search') as HTMLInputElement;
+    const dropdown = document.getElementById('search-results-dropdown');
+
+    searchInput?.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase().trim();
+        applyFilters();
+
+        if (query.length > 0 && dropdown) {
+            const matches = allLoadouts.filter(l =>
+                l.weaponName.toLowerCase().includes(query) ||
+                l.weaponCategory.toLowerCase().includes(query) ||
+                l.tags.some(t => t.toLowerCase().includes(query))
+            ).slice(0, 6);
+
+            if (matches.length > 0) {
+                dropdown.innerHTML = matches.map(l => `
+                    <a href="/cod-tracker/${l.id}" class="search-dropdown-item">
+                        ${l.weaponImage ? `<img src="${l.weaponImage}" alt="${l.weaponName}" />` : `<div style="width:48px;height:32px;background:rgba(229,9,20,0.1);border-radius:0.25rem;display:flex;align-items:center;justify-content:center;"><svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4"/></svg></div>`}
+                        <div class="weapon-info">
+                            <span>${l.weaponName}</span>
+                            <span>${l.weaponCategory} - ${l.game}</span>
+                        </div>
+                    </a>
+                `).join('');
+                dropdown.classList.remove('hidden');
+            } else {
+                dropdown.classList.add('hidden');
+            }
+        } else {
+            dropdown?.classList.add('hidden');
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!(e.target as Element)?.closest('.search-bar')) {
+            dropdown?.classList.add('hidden');
+        }
+    });
+
+    function applyFilters() {
+        const query = searchInput?.value.toLowerCase().trim() || '';
+        let filtered = allLoadouts;
+
+        if (currentFilter !== 'all') {
+            filtered = filtered.filter(l => l.weaponCategory === currentFilter);
+        }
+
+        if (query) {
+            filtered = filtered.filter(l =>
+                l.weaponName.toLowerCase().includes(query) ||
+                l.weaponCategory.toLowerCase().includes(query) ||
+                l.tags.some(t => t.toLowerCase().includes(query))
+            );
+        }
+
+        renderLoadouts(filtered);
+    }
+
+    // Player stats lookup
+    const statsBtn = document.getElementById('stats-lookup-btn');
+    const statsError = document.getElementById('stats-error');
+
+    function formatNumber(num: number | undefined): string {
+        if (num === undefined || num === null) return '--';
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+        if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+        return num.toLocaleString();
+    }
+
+    function formatTimePlayed(seconds: number | undefined): string {
+        if (!seconds || seconds <= 0) return '--';
+        const hours = Math.floor(seconds / 3600);
+        const days = Math.floor(hours / 24);
+        if (days > 0) return `${days}d ${hours % 24}h`;
+        const mins = Math.floor((seconds % 3600) / 60);
+        if (hours > 0) return `${hours}h ${mins}m`;
+        return `${mins}m`;
+    }
+
+    function showStatsError(message: string) {
+        if (statsError) {
+            statsError.textContent = message;
+            statsError.classList.remove('hidden');
+        }
+    }
+
+    function hideStatsError() {
+        if (statsError) {
+            statsError.classList.add('hidden');
+        }
+    }
+
+    statsBtn?.addEventListener('click', async () => {
+        const username = (document.getElementById('stats-username') as HTMLInputElement)?.value.trim();
+        const platform = (document.getElementById('stats-platform') as HTMLSelectElement)?.value;
+
+        if (!username) return;
+
+        hideStatsError();
+
+        // Show loading state on button
+        const originalBtnHTML = statsBtn.innerHTML;
+        statsBtn.innerHTML = '<div class="loading-spinner-small"></div> Looking up...';
+        (statsBtn as HTMLButtonElement).disabled = true;
+
+        try {
+            const resp = await fetch(`/api/cod-stats?username=${encodeURIComponent(username)}&platform=${encodeURIComponent(platform)}`);
+            const data = await resp.json();
+
+            if (!resp.ok || data.error) {
+                showStatsError(data.error || 'Failed to look up player stats. Please try again.');
+                document.getElementById('stats-result')?.classList.add('hidden');
+                document.getElementById('stats-info')?.classList.remove('hidden');
+                statsBtn.innerHTML = originalBtnHTML;
+                (statsBtn as HTMLButtonElement).disabled = false;
+                return;
+            }
+
+            document.getElementById('stats-result')?.classList.remove('hidden');
+            document.getElementById('stats-info')?.classList.add('hidden');
+
+            const nameEl = document.getElementById('stats-player-name');
+            if (nameEl) nameEl.textContent = data.username || username;
+
+            const platformEl = document.getElementById('stats-player-platform');
+            if (platformEl) {
+                const platformNames: Record<string, string> = {
+                    battlenet: 'Battle.net',
+                    psn: 'PlayStation',
+                    xbl: 'Xbox',
+                    steam: 'Steam'
+                };
+                platformEl.textContent = platformNames[data.platform || platform] || platform;
+            }
+
+            const levelEl = document.getElementById('stats-player-level');
+            if (levelEl) {
+                if (data.prestige && data.prestige > 0) {
+                    levelEl.textContent = `Prestige ${data.prestige} - Level ${data.level || '?'}`;
+                } else if (data.level) {
+                    levelEl.textContent = `Level ${data.level}`;
+                } else {
+                    levelEl.textContent = 'Player Profile';
+                }
+            }
+
+            // Populate stats
+            const el = (id: string) => document.getElementById(id);
+            if (el('stats-kd')) el('stats-kd')!.textContent = data.kd !== undefined ? data.kd.toFixed(2) : '--';
+            if (el('stats-wins')) el('stats-wins')!.textContent = formatNumber(data.wins);
+            if (el('stats-kills')) el('stats-kills')!.textContent = formatNumber(data.kills);
+            if (el('stats-wl')) el('stats-wl')!.textContent = data.wl !== undefined ? data.wl.toFixed(2) : '--';
+            if (el('stats-matches')) el('stats-matches')!.textContent = formatNumber(data.matches);
+            if (el('stats-deaths')) el('stats-deaths')!.textContent = formatNumber(data.deaths);
+            if (el('stats-time')) el('stats-time')!.textContent = formatTimePlayed(data.timePlayed);
+            if (el('stats-accuracy')) el('stats-accuracy')!.textContent = data.accuracy !== undefined ? data.accuracy.toFixed(1) + '%' : '--';
+            if (el('stats-headshots')) el('stats-headshots')!.textContent = formatNumber(data.headshots);
+            if (el('stats-streak')) el('stats-streak')!.textContent = data.bestStreak !== undefined ? data.bestStreak.toString() : '--';
+
+            // Render recent matches
+            const recentMatches = document.getElementById('stats-recent-matches');
+            if (recentMatches) {
+                if (data.recentMatches && data.recentMatches.length > 0) {
+                    recentMatches.innerHTML = data.recentMatches.map((m: any) => `
+                        <div class="match-item">
+                            <div class="flex items-center gap-3">
+                                <span class="match-result ${m.result === 'win' ? 'win' : 'loss'}">${m.result === 'win' ? 'W' : 'L'}</span>
+                                <div>
+                                    <div class="text-sm text-white font-medium">${m.mode}</div>
+                                    <div class="text-xs text-gray-500">${m.map}</div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-white">${m.kills}/${m.deaths} <span class="text-gray-500 text-xs">(${m.kd} K/D)</span></div>
+                                <div class="text-xs text-gray-500">${new Date(m.timestamp).toLocaleDateString()}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    recentMatches.innerHTML = `
+                        <p class="text-sm text-gray-500 text-center py-4">
+                            No recent match data available for <strong class="text-white">${username}</strong>.
+                        </p>
+                    `;
+                }
+            }
+        } catch (err) {
+            showStatsError('Network error. Could not connect to the stats API. Please try again later.');
+            document.getElementById('stats-result')?.classList.add('hidden');
+            document.getElementById('stats-info')?.classList.remove('hidden');
+        }
+
+        statsBtn.innerHTML = originalBtnHTML;
+        (statsBtn as HTMLButtonElement).disabled = false;
+    });
+
+    // Allow Enter key to trigger lookup
+    document.getElementById('stats-username')?.addEventListener('keydown', (e) => {
+        if ((e as KeyboardEvent).key === 'Enter') {
+            statsBtn?.click();
+        }
+    });
+
+    // Initialize
+    loadLoadouts();
+</script>

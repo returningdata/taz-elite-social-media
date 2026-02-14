@@ -108,6 +108,7 @@ import Layout from '../../layouts/Layout.astro';
             <button class="tab-btn" data-tab="schedule">Stream Schedule</button>
             <button class="tab-btn" data-tab="seo">SEO & Meta</button>
             <button class="tab-btn" data-tab="navigation">Navigation</button>
+            <button class="tab-btn" data-tab="loadouts">COD Loadouts</button>
             <button class="tab-btn" data-tab="custom">Custom Code</button>
             <button class="tab-btn" data-tab="backup">Backup & Tools</button>
         </div>
@@ -574,6 +575,123 @@ import Layout from '../../layouts/Layout.astro';
             </div>
         </div>
 
+        <!-- COD Loadouts Tab -->
+        <div id="tab-loadouts" class="tab-content hidden">
+            <div class="card">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-red-400">Weapon Loadouts</h3>
+                    <button id="add-loadout-btn" class="quick-action-btn">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Add Loadout
+                    </button>
+                </div>
+                <p class="text-sm text-gray-400 mb-4">Manage weapon loadouts displayed on the COD Tracker page.</p>
+                <div id="loadouts-list" class="space-y-3">
+                    <div class="text-gray-500 text-center py-6 text-sm">Loading loadouts...</div>
+                </div>
+            </div>
+
+            <!-- Add/Edit Loadout Form -->
+            <div id="loadout-form-container" class="hidden mt-4">
+                <div class="card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 id="loadout-form-title" class="text-xl font-bold text-red-400">Add New Loadout</h3>
+                        <button id="cancel-loadout-btn" class="quick-action-btn text-gray-400">Cancel</button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <input type="hidden" id="loadout-edit-id" value="">
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Weapon Name *</label>
+                                <input type="text" id="loadout-weaponName" class="admin-input" placeholder="e.g. REV-46">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Category *</label>
+                                <select id="loadout-weaponCategory" class="admin-input">
+                                    <option value="Assault Rifle">Assault Rifle</option>
+                                    <option value="SMG">SMG</option>
+                                    <option value="LMG">LMG</option>
+                                    <option value="Sniper">Sniper</option>
+                                    <option value="Shotgun">Shotgun</option>
+                                    <option value="Marksman Rifle">Marksman Rifle</option>
+                                    <option value="Pistol">Pistol</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Game</label>
+                                <select id="loadout-game" class="admin-input">
+                                    <option value="Black Ops 7">Black Ops 7</option>
+                                    <option value="Warzone">Warzone</option>
+                                    <option value="Modern Warfare III">Modern Warfare III</option>
+                                    <option value="Modern Warfare II">Modern Warfare II</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Weapon Image URL</label>
+                                <input type="text" id="loadout-weaponImage" class="admin-input" placeholder="https://... or /images/weapons/...">
+                                <p class="text-xs text-gray-500 mt-1">Direct URL to weapon image (PNG recommended)</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Description</label>
+                            <textarea id="loadout-description" class="admin-input h-20" placeholder="Describe this loadout build..."></textarea>
+                        </div>
+
+                        <!-- Attachments Section -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-sm font-medium text-gray-300">Attachments</label>
+                                <button id="add-attachment-btn" class="quick-action-btn text-xs">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                    Add Slot
+                                </button>
+                            </div>
+                            <div id="attachments-form-list" class="space-y-2"></div>
+                        </div>
+
+                        <!-- Perks -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Perks (comma separated)</label>
+                            <input type="text" id="loadout-perks" class="admin-input" placeholder="e.g. Ghost, Ninja, Fast Hands">
+                        </div>
+
+                        <!-- Equipment -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Tactical Equipment</label>
+                                <input type="text" id="loadout-tactical" class="admin-input" placeholder="e.g. Stim Shot">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Lethal Equipment</label>
+                                <input type="text" id="loadout-lethal" class="admin-input" placeholder="e.g. Semtex">
+                            </div>
+                        </div>
+
+                        <!-- Tags -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Tags (comma separated)</label>
+                            <input type="text" id="loadout-tags" class="admin-input" placeholder="e.g. meta, ranked, warzone, sniper">
+                        </div>
+
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox" id="loadout-featured" class="admin-checkbox">
+                            <span class="text-gray-300">Featured Loadout (highlighted on tracker page)</span>
+                        </label>
+
+                        <button id="save-loadout-btn" class="btn btn-lg w-full">
+                            Save Loadout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Custom Code Tab -->
         <div id="tab-custom" class="tab-content hidden">
             <div class="card">
@@ -880,6 +998,76 @@ import Layout from '../../layouts/Layout.astro';
 
     .modal-overlay.active .modal-content {
         transform: scale(1);
+    }
+
+    .loadout-list-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 0.5rem;
+        border: 1px solid rgba(229, 9, 20, 0.15);
+        transition: all 0.2s;
+    }
+
+    .loadout-list-item:hover {
+        border-color: rgba(229, 9, 20, 0.3);
+    }
+
+    .loadout-list-thumb {
+        width: 80px;
+        height: 50px;
+        border-radius: 0.375rem;
+        background: rgba(229, 9, 20, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        overflow: hidden;
+    }
+
+    .loadout-list-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .loadout-list-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .loadout-list-name {
+        font-weight: 600;
+        color: white;
+        font-size: 0.875rem;
+    }
+
+    .loadout-list-meta {
+        font-size: 0.75rem;
+        color: #6b7280;
+    }
+
+    .loadout-list-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-shrink: 0;
+    }
+
+    .attachment-form-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 0.375rem;
+        border: 1px solid rgba(229, 9, 20, 0.1);
+    }
+
+    .attachment-form-row input,
+    .attachment-form-row select {
+        flex: 1;
     }
 </style>
 
@@ -1819,6 +2007,278 @@ import Layout from '../../layouts/Layout.astro';
         if (infoLastModified) {
             infoLastModified.textContent = new Date().toLocaleString();
         }
+
+        // Initialize COD Loadouts management
+        initLoadoutsManager();
+    }
+
+    // ========== COD LOADOUTS MANAGEMENT ==========
+    interface LoadoutAttachment {
+        slot: string;
+        name: string;
+        tuning?: string;
+    }
+
+    interface LoadoutData {
+        id: string;
+        weaponName: string;
+        weaponSlug: string;
+        weaponCategory: string;
+        weaponImage: string;
+        game: string;
+        description: string;
+        attachments: LoadoutAttachment[];
+        perks: string[];
+        equipment: { tactical: string; lethal: string };
+        tags: string[];
+        featured: boolean;
+        createdAt: string;
+        updatedAt: string;
+    }
+
+    let adminLoadouts: LoadoutData[] = [];
+
+    async function fetchAdminLoadouts() {
+        try {
+            const resp = await fetch('/api/loadouts');
+            if (resp.ok) {
+                adminLoadouts = await resp.json();
+            }
+        } catch {
+            adminLoadouts = [];
+        }
+        renderLoadoutsList();
+    }
+
+    function renderLoadoutsList() {
+        const container = document.getElementById('loadouts-list');
+        if (!container) return;
+
+        if (adminLoadouts.length === 0) {
+            container.innerHTML = '<div class="text-gray-500 text-center py-6 text-sm">No loadouts yet. Click "Add Loadout" to create one.</div>';
+            return;
+        }
+
+        container.innerHTML = adminLoadouts.map(l => `
+            <div class="loadout-list-item" data-id="${l.id}">
+                <div class="loadout-list-thumb">
+                    ${l.weaponImage ? `<img src="${l.weaponImage}" alt="${l.weaponName}">` : `<svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`}
+                </div>
+                <div class="loadout-list-info">
+                    <div class="loadout-list-name">${l.weaponName} ${l.featured ? '<span style="color: #fbbf24; font-size: 0.7rem;">FEATURED</span>' : ''}</div>
+                    <div class="loadout-list-meta">${l.weaponCategory} &middot; ${l.game} &middot; ${l.attachments.length} attachments</div>
+                </div>
+                <div class="loadout-list-actions">
+                    <button class="quick-action-btn text-xs" onclick="editLoadout('${l.id}')">Edit</button>
+                    <button class="delete-btn" onclick="deleteLoadout('${l.id}', '${l.weaponName.replace(/'/g, "\\'")}')">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function showLoadoutForm(loadout?: LoadoutData) {
+        const container = document.getElementById('loadout-form-container');
+        const title = document.getElementById('loadout-form-title');
+        container?.classList.remove('hidden');
+
+        if (loadout) {
+            if (title) title.textContent = 'Edit Loadout';
+            (document.getElementById('loadout-edit-id') as HTMLInputElement).value = loadout.id;
+            (document.getElementById('loadout-weaponName') as HTMLInputElement).value = loadout.weaponName;
+            (document.getElementById('loadout-weaponCategory') as HTMLSelectElement).value = loadout.weaponCategory;
+            (document.getElementById('loadout-game') as HTMLSelectElement).value = loadout.game;
+            (document.getElementById('loadout-weaponImage') as HTMLInputElement).value = loadout.weaponImage;
+            (document.getElementById('loadout-description') as HTMLTextAreaElement).value = loadout.description;
+            (document.getElementById('loadout-perks') as HTMLInputElement).value = loadout.perks.join(', ');
+            (document.getElementById('loadout-tactical') as HTMLInputElement).value = loadout.equipment?.tactical || '';
+            (document.getElementById('loadout-lethal') as HTMLInputElement).value = loadout.equipment?.lethal || '';
+            (document.getElementById('loadout-tags') as HTMLInputElement).value = loadout.tags.join(', ');
+            (document.getElementById('loadout-featured') as HTMLInputElement).checked = loadout.featured;
+            renderAttachmentsForm(loadout.attachments);
+        } else {
+            if (title) title.textContent = 'Add New Loadout';
+            (document.getElementById('loadout-edit-id') as HTMLInputElement).value = '';
+            (document.getElementById('loadout-weaponName') as HTMLInputElement).value = '';
+            (document.getElementById('loadout-weaponCategory') as HTMLSelectElement).value = 'Assault Rifle';
+            (document.getElementById('loadout-game') as HTMLSelectElement).value = 'Black Ops 7';
+            (document.getElementById('loadout-weaponImage') as HTMLInputElement).value = '';
+            (document.getElementById('loadout-description') as HTMLTextAreaElement).value = '';
+            (document.getElementById('loadout-perks') as HTMLInputElement).value = '';
+            (document.getElementById('loadout-tactical') as HTMLInputElement).value = '';
+            (document.getElementById('loadout-lethal') as HTMLInputElement).value = '';
+            (document.getElementById('loadout-tags') as HTMLInputElement).value = '';
+            (document.getElementById('loadout-featured') as HTMLInputElement).checked = false;
+            renderAttachmentsForm([
+                { slot: 'Muzzle', name: '', tuning: '' },
+                { slot: 'Barrel', name: '', tuning: '' },
+                { slot: 'Underbarrel', name: '', tuning: '' },
+                { slot: 'Magazine', name: '', tuning: '' },
+                { slot: 'Rear Grip', name: '', tuning: '' },
+            ]);
+        }
+
+        container?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function hideLoadoutForm() {
+        document.getElementById('loadout-form-container')?.classList.add('hidden');
+    }
+
+    function renderAttachmentsForm(attachments: LoadoutAttachment[]) {
+        const container = document.getElementById('attachments-form-list');
+        if (!container) return;
+
+        container.innerHTML = attachments.map((a, i) => `
+            <div class="attachment-form-row" data-idx="${i}">
+                <select class="admin-input" style="max-width:140px;" data-field="slot">
+                    <option value="Muzzle" ${a.slot === 'Muzzle' ? 'selected' : ''}>Muzzle</option>
+                    <option value="Barrel" ${a.slot === 'Barrel' ? 'selected' : ''}>Barrel</option>
+                    <option value="Underbarrel" ${a.slot === 'Underbarrel' ? 'selected' : ''}>Underbarrel</option>
+                    <option value="Magazine" ${a.slot === 'Magazine' ? 'selected' : ''}>Magazine</option>
+                    <option value="Rear Grip" ${a.slot === 'Rear Grip' ? 'selected' : ''}>Rear Grip</option>
+                    <option value="Stock" ${a.slot === 'Stock' ? 'selected' : ''}>Stock</option>
+                    <option value="Optic" ${a.slot === 'Optic' ? 'selected' : ''}>Optic</option>
+                    <option value="Laser" ${a.slot === 'Laser' ? 'selected' : ''}>Laser</option>
+                    <option value="Ammunition" ${a.slot === 'Ammunition' ? 'selected' : ''}>Ammunition</option>
+                    <option value="Conversion Kit" ${a.slot === 'Conversion Kit' ? 'selected' : ''}>Conversion Kit</option>
+                    <option value="Perk" ${a.slot === 'Perk' ? 'selected' : ''}>Perk</option>
+                </select>
+                <input type="text" class="admin-input" placeholder="Attachment name" value="${a.name || ''}" data-field="name">
+                <input type="text" class="admin-input" placeholder="Tuning (optional)" value="${a.tuning || ''}" data-field="tuning" style="max-width:150px;">
+                <button class="delete-btn" onclick="this.closest('.attachment-form-row').remove()">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        `).join('');
+    }
+
+    function addAttachmentRow() {
+        const container = document.getElementById('attachments-form-list');
+        if (!container) return;
+        const idx = container.children.length;
+        const div = document.createElement('div');
+        div.className = 'attachment-form-row';
+        div.setAttribute('data-idx', idx.toString());
+        div.innerHTML = `
+            <select class="admin-input" style="max-width:140px;" data-field="slot">
+                <option value="Muzzle">Muzzle</option>
+                <option value="Barrel">Barrel</option>
+                <option value="Underbarrel">Underbarrel</option>
+                <option value="Magazine">Magazine</option>
+                <option value="Rear Grip">Rear Grip</option>
+                <option value="Stock">Stock</option>
+                <option value="Optic">Optic</option>
+                <option value="Laser">Laser</option>
+                <option value="Ammunition">Ammunition</option>
+                <option value="Conversion Kit">Conversion Kit</option>
+                <option value="Perk">Perk</option>
+            </select>
+            <input type="text" class="admin-input" placeholder="Attachment name" value="" data-field="name">
+            <input type="text" class="admin-input" placeholder="Tuning (optional)" value="" data-field="tuning" style="max-width:150px;">
+            <button class="delete-btn" onclick="this.closest('.attachment-form-row').remove()">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        `;
+        container.appendChild(div);
+    }
+
+    function collectAttachmentsForm(): LoadoutAttachment[] {
+        const container = document.getElementById('attachments-form-list');
+        if (!container) return [];
+        return Array.from(container.querySelectorAll('.attachment-form-row')).map(row => ({
+            slot: (row.querySelector('[data-field="slot"]') as HTMLSelectElement)?.value || '',
+            name: (row.querySelector('[data-field="name"]') as HTMLInputElement)?.value || '',
+            tuning: (row.querySelector('[data-field="tuning"]') as HTMLInputElement)?.value || '',
+        })).filter(a => a.name.trim() !== '');
+    }
+
+    async function saveLoadout() {
+        const saveBtn = document.getElementById('save-loadout-btn') as HTMLButtonElement;
+        const editId = (document.getElementById('loadout-edit-id') as HTMLInputElement).value;
+        const weaponName = (document.getElementById('loadout-weaponName') as HTMLInputElement).value.trim();
+
+        if (!weaponName) {
+            showToast('Weapon name is required', 'error');
+            return;
+        }
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        const perksStr = (document.getElementById('loadout-perks') as HTMLInputElement).value;
+        const tagsStr = (document.getElementById('loadout-tags') as HTMLInputElement).value;
+
+        const loadoutData = {
+            id: editId || undefined,
+            weaponName,
+            weaponCategory: (document.getElementById('loadout-weaponCategory') as HTMLSelectElement).value,
+            game: (document.getElementById('loadout-game') as HTMLSelectElement).value,
+            weaponImage: (document.getElementById('loadout-weaponImage') as HTMLInputElement).value.trim(),
+            description: (document.getElementById('loadout-description') as HTMLTextAreaElement).value.trim(),
+            attachments: collectAttachmentsForm(),
+            perks: perksStr.split(',').map(p => p.trim()).filter(Boolean),
+            equipment: {
+                tactical: (document.getElementById('loadout-tactical') as HTMLInputElement).value.trim(),
+                lethal: (document.getElementById('loadout-lethal') as HTMLInputElement).value.trim(),
+            },
+            tags: tagsStr.split(',').map(t => t.trim()).filter(Boolean),
+            featured: (document.getElementById('loadout-featured') as HTMLInputElement).checked,
+            createdAt: editId ? (adminLoadouts.find(l => l.id === editId)?.createdAt || new Date().toISOString()) : undefined,
+        };
+
+        try {
+            const resp = await fetch('/api/loadouts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(loadoutData),
+            });
+
+            if (resp.ok) {
+                showToast(`Loadout ${editId ? 'updated' : 'created'} successfully!`, 'success');
+                logActivity(`${editId ? 'Updated' : 'Created'} loadout: ${weaponName}`);
+                hideLoadoutForm();
+                await fetchAdminLoadouts();
+            } else {
+                throw new Error('Save failed');
+            }
+        } catch {
+            showToast('Failed to save loadout', 'error');
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Loadout';
+        }
+    }
+
+    (window as any).editLoadout = function(id: string) {
+        const loadout = adminLoadouts.find(l => l.id === id);
+        if (loadout) showLoadoutForm(loadout);
+    };
+
+    (window as any).deleteLoadout = async function(id: string, name: string) {
+        if (!confirm(`Delete loadout "${name}"? This cannot be undone.`)) return;
+
+        try {
+            const resp = await fetch(`/api/loadouts?id=${id}`, { method: 'DELETE' });
+            if (resp.ok) {
+                showToast('Loadout deleted', 'success');
+                logActivity(`Deleted loadout: ${name}`);
+                await fetchAdminLoadouts();
+            } else {
+                throw new Error('Delete failed');
+            }
+        } catch {
+            showToast('Failed to delete loadout', 'error');
+        }
+    };
+
+    function initLoadoutsManager() {
+        document.getElementById('add-loadout-btn')?.addEventListener('click', () => showLoadoutForm());
+        document.getElementById('cancel-loadout-btn')?.addEventListener('click', hideLoadoutForm);
+        document.getElementById('add-attachment-btn')?.addEventListener('click', addAttachmentRow);
+        document.getElementById('save-loadout-btn')?.addEventListener('click', saveLoadout);
+        fetchAdminLoadouts();
     }
 
     init();

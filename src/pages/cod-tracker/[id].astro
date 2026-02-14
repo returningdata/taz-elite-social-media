@@ -1,0 +1,458 @@
+---
+export const prerender = false;
+
+import Layout from '../../layouts/Layout.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+
+const { id } = Astro.params;
+---
+
+<Layout title="Loadout Details | COD Tracker - TazElite Plays">
+    <SiteHeader />
+
+    <div class="pt-20 flex flex-col items-center min-h-screen">
+        <!-- Loading -->
+        <div id="loadout-loading" class="flex flex-col items-center justify-center py-24 w-full">
+            <div class="loading-spinner"></div>
+            <p class="text-gray-400 mt-4">Loading loadout...</p>
+        </div>
+
+        <!-- Not Found -->
+        <div id="loadout-not-found" class="hidden text-center py-24 w-full">
+            <svg class="w-20 h-20 mx-auto text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <h2 class="stranger-things-title text-2xl mb-3">Loadout Not Found</h2>
+            <p class="text-gray-400 mb-6">This weapon loadout doesn't exist or has been removed.</p>
+            <a href="/cod-tracker" class="btn">Back to COD Tracker</a>
+        </div>
+
+        <!-- Loadout Content -->
+        <div id="loadout-content" class="hidden w-full max-w-6xl mx-auto px-4">
+            <!-- Breadcrumb -->
+            <nav class="mb-6">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <a href="/cod-tracker" class="hover:text-red-400 transition-colors" style="text-decoration:none !important;">COD Tracker</a>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    <span id="breadcrumb-category" class="hover:text-red-400 transition-colors"></span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    <span id="breadcrumb-name" class="text-red-400"></span>
+                </div>
+            </nav>
+
+            <!-- Main Layout: Two Column -->
+            <div class="loadout-detail-grid">
+                <!-- Left Column - Weapon Image & Info -->
+                <div class="loadout-left">
+                    <div class="weapon-showcase">
+                        <div class="weapon-showcase-badges">
+                            <span id="detail-category-badge" class="showcase-badge"></span>
+                            <span id="detail-game-badge" class="showcase-badge showcase-badge-secondary"></span>
+                        </div>
+                        <div id="detail-weapon-image" class="weapon-showcase-image">
+                            <span class="text-gray-600">No Image</span>
+                        </div>
+                        <div id="detail-featured-indicator" class="hidden featured-star">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                            <span>Featured Build</span>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <h1 id="detail-weapon-name" class="text-2xl sm:text-3xl font-bold text-white uppercase tracking-wide mb-1"></h1>
+                        <p id="detail-weapon-desc" class="text-gray-400 text-sm leading-relaxed"></p>
+                    </div>
+
+                    <!-- Equipment & Perks -->
+                    <div id="detail-equipment-section" class="card mt-4 hidden">
+                        <h3 class="text-sm font-semibold text-red-400 uppercase tracking-wider mb-4">Equipment & Perks</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div id="detail-tactical" class="equip-slot">
+                                <div class="equip-label">Tactical</div>
+                                <div class="equip-value">--</div>
+                            </div>
+                            <div id="detail-lethal" class="equip-slot">
+                                <div class="equip-label">Lethal</div>
+                                <div class="equip-value">--</div>
+                            </div>
+                        </div>
+                        <div id="detail-perks-list" class="mt-4"></div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div id="detail-tags-section" class="hidden mt-4">
+                        <div id="detail-tags" class="flex flex-wrap gap-2"></div>
+                    </div>
+
+                    <div class="meta-info mt-4">
+                        <span id="detail-updated" class="text-xs text-gray-600"></span>
+                    </div>
+                </div>
+
+                <!-- Right Column - Attachments -->
+                <div class="loadout-right">
+                    <div class="attachments-panel">
+                        <div class="attachments-header">
+                            <h2 class="text-lg font-bold text-white uppercase tracking-wide">Attachments</h2>
+                            <span id="detail-attachment-count" class="text-xs text-gray-500"></span>
+                        </div>
+                        <div id="detail-attachments" class="attachments-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back Button -->
+            <div class="mt-8 mb-12 text-center">
+                <a href="/cod-tracker" class="btn">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    Back to All Loadouts
+                </a>
+            </div>
+        </div>
+
+        <footer class="py-8 text-center text-gray-500 text-sm w-full mt-auto">
+            <p>&copy; {new Date().getFullYear()} TazElite Plays. All rights reserved.</p>
+            <p class="text-xs mt-2 text-red-900">From The Upside Down</p>
+        </footer>
+    </div>
+</Layout>
+
+<style>
+    .loadout-detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    @media (max-width: 900px) {
+        .loadout-detail-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .weapon-showcase {
+        border-radius: 1rem;
+        background: rgba(26, 5, 5, 0.8);
+        border: 1px solid rgba(229, 9, 20, 0.25);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .weapon-showcase-badges {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        z-index: 2;
+    }
+
+    .showcase-badge {
+        padding: 0.3rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background: rgba(229, 9, 20, 0.3);
+        border: 1px solid rgba(229, 9, 20, 0.5);
+        color: #f87171;
+    }
+
+    .showcase-badge-secondary {
+        background: rgba(59, 130, 246, 0.2);
+        border-color: rgba(59, 130, 246, 0.4);
+        color: #60a5fa;
+    }
+
+    .weapon-showcase-image {
+        width: 100%;
+        height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, rgba(10, 10, 10, 0.95), rgba(26, 5, 5, 0.7));
+        position: relative;
+    }
+
+    .weapon-showcase-image::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at center, transparent 40%, rgba(10, 10, 10, 0.4) 100%);
+        pointer-events: none;
+    }
+
+    .weapon-showcase-image img {
+        max-width: 80%;
+        max-height: 80%;
+        object-fit: contain;
+        filter: drop-shadow(0 0 20px rgba(229, 9, 20, 0.3));
+        position: relative;
+        z-index: 1;
+    }
+
+    .featured-star {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        background: rgba(251, 191, 36, 0.1);
+        border-top: 1px solid rgba(251, 191, 36, 0.2);
+        color: #fbbf24;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .attachments-panel {
+        background: rgba(26, 5, 5, 0.8);
+        border: 1px solid rgba(229, 9, 20, 0.25);
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    .attachments-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 1.25rem;
+        background: rgba(229, 9, 20, 0.08);
+        border-bottom: 1px solid rgba(229, 9, 20, 0.15);
+    }
+
+    .attachments-list {
+        padding: 0.5rem;
+    }
+
+    .attachment-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.875rem 1rem;
+        border-radius: 0.5rem;
+        transition: background 0.15s;
+        border-bottom: 1px solid rgba(229, 9, 20, 0.08);
+    }
+
+    .attachment-row:last-child {
+        border-bottom: none;
+    }
+
+    .attachment-row:hover {
+        background: rgba(229, 9, 20, 0.06);
+    }
+
+    .attachment-slot-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 0.5rem;
+        background: rgba(229, 9, 20, 0.12);
+        border: 1px solid rgba(229, 9, 20, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .attachment-slot-icon .slot-number {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: #e50914;
+    }
+
+    .attachment-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .attachment-slot-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #6b7280;
+        font-weight: 600;
+    }
+
+    .attachment-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: white;
+    }
+
+    .attachment-tuning {
+        font-size: 0.7rem;
+        color: #9ca3af;
+        margin-top: 0.125rem;
+    }
+
+    .equip-slot {
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(229, 9, 20, 0.15);
+    }
+
+    .equip-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #6b7280;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .equip-value {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: white;
+    }
+
+    .perk-chip {
+        display: inline-flex;
+        padding: 0.3rem 0.75rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        background: rgba(139, 92, 246, 0.15);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        color: #a78bfa;
+    }
+
+    .tag-chip {
+        display: inline-flex;
+        padding: 0.25rem 0.625rem;
+        border-radius: 2rem;
+        font-size: 0.7rem;
+        background: rgba(229, 9, 20, 0.1);
+        border: 1px solid rgba(229, 9, 20, 0.2);
+        color: #9ca3af;
+    }
+
+    .meta-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+</style>
+
+<script define:vars={{ id }}>
+    async function loadLoadout() {
+        try {
+            const resp = await fetch(`/api/loadouts?id=${id}`);
+            if (!resp.ok) throw new Error('Not found');
+
+            const loadout = await resp.json();
+            if (loadout.error) throw new Error(loadout.error);
+
+            document.getElementById('loadout-loading')?.classList.add('hidden');
+            document.getElementById('loadout-content')?.classList.remove('hidden');
+
+            // Update page title
+            document.title = `${loadout.weaponName} Loadout | COD Tracker - TazElite Plays`;
+
+            // Breadcrumb
+            const bcCat = document.getElementById('breadcrumb-category');
+            if (bcCat) bcCat.textContent = loadout.weaponCategory;
+            const bcName = document.getElementById('breadcrumb-name');
+            if (bcName) bcName.textContent = loadout.weaponName;
+
+            // Badges
+            const catBadge = document.getElementById('detail-category-badge');
+            if (catBadge) catBadge.textContent = loadout.weaponCategory;
+            const gameBadge = document.getElementById('detail-game-badge');
+            if (gameBadge) gameBadge.textContent = loadout.game;
+
+            // Image
+            const imgContainer = document.getElementById('detail-weapon-image');
+            if (imgContainer && loadout.weaponImage) {
+                imgContainer.innerHTML = `<img src="${loadout.weaponImage}" alt="${loadout.weaponName}" />`;
+            }
+
+            // Featured
+            if (loadout.featured) {
+                document.getElementById('detail-featured-indicator')?.classList.remove('hidden');
+            }
+
+            // Name & Description
+            const nameEl = document.getElementById('detail-weapon-name');
+            if (nameEl) nameEl.textContent = loadout.weaponName;
+            const descEl = document.getElementById('detail-weapon-desc');
+            if (descEl) descEl.textContent = loadout.description || 'No description provided.';
+
+            // Attachments
+            const attachContainer = document.getElementById('detail-attachments');
+            const attachCount = document.getElementById('detail-attachment-count');
+            if (attachCount) attachCount.textContent = `${loadout.attachments.length} attachment${loadout.attachments.length !== 1 ? 's' : ''}`;
+
+            if (attachContainer) {
+                if (loadout.attachments.length === 0) {
+                    attachContainer.innerHTML = '<p class="text-gray-500 text-sm text-center py-6">No attachments configured</p>';
+                } else {
+                    attachContainer.innerHTML = loadout.attachments.map((a, i) => `
+                        <div class="attachment-row">
+                            <div class="attachment-slot-icon">
+                                <span class="slot-number">${i + 1}</span>
+                            </div>
+                            <div class="attachment-info">
+                                <div class="attachment-slot-label">${a.slot || 'Slot ' + (i + 1)}</div>
+                                <div class="attachment-name">${a.name}</div>
+                                ${a.tuning ? `<div class="attachment-tuning">${a.tuning}</div>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // Equipment & Perks
+            const hasEquipment = loadout.equipment?.tactical || loadout.equipment?.lethal;
+            const hasPerks = loadout.perks && loadout.perks.length > 0;
+
+            if (hasEquipment || hasPerks) {
+                document.getElementById('detail-equipment-section')?.classList.remove('hidden');
+
+                if (loadout.equipment?.tactical) {
+                    const tacVal = document.querySelector('#detail-tactical .equip-value');
+                    if (tacVal) tacVal.textContent = loadout.equipment.tactical;
+                }
+                if (loadout.equipment?.lethal) {
+                    const letVal = document.querySelector('#detail-lethal .equip-value');
+                    if (letVal) letVal.textContent = loadout.equipment.lethal;
+                }
+
+                if (hasPerks) {
+                    const perksList = document.getElementById('detail-perks-list');
+                    if (perksList) {
+                        perksList.innerHTML = `
+                            <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">Perks</div>
+                            <div class="flex flex-wrap gap-2">
+                                ${loadout.perks.map(p => `<span class="perk-chip">${p}</span>`).join('')}
+                            </div>
+                        `;
+                    }
+                }
+            }
+
+            // Tags
+            if (loadout.tags && loadout.tags.length > 0) {
+                document.getElementById('detail-tags-section')?.classList.remove('hidden');
+                const tagsContainer = document.getElementById('detail-tags');
+                if (tagsContainer) {
+                    tagsContainer.innerHTML = loadout.tags.map(t => `<span class="tag-chip">${t}</span>`).join('');
+                }
+            }
+
+            // Updated date
+            const updatedEl = document.getElementById('detail-updated');
+            if (updatedEl && loadout.updatedAt) {
+                updatedEl.textContent = 'Last updated: ' + new Date(loadout.updatedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            }
+
+        } catch {
+            document.getElementById('loadout-loading')?.classList.add('hidden');
+            document.getElementById('loadout-not-found')?.classList.remove('hidden');
+        }
+    }
+
+    loadLoadout();
+</script>
