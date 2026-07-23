@@ -1,0 +1,17 @@
+---
+interface Props { size?: 'small' | 'medium' | 'large'; class?: string; eager?: boolean; }
+const { size = 'medium', class: className = '', eager = false } = Astro.props;
+const dimensions = { small: 48, medium: 128, large: 512 } as const;
+const dimension = dimensions[size];
+---
+<img
+  class:list={['taz-brand-logo', className]}
+  src={`/.netlify/images?url=/images/brand/taz-elite-logo.png&w=${dimension}&h=${dimension}&fit=contain`}
+  srcset={`/.netlify/images?url=/images/brand/taz-elite-logo.png&w=${dimension}&h=${dimension}&fit=contain 1x, /.netlify/images?url=/images/brand/taz-elite-logo.png&w=${dimension * 2}&h=${dimension * 2}&fit=contain 2x`}
+  width={dimension}
+  height={dimension}
+  alt="Taz Elite logo"
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+/>
+<style>.taz-brand-logo{display:block;max-width:100%;height:auto;object-fit:contain}</style>

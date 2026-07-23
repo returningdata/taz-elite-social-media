@@ -1,0 +1,59 @@
+---
+import { navigation } from '../../config/site';
+import BrandLogo from '../brand/BrandLogo.astro';
+const currentPath = Astro.url.pathname;
+const primary = navigation.filter((item) => !('service' in item));
+const services = navigation.filter((item) => 'service' in item);
+---
+
+<header class="portfolio-header">
+  <a class="brand-mark" href="/" aria-label="Taz Elite home"><BrandLogo size="small" class="brand-logo" eager /><strong>Taz Elite</strong></a>
+  <nav class="desktop-nav" aria-label="Main navigation">
+    {primary.map((item) => <a class:list={{ active: currentPath === item.href }} href={item.href}>{item.label}</a>)}
+    <details class="services-menu">
+      <summary>Services <span aria-hidden="true">⌄</span></summary>
+      <div>{services.map((item) => <a href={item.href}>{item.label}</a>)}</div>
+    </details>
+  </nav>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+    <span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <div class="mobile-menu-panel" role="dialog" aria-modal="true" aria-label="Taz Elite navigation">
+    <div class="mobile-menu-top"><a class="mobile-brand" href="/"><BrandLogo size="small" class="brand-logo" /><span>Taz Elite</span></a><button type="button" class="menu-close" aria-label="Close menu">×</button></div>
+    <nav aria-label="Mobile navigation">
+      {primary.map((item, index) => <a style={`--order:${index}`} href={item.href}>{item.label}<span>↗</span></a>)}
+      <p>Services</p>
+      {services.map((item, index) => <a style={`--order:${index + primary.length}`} href={item.href}>{item.label}<span>↗</span></a>)}
+    </nav>
+  </div>
+</div>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
+  const close = document.querySelector<HTMLButtonElement>('.menu-close');
+  const menu = document.querySelector<HTMLElement>('.mobile-menu');
+  let lockedScroll = 0;
+  const setOpen = (open: boolean) => {
+    if (!toggle || !menu) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menu.setAttribute('aria-hidden', String(!open));
+    menu.classList.toggle('open', open);
+    document.body.classList.toggle('menu-open', open);
+    if (open) { lockedScroll = window.scrollY; document.body.style.position = 'fixed'; document.body.style.top = `-${lockedScroll}px`; document.body.style.width = '100%'; }
+    else { document.body.style.position = ''; document.body.style.top = ''; document.body.style.width = ''; window.scrollTo(0, lockedScroll); }
+    if (open) close?.focus(); else toggle.focus();
+  };
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  close?.addEventListener('click', () => setOpen(false));
+  menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
+  menu?.addEventListener('click', (event) => { if (event.target === menu) setOpen(false); });
+  document.addEventListener('keydown', (event) => event.key === 'Escape' && setOpen(false));
+</script>
+
+<style>
+  .brand-logo{width:42px;height:42px;flex:none}.mobile-menu{height:100dvh;max-height:100dvh;padding:max(.6rem,env(safe-area-inset-top)) .6rem max(.6rem,env(safe-area-inset-bottom));overflow:hidden;background:rgba(2,5,13,.72);z-index:100}.mobile-menu-panel{width:min(100%,560px);height:100%;margin-left:auto;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#6573ce #0b1020;border:1px solid rgba(126,151,226,.18);border-radius:18px;background:rgba(5,8,18,.985);box-shadow:-24px 0 70px rgba(0,0,0,.45)}.mobile-menu-top{position:sticky;top:0;z-index:2;padding:.45rem 0 .75rem;background:linear-gradient(#050812 80%,transparent)}.mobile-brand{display:flex;align-items:center;gap:.65rem;font-family:'Space Grotesk',sans-serif;text-decoration:none}.mobile-brand span{font-weight:800}.mobile-menu nav{padding:0 .75rem calc(1.5rem + env(safe-area-inset-bottom))}.mobile-menu nav a{font-size:clamp(1.1rem,5.2vw,1.75rem);min-height:50px;align-items:center}.menu-close{flex:none}@media(max-height:560px) and (orientation:landscape){.mobile-menu nav a{min-height:42px;padding:.45rem 0;font-size:1.05rem}.mobile-menu nav p{margin:.75rem 0 .15rem}}
+</style>

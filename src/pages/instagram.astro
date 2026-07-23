@@ -1,0 +1,9 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import PhotoGallery from '../components/portfolio/PhotoGallery.astro';
+import { siteConfig } from '../config/site';
+---
+<PortfolioLayout title="Instagram | Taz Elite" description="View a manually approved gallery of public photos from Taz Elite on Instagram.">
+  <header class="page-shell page-intro"><span class="page-kicker">Instagram</span><h1>A personal gallery with professional intent.</h1><p>These images are manually approved from Taz’s own public Instagram posts. Follower statistics appear only when an approved API integration is configured.</p><div class="button-row"><a class="button primary" href={siteConfig.socials.instagram} target="_blank" rel="noopener noreferrer">Follow on Instagram</a></div></header>
+  <section class="section"><div class="section-shell"><div class="empty-state" style="margin-bottom:1rem">Live Instagram profile statistics are temporarily unavailable. The approved gallery remains available below.</div><PhotoGallery /></div></section>
+</PortfolioLayout>

@@ -1,0 +1,9 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import TikTokDashboard from '../components/integrations/TikTokDashboard.astro';
+import { siteConfig } from '../config/site';
+---
+<PortfolioLayout title="TikTok | Taz Elite" description="See verified TikTok profile statistics and connected posts from Taz Elite when the authorized integration is available.">
+  <header class="page-shell page-intro"><span class="page-kicker">TikTok · @tazeliteplays</span><h1>Quick hits from the Taz Elite creator feed.</h1><p>Only information returned by an authorized TikTok connection appears here. Unsupported metrics remain clearly unavailable instead of being estimated.</p><div class="button-row"><a class="button primary" href={siteConfig.socials.tiktok} target="_blank" rel="noopener noreferrer">Follow on TikTok</a></div></header>
+  <section class="section"><div class="section-shell"><TikTokDashboard /></div></section>
+</PortfolioLayout>

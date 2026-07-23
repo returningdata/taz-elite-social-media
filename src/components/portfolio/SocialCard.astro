@@ -1,0 +1,24 @@
+---
+import PlatformIcon from '../brand/PlatformIcon.astro';
+interface Props { platform: 'Discord' | 'Twitch' | 'TikTok' | 'YouTube' | 'Instagram'; title: string; description: string; href: string; endpoint?: string; accent?: string; }
+const { platform, title, description, href, endpoint, accent = '#6ee7ff' } = Astro.props;
+---
+<article class="social-card" style={`--social-accent:${accent}`} data-social-card data-endpoint={endpoint} data-reveal>
+  <div class="social-card-top"><span class="social-icon"><PlatformIcon name={platform.toLowerCase() as 'discord' | 'twitch' | 'tiktok' | 'youtube' | 'instagram'} size={21} /></span><span class="live-chip" data-live hidden>LIVE NOW</span></div>
+  <p class="social-platform">{platform}</p><h3>{title}</h3><p>{description}</p>
+  <div class="social-stat" data-stat>{endpoint ? <><span class="skeleton"></span><span class="skeleton short"></span></> : <span>Approved local gallery available</span>}</div>
+  {endpoint && <button class="social-retry" type="button" data-social-retry hidden>Retry live data</button>}
+  <a class="text-link" href={href} target="_blank" rel="noopener noreferrer">Open {platform} <span>↗</span></a>
+</article>
+
+{endpoint && <script>
+  import { errorLabel, fetchIntegration, formatCount } from '../../scripts/live-data';
+  document.querySelectorAll<HTMLElement>('[data-social-card][data-endpoint]').forEach(async (card) => {
+    const stat = card.querySelector<HTMLElement>('[data-stat]');
+    const retry = card.querySelector<HTMLButtonElement>('[data-social-retry]');
+    const load = async () => { if (retry) retry.hidden = true; if (stat) stat.innerHTML = '<span class="skeleton"></span><span class="skeleton short"></span>'; try { const result = await fetchIntegration<any>(card.dataset.endpoint || ''); const data = result.data; const live = Boolean(data.isLive || data.live?.isLive); const number = data.memberCount ?? data.subscriberCount ?? data.followers ?? data.live?.viewerCount; const status = data.status ? `Discord: ${data.status === 'dnd' ? 'Do Not Disturb' : data.status}` : null; card.querySelector<HTMLElement>('[data-live]')?.toggleAttribute('hidden', !live); if (stat) stat.textContent = number !== undefined && number !== null ? `${formatCount(number)} verified` : status || (live ? 'Streaming now' : 'Live data connected'); } catch (requestError) { const details = requestError as { code?: string }; if (stat) stat.textContent = errorLabel(details.code || ''); if (retry) retry.hidden = false; } };
+    retry?.addEventListener('click', load); load();
+  });
+</script>}
+
+<style>.social-retry{margin:0 0 .8rem;padding:.55rem .7rem;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.03);color:white;cursor:pointer}.social-retry[hidden]{display:none}</style>

@@ -1,0 +1,9 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import YouTubeDashboard from '../components/integrations/YouTubeDashboard.astro';
+import { siteConfig } from '../config/site';
+---
+<PortfolioLayout title="YouTube | Taz Elite" description="View verified YouTube channel statistics, live status, and recent videos from Taz Elite.">
+  <header class="page-shell page-intro"><span class="page-kicker">YouTube · @tazelite-plays</span><h1>Long-form content. Live moments. Recent uploads.</h1><p>Recent videos load from the official YouTube channel feed. Subscriber statistics, total views, durations, and livestream status use the YouTube Data API v3 when its server-side key is configured.</p><div class="button-row"><a class="button primary" href={siteConfig.socials.youtube} target="_blank" rel="noopener noreferrer">Subscribe on YouTube</a></div></header>
+  <section class="section"><div class="section-shell"><YouTubeDashboard /></div></section>
+</PortfolioLayout>

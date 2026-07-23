@@ -1,78 +1,18 @@
-import type { Context, Config } from "@netlify/functions";
+import { apiError, apiSuccess, fetchWithTimeout, safeDiagnostic, upstreamError } from '../lib/api';
 
-interface CFXServerData {
-    Data?: {
-        clients?: number;
-        sv_maxclients?: number;
-        hostname?: string;
-        gametype?: string;
-        mapname?: string;
-        players?: Array<{ name: string; id: number; ping: number }>;
-    };
-    clients?: number;
-    sv_maxclients?: number;
-    hostname?: string;
-    gametype?: string;
-    mapname?: string;
-}
-
-export default async (req: Request, context: Context) => {
-    const url = new URL(req.url);
-    // CFX server code from cfx-finder (e.g., "ajv9r5" from cfx.re/join/ajv9r5)
-    const cfxCode = url.searchParams.get('code') || 'ajv9r5';
-
-    try {
-        // Use the CFX.re servers API with the join code
-        const cfxResponse = await fetch(`https://servers-frontend.fivem.net/api/servers/single/${cfxCode}`, {
-            headers: {
-                'Accept': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (compatible; ServerStatus/1.0)'
-            }
-        });
-
-        if (!cfxResponse.ok) {
-            throw new Error(`CFX API returned ${cfxResponse.status}`);
-        }
-
-        const cfxData: CFXServerData = await cfxResponse.json();
-        const data = cfxData?.Data || cfxData;
-
-        const players = data?.clients || 0;
-        const maxPlayers = data?.sv_maxclients || 0;
-
-        return new Response(JSON.stringify({
-            online: true,
-            players: players,
-            maxPlayers: maxPlayers,
-            hostname: data?.hostname || 'California Roleplay',
-            gametype: data?.gametype || 'FiveM',
-            mapname: data?.mapname || 'Los Santos'
-        }), {
-            headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'public, max-age=30',
-                'Access-Control-Allow-Origin': '*'
-            }
-        });
-    } catch (error) {
-        console.error('Error fetching server status:', error);
-
-        return new Response(JSON.stringify({
-            online: false,
-            players: 0,
-            maxPlayers: 0,
-            hostname: 'California Roleplay',
-            error: 'Server is offline or unreachable'
-        }), {
-            headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'public, max-age=60',
-                'Access-Control-Allow-Origin': '*'
-            }
-        });
-    }
-}
-
-export const config: Config = {
-    path: "/api/fivem-status"
+export default async (request: Request) => {
+  const code = new URL(request.url).searchParams.get('code') || 'ajv9r5';
+  if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return apiError('BAD_REQUEST', 'The FiveM server code is invalid.', 400);
+  try {
+    const response = await fetchWithTimeout(`https://servers-frontend.fivem.net/api/servers/single/${code}`, { headers: { Accept: 'application/json', 'User-Agent': 'TazEliteWebsite/1.0' } }, 10000);
+    if (!response.ok) return upstreamError('FiveM server status', response.status);
+    const payload = await response.json();
+    const data = payload?.Data || payload;
+    if (!data) return apiError('INVALID_RESPONSE', 'FiveM returned an incomplete server response.', 502);
+    return apiSuccess({ online: true, players: Number(data.clients || 0), maxPlayers: Number(data.sv_maxclients || 0), hostname: data.hostname || 'California Roleplay', gametype: data.gametype || 'FiveM', mapname: data.mapname || 'Los Santos' }, { maxAge: 30, staleWhileRevalidate: 60 });
+  } catch (error) {
+    console.error('FiveM status request failed:', safeDiagnostic(error));
+    if (error instanceof DOMException && error.name === 'AbortError') return apiError('TIMEOUT', 'FiveM server status took too long to respond.', 504);
+    return apiError('UPSTREAM_ERROR', 'The FiveM server is offline or unreachable.', 502);
+  }
 };

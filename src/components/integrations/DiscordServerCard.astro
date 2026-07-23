@@ -1,0 +1,39 @@
+---
+import PlatformIcon from '../brand/PlatformIcon.astro';
+interface Props { invite: string; title?: string; description: string; featured?: boolean; }
+const { invite, title, description, featured = false } = Astro.props;
+---
+<article class:list={['discord-server-card', { featured }]} data-discord-server data-invite={invite}>
+  <div class="server-banner" data-server-banner>
+    <img data-server-icon src="/images/brand/taz-elite-logo-256.webp" alt="Discord server icon fallback" width="88" height="88" />
+    <span class="server-live-dot"></span>
+  </div>
+  <div class="server-copy"><p><PlatformIcon name="discord" size={15} /> LIVE COMMUNITY</p><h3 data-server-name>{title || 'Discord Community'}</h3><span data-server-description>{description}</span></div>
+  <div class="server-stats" aria-live="polite"><div><span>Members</span><strong data-member-count>Loading…</strong></div><div><span>Online</span><strong data-online-count>Loading…</strong></div><div><span>Boost level</span><strong data-boost-level>—</strong></div></div>
+  <p class="server-message" data-server-message>Loading live Discord server information…</p>
+  <div class="server-actions"><a href={`https://discord.gg/${invite}`} target="_blank" rel="noopener noreferrer">Join Discord</a><button type="button" data-server-retry hidden>Retry live data</button></div>
+</article>
+<style>
+  .discord-server-card{min-width:0;overflow:hidden;border:1px solid rgba(88,101,242,.3);border-radius:18px;background:linear-gradient(145deg,rgba(88,101,242,.13),rgba(7,11,23,.82));box-shadow:inset 0 1px rgba(255,255,255,.04)}.discord-server-card.featured{box-shadow:0 20px 70px rgba(54,65,170,.18)}.server-banner{min-height:100px;display:flex;align-items:end;padding:1rem;background:linear-gradient(135deg,rgba(88,101,242,.35),rgba(114,74,199,.2));background-size:cover;background-position:center}.server-banner img{width:72px;height:72px;object-fit:cover;border:3px solid #0b1020;border-radius:20px;background:#0b1020}.server-live-dot{width:12px;height:12px;margin:0 0 5px -8px;border:2px solid #0b1020;border-radius:50%;background:#23a55a}.server-copy,.server-stats,.server-message,.server-actions{margin-inline:1rem}.server-copy{padding-top:1rem}.server-copy>p{display:flex;align-items:center;gap:.35rem;margin:0;color:#aab2ff;font-size:.65rem;font-weight:800;letter-spacing:.12em}.server-copy h3{margin:.45rem 0;font-family:'Space Grotesk',sans-serif;font-size:1.35rem}.server-copy>span,.server-message{color:#9da9bf;line-height:1.6}.server-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin-top:1rem}.server-stats div{min-width:0;padding:.75rem;border:1px solid rgba(255,255,255,.08);border-radius:11px;background:rgba(3,6,14,.32)}.server-stats span{display:block;color:#8f9bb1;font-size:.63rem}.server-stats strong{display:block;margin-top:.2rem;overflow-wrap:anywhere}.server-message{font-size:.72rem}.server-actions{display:flex;flex-wrap:wrap;gap:.55rem;padding-bottom:1rem}.server-actions a,.server-actions button{min-height:44px;padding:.7rem .85rem;border:1px solid rgba(129,142,255,.35);border-radius:9px;background:rgba(88,101,242,.14);color:white;font:inherit;font-size:.76rem;font-weight:800;text-decoration:none;cursor:pointer}.server-actions button[hidden]{display:none}@media(max-width:430px){.server-stats{grid-template-columns:1fr 1fr}.server-stats div:last-child{grid-column:1/-1}}
+</style>
+<script>
+  import { errorLabel, fetchIntegration, formatCount } from '../../scripts/live-data';
+  interface ServerData { name: string; description: string | null; iconUrl: string | null; bannerUrl: string | null; memberCount: number | null; onlineCount: number | null; boostLevel: number | null; }
+  document.querySelectorAll<HTMLElement>('[data-discord-server]').forEach((root) => {
+    const set = (selector: string, value: string) => { const element = root.querySelector<HTMLElement>(selector); if (element) element.textContent = value; };
+    const load = async () => {
+      const retry = root.querySelector<HTMLButtonElement>('[data-server-retry]'); if (retry) retry.hidden = true;
+      set('[data-server-message]', 'Loading live Discord server information…');
+      try {
+        const result = await fetchIntegration<ServerData>(`/.netlify/functions/discord-server?invite=${encodeURIComponent(root.dataset.invite || '')}`);
+        const data = result.data; set('[data-server-name]', data.name); if (data.description) set('[data-server-description]', data.description); set('[data-member-count]', formatCount(data.memberCount)); set('[data-online-count]', formatCount(data.onlineCount)); set('[data-boost-level]', data.boostLevel === null ? 'Unavailable' : `Level ${data.boostLevel}`);
+        const icon = root.querySelector<HTMLImageElement>('[data-server-icon]'); if (icon && data.iconUrl) { icon.src = data.iconUrl; icon.alt = `${data.name} server icon`; icon.onerror = () => { icon.src = '/images/brand/taz-elite-logo-256.webp'; }; }
+        const banner = root.querySelector<HTMLElement>('[data-server-banner]'); if (banner && data.bannerUrl) banner.style.backgroundImage = `linear-gradient(135deg,rgba(16,20,50,.35),rgba(6,8,18,.72)),url("${data.bannerUrl}")`;
+        set('[data-server-message]', `${result.cached ? 'Cached' : 'Live'} data updated ${new Date(result.updatedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}.`);
+      } catch (requestError) {
+        const details = requestError as { code?: string; message?: string }; set('[data-member-count]', 'Unavailable'); set('[data-online-count]', 'Unavailable'); set('[data-boost-level]', 'Unavailable'); set('[data-server-message]', `${errorLabel(details.code || '')}: ${details.message || 'Discord server information is temporarily unavailable.'}`); if (retry) retry.hidden = false;
+      }
+    };
+    root.querySelector('[data-server-retry]')?.addEventListener('click', load); load();
+  });
+</script>

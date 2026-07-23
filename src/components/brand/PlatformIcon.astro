@@ -1,0 +1,16 @@
+---
+interface Props { name: 'discord' | 'twitch' | 'youtube' | 'tiktok' | 'instagram' | 'rust' | 'store' | 'server' | 'activity'; size?: number; }
+const { name, size = 24 } = Astro.props;
+const paths: Record<string, string> = {
+  discord: 'M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.2a18.4 18.4 0 0 0-5.5 0L8.7 3a19.8 19.8 0 0 0-4.9 1.5C.7 9.1-.1 13.6.3 18a19.9 19.9 0 0 0 6 3l1.2-2a13 13 0 0 1-1.9-.9l.4-.3a14 14 0 0 0 12 0l.4.3c-.6.4-1.2.7-1.9.9l1.2 2a19.8 19.8 0 0 0 6-3c.5-5.2-.8-9.7-3.5-13.6ZM8 15.3c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z',
+  twitch: 'M3 2h19v13l-5 5h-4l-3 3H7v-3H3V2Zm2 2v14h4v2l2-2h6l3-3V4H5Zm5 3h2v6h-2V7Zm5 0h2v6h-2V7Z',
+  youtube: 'M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.5 15.6V8.4L15.8 12l-6.3 3.6Z',
+  tiktok: 'M16.6 2c.4 2.2 1.7 3.6 3.9 3.8v4a9 9 0 0 1-3.9-1v7.3a7.1 7.1 0 1 1-6.1-7v4a3.2 3.2 0 1 0 2.2 3V2h3.9Z',
+  instagram: 'M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm11 1.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z',
+  rust: 'M12 2 3.5 6.8v10.4L12 22l8.5-4.8V6.8L12 2Zm0 4 5 2.8v6.3l-5 2.9-5-2.9V8.8L12 6Zm-2 3v6l5-3-5-3Z',
+  store: 'M4 4h16l-1 5H5L4 4Zm1 7h14v9H5v-9Zm3 2v5h3v-5H8Zm5 0v2h4v-2h-4Z',
+  server: 'M4 3h16v6H4V3Zm2 2v2h2V5H6Zm-2 6h16v6H4v-6Zm2 2v2h2v-2H6Zm-2 6h16v2H4v-2Z',
+  activity: 'M3 12h4l2-6 4 12 2-6h6v2h-4.6L13 24 9 12l-.6 2H3v-2Z'
+};
+---
+<svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d={paths[name]} /></svg>

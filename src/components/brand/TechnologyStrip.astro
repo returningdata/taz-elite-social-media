@@ -1,0 +1,10 @@
+---
+import { siAndroid, siCss, siDiscord, siHtml5, siJavascript, siNetlify, siNextdotjs, siNodedotjs, siPostgresql, siPython, siReact, siTailwindcss, siTypescript, siUbuntu } from 'simple-icons';
+const technologies = [
+  [siJavascript, 'JavaScript'], [siTypescript, 'TypeScript'], [siPython, 'Python'], [siHtml5, 'HTML5'], [siCss, 'CSS3'], [siReact, 'React'], [siNextdotjs, 'Next.js'], [siNodedotjs, 'Node.js'], [siPostgresql, 'PostgreSQL'], [siTailwindcss, 'Tailwind CSS'], [siNetlify, 'Netlify'], [siDiscord, 'Discord'], [siAndroid, 'Android'], [siUbuntu, 'Ubuntu']
+] as const;
+---
+<div class="technology-strip" aria-label="Core technology stack">
+  {technologies.map(([icon, label]) => <div title={label}><svg viewBox="0 0 24 24" aria-hidden="true"><path fill={`#${icon.hex}`} d={icon.path} /></svg><span>{label}</span></div>)}
+</div>
+<style>.technology-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:.65rem;margin-bottom:2rem}.technology-strip>div{display:grid;min-width:0;place-items:center;gap:.5rem;padding:.85rem .45rem;border:1px solid rgba(140,171,255,.14);border-radius:12px;background:rgba(10,16,32,.58);text-align:center}.technology-strip svg{width:28px;height:28px}.technology-strip span{color:#aeb9cc;font-size:.66rem;overflow-wrap:anywhere}@media(max-width:900px){.technology-strip{grid-template-columns:repeat(5,1fr)}}@media(max-width:600px){.technology-strip{grid-template-columns:repeat(3,1fr)}}@media(max-width:360px){.technology-strip{grid-template-columns:repeat(2,1fr)}}</style>

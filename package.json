@@ -7,28 +7,22 @@
         "start": "astro dev",
         "build": "astro build",
         "preview": "astro preview",
-        "astro": "astro"
+        "astro": "astro",
+        "test:responsive": "playwright test tests/responsive-audit.spec.ts"
     },
     "dependencies": {
         "@astrojs/netlify": "^6.6.0",
-        "@astrojs/react": "^4.4.0",
         "@fontsource-variable/inter": "^5.2.5",
-        "@netlify/blobs": "^10.4.1",
         "@netlify/functions": "^5.1.0",
         "@tailwindcss/vite": "^4.1.16",
         "astro": "^5.15.0",
-        "blobshape": "^1.0.0",
-        "marked": "^16.4.1",
-        "marked-shiki": "^1.2.1",
-        "react": "^19.2.0",
-        "react-dom": "^19.2.0",
-        "tailwindcss": "^4.1.16",
-        "unique-names-generator": "^4.7.1"
+        "simple-icons": "^16.27.0",
+        "tailwindcss": "^4.1.16"
     },
     "devDependencies": {
-        "@types/blobshape": "^1.0.3",
+        "@astrojs/check": "^0.9.9",
+        "@playwright/test": "^1.61.1",
         "@types/node": "^20.12.7",
-        "@types/react": "^19.2.2",
-        "@types/react-dom": "^19.2.2"
+        "typescript": "^5.9.3"
     }
 }

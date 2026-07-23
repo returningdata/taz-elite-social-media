@@ -1,66 +1,41 @@
 ---
-interface Props {
-    username: string;
-}
-
+import PlatformIcon from './brand/PlatformIcon.astro';
+interface Props { username: string; }
 const { username } = Astro.props;
 const twitchUrl = `https://www.twitch.tv/${username}`;
 ---
-
-<a
-    href={twitchUrl}
-    target="_blank"
-    rel="noopener noreferrer"
-    id="twitch-status"
-    class="live-indicator offline"
-    data-username={username}
->
-    <div class="flex items-center gap-3">
-        <div class="relative">
-            <svg class="w-8 h-8 text-purple-400" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
-            </svg>
-            <span id="live-dot" class="absolute -top-1 -right-1 w-3 h-3 bg-gray-500 rounded-full hidden"></span>
-        </div>
-        <div class="flex flex-col">
-            <span class="font-semibold text-white" id="status-text">Watch on Twitch</span>
-            <span class="text-sm text-gray-400" id="status-subtext">Click to visit channel</span>
-        </div>
-    </div>
-</a>
-
+<section class="twitch-card" data-twitch-card data-username={username}>
+  <div class="twitch-loading" data-twitch-loading><span></span><div><i></i><i></i><i></i></div><p>Loading Twitch channel information…</p></div>
+  <div class="twitch-content" data-twitch-content hidden>
+    <header><img data-twitch-avatar src="/images/brand/taz-elite-logo-256.webp" alt="Taz Elite Twitch profile fallback" width="88" height="88" /><div><p><PlatformIcon name="twitch" size={15} /> TWITCH CHANNEL</p><h3 data-twitch-name>TazElitePlays</h3><span data-twitch-login>@tazeliteplays</span></div><strong data-twitch-live>OFFLINE</strong></header>
+    <p data-twitch-description></p>
+    <div class="twitch-stream" data-twitch-stream hidden><img data-stream-thumbnail src="/images/brand/taz-elite-logo-512.webp" alt="Current Twitch stream thumbnail" /><div><span>LIVE NOW</span><strong data-stream-title></strong><p data-stream-meta></p></div></div>
+    <div class="twitch-recent" data-twitch-recent></div>
+    <footer><span data-twitch-updated></span><a href={twitchUrl} target="_blank" rel="noopener noreferrer">Open Twitch ↗</a></footer>
+  </div>
+  <div class="twitch-error" data-twitch-error hidden><strong data-twitch-error-title>Twitch information is temporarily unavailable.</strong><p data-twitch-error-message></p><div><button type="button" data-twitch-retry>Retry</button><a href={twitchUrl} target="_blank" rel="noopener noreferrer">Visit Twitch</a></div></div>
+</section>
+<style>
+  .twitch-card{width:100%;min-width:0;padding:1rem;overflow:hidden;border:1px solid rgba(169,112,255,.3);border-radius:14px;background:linear-gradient(145deg,rgba(145,70,255,.15),rgba(8,7,18,.8));text-align:left}.twitch-loading{display:grid;grid-template-columns:58px 1fr;gap:.8rem}.twitch-loading>span{width:58px;height:58px;border-radius:15px;background:linear-gradient(90deg,#181226,#372552,#181226);background-size:200%;animation:twitch-shimmer 1.4s infinite}.twitch-loading>div{display:grid;gap:.4rem;align-content:center}.twitch-loading i{display:block;height:9px;border-radius:999px;background:#2a203d}.twitch-loading i:nth-child(2){width:70%}.twitch-loading i:nth-child(3){width:45%}.twitch-loading p{grid-column:1/-1;margin:0;color:#a8a0b7;font-size:.75rem}.twitch-content header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.8rem;align-items:center}.twitch-content header img{width:64px;height:64px;object-fit:cover;border-radius:16px;border:2px solid rgba(169,112,255,.55)}.twitch-content header p{display:flex;align-items:center;gap:.3rem;margin:0;color:#c4a4ff;font-size:.62rem;font-weight:800;letter-spacing:.12em}.twitch-content header h3{margin:.3rem 0 0;color:white;font-size:1.05rem}.twitch-content header span{color:#9d95ab;font-size:.75rem}.twitch-content header>strong{padding:.35rem .5rem;border-radius:999px;background:#40384d;color:#c4bccd;font-size:.6rem;letter-spacing:.08em}.twitch-content header>strong.live{background:#eb2949;color:white;box-shadow:0 0 18px rgba(235,41,73,.3)}.twitch-content>p{color:#aaa2b6;font-size:.78rem;line-height:1.6}.twitch-stream{display:grid;gap:.7rem;padding:.75rem;border:1px solid rgba(169,112,255,.2);border-radius:11px;background:rgba(4,3,10,.4)}.twitch-stream img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px}.twitch-stream div{display:grid;gap:.25rem}.twitch-stream span{color:#ff6683;font-size:.62rem;font-weight:900;letter-spacing:.12em}.twitch-stream strong{color:white}.twitch-stream p{margin:0;color:#a9a0b6;font-size:.72rem}.twitch-recent{display:grid;gap:.45rem;margin-top:.7rem}.twitch-recent a{display:block;padding:.6rem;border:1px solid rgba(255,255,255,.08);border-radius:8px;color:#ddd5e8;font-size:.72rem;text-decoration:none;overflow-wrap:anywhere}.twitch-content footer{display:flex;justify-content:space-between;gap:.6rem;margin-top:.8rem;color:#847c90;font-size:.65rem}.twitch-content footer a{color:#c7a5ff;text-decoration:none}.twitch-error{padding:.9rem;border:1px solid rgba(255,94,127,.25);border-radius:10px;background:rgba(77,15,33,.15)}.twitch-error strong{color:#ffd3dc}.twitch-error p{color:#aaa2b6;line-height:1.55}.twitch-error div{display:flex;flex-wrap:wrap;gap:.5rem}.twitch-error button,.twitch-error a{min-height:42px;padding:.65rem .8rem;border:1px solid rgba(169,112,255,.3);border-radius:8px;background:rgba(145,70,255,.13);color:white;text-decoration:none;cursor:pointer}@keyframes twitch-shimmer{to{background-position:-200%}}@media(max-width:430px){.twitch-content header{grid-template-columns:52px minmax(0,1fr)}.twitch-content header img{width:52px;height:52px}.twitch-content header>strong{grid-column:1/-1;justify-self:start}}
+</style>
 <script>
-    async function checkTwitchStatus() {
-        const statusElement = document.getElementById('twitch-status');
-        const liveDot = document.getElementById('live-dot');
-        const statusText = document.getElementById('status-text');
-        const statusSubtext = document.getElementById('status-subtext');
-
-        if (!statusElement) return;
-
-        const username = statusElement.getAttribute('data-username');
-
-        try {
-            const response = await fetch(`/api/twitch-status?username=${username}`);
-            const data = await response.json();
-
-            if (data.isLive) {
-                statusElement.classList.remove('offline');
-                liveDot?.classList.remove('hidden', 'bg-gray-500');
-                liveDot?.classList.add('bg-red-500', 'pulse-live');
-                if (statusText) statusText.textContent = 'LIVE NOW';
-                if (statusSubtext) statusSubtext.textContent = data.title || 'Click to watch!';
-            } else {
-                statusElement.classList.add('offline');
-                liveDot?.classList.add('hidden');
-                if (statusText) statusText.textContent = 'Currently Offline';
-                if (statusSubtext) statusSubtext.textContent = 'Click to visit channel';
-            }
-        } catch (error) {
-            console.log('Could not check Twitch status');
-        }
-    }
-
-    checkTwitchStatus();
-    setInterval(checkTwitchStatus, 60000);
+  import { errorLabel, fetchIntegration, formatCount } from '../scripts/live-data';
+  interface TwitchData { channel: { login: string; displayName: string; description: string; profileImageUrl: string; url: string }; live: { isLive: boolean; title?: string; game?: string; viewerCount?: number; thumbnailUrl?: string }; recentContent: Array<{ title: string; url: string; viewCount: number }> }
+  document.querySelectorAll<HTMLElement>('[data-twitch-card]').forEach((root) => {
+    const set = (selector: string, value: string) => { const element = root.querySelector<HTMLElement>(selector); if (element) element.textContent = value; };
+    const load = async () => {
+      const loading = root.querySelector<HTMLElement>('[data-twitch-loading]'); const content = root.querySelector<HTMLElement>('[data-twitch-content]'); const error = root.querySelector<HTMLElement>('[data-twitch-error]');
+      if (loading) loading.hidden = false; if (content) content.hidden = true; if (error) error.hidden = true;
+      try {
+        const result = await fetchIntegration<TwitchData>(`/.netlify/functions/twitch-status?username=${encodeURIComponent(root.dataset.username || '')}`); const data = result.data;
+        set('[data-twitch-name]', data.channel.displayName); set('[data-twitch-login]', `@${data.channel.login}`); set('[data-twitch-description]', data.channel.description || 'Gaming streams and creator content from Taz Elite.');
+        const avatar = root.querySelector<HTMLImageElement>('[data-twitch-avatar]'); if (avatar) { avatar.src = data.channel.profileImageUrl; avatar.onerror = () => { avatar.src = '/images/brand/taz-elite-logo-256.webp'; }; }
+        const live = root.querySelector<HTMLElement>('[data-twitch-live]'); if (live) { live.textContent = data.live.isLive ? 'LIVE NOW' : 'OFFLINE'; live.classList.toggle('live', data.live.isLive); }
+        const stream = root.querySelector<HTMLElement>('[data-twitch-stream]'); if (stream && data.live.isLive) { stream.hidden = false; set('[data-stream-title]', data.live.title || 'Live on Twitch'); set('[data-stream-meta]', `${data.live.game || 'Streaming'} · ${formatCount(data.live.viewerCount)} viewers`); const image = root.querySelector<HTMLImageElement>('[data-stream-thumbnail]'); if (image && data.live.thumbnailUrl) image.src = data.live.thumbnailUrl; }
+        const recent = root.querySelector<HTMLElement>('[data-twitch-recent]'); if (recent) { recent.replaceChildren(...data.recentContent.slice(0,3).map((video) => { const link = document.createElement('a'); link.href = video.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = `${video.title} · ${formatCount(video.viewCount)} views`; return link; })); }
+        set('[data-twitch-updated]', `Updated ${new Date(result.updatedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`); if (loading) loading.hidden = true; if (content) content.hidden = false;
+      } catch (requestError) { const details = requestError as { code?: string; message?: string }; if (loading) loading.hidden = true; if (error) error.hidden = false; set('[data-twitch-error-title]', errorLabel(details.code || '')); set('[data-twitch-error-message]', details.message || 'Twitch information is temporarily unavailable.'); }
+    };
+    root.querySelector('[data-twitch-retry]')?.addEventListener('click', load); load();
+  });
 </script>

@@ -1,0 +1,12 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import SectionHeading from '../components/portfolio/SectionHeading.astro';
+import PhotoGallery from '../components/portfolio/PhotoGallery.astro';
+import { biography, pillars } from '../data/content';
+---
+<PortfolioLayout title="About Taz | Taz Elite" description="Learn about Taz, a U.S. Army service member, software developer, founder of Kruiger Labs, gamer, and content creator.">
+  <header class="page-shell page-intro"><span class="page-kicker">About Taz</span><h1>Discipline powers the mission. Curiosity shapes the future.</h1><p>Known professionally as Taz, I bring military focus, technical ambition, and an entrepreneurial mindset to every platform and community I build.</p></header>
+  <section class="section"><div class="section-shell bio-grid"><aside class="bio-aside"><blockquote>“Building the future through innovation, discipline, and technology.”</blockquote></aside><div class="bio-copy">{biography.map((paragraph) => <p data-reveal>{paragraph}</p>)}</div></div></section>
+  <section class="section"><div class="section-shell"><SectionHeading eyebrow="What shapes the work" title="Seven dimensions of Taz Elite." /><div class="pillars">{pillars.map(([title, text]) => <article class="pillar" data-reveal><span>{title}</span><p>{text}</p></article>)}</div></div></section>
+  <section class="section"><div class="section-shell"><SectionHeading eyebrow="Approved gallery" title="Personal moments, intentionally selected." description="Only manually approved photos from Taz’s own Instagram posts appear here." /><PhotoGallery /></div></section>
+</PortfolioLayout>

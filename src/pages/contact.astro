@@ -1,0 +1,29 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import { siteConfig } from '../config/site';
+---
+<PortfolioLayout title="Contact Taz | Taz Elite" description="Contact Taz for business inquiries, development requests, collaborations, content, hosting, VPN, and technical support.">
+  <header class="page-shell page-intro"><span class="page-kicker">Contact Taz</span><h1>Start a focused conversation.</h1><p>For business inquiries, development requests, collaborations, and other questions, contact Taz at {siteConfig.email}. Response times may vary between 24 and 72 hours.</p></header>
+  <section class="section"><div class="section-shell contact-grid"><article class="contact-card"><h2>Direct contact</h2><p>Email remains the best way to discuss a project, partnership, creator opportunity, or technical request.</p><a class="button primary" href={`mailto:${siteConfig.email}`}>Email Taz</a><div class="social-links">{Object.entries(siteConfig.socials).map(([name, href]) => <a href={href} target="_blank" rel="noopener noreferrer">{name.replace(/([A-Z])/g, ' $1')} ↗</a>)}</div></article><article class="contact-card"><h2>Send an inquiry</h2><form class="contact-form" name="taz-contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/contact-success"><input type="hidden" name="form-name" value="taz-contact" /><p class="honeypot"><label>Do not fill this field<input name="bot-field" /></label></p><div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name" required maxlength="100" /></div><div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="160" /></div><div class="field"><label for="subject">Subject</label><input id="subject" name="subject" required maxlength="160" /></div><div class="field"><label for="inquiry-type">Inquiry type</label><select id="inquiry-type" name="inquiry-type" required><option value="">Select one</option>{['Business','Development','Collaboration','Content','Game Hosting','VPN','Technical Support','Other'].map((type) => <option>{type}</option>)}</select></div><div class="field full"><label for="message">Message</label><textarea id="message" name="message" required minlength="20" maxlength="5000"></textarea></div><p class="form-note">Response times may vary between 24 and 72 hours. This form includes Netlify spam filtering and a honeypot.</p><div class="form-status" aria-live="polite"></div><button class="button primary" type="submit">Send message</button></form></article></div></section>
+  <script>
+    const form = document.querySelector<HTMLFormElement>('.contact-form');
+    form?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const status = form.querySelector<HTMLElement>('.form-status');
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      if (!form.reportValidity()) return;
+      if (button) button.disabled = true;
+      if (status) status.textContent = 'Sending your message…';
+      try {
+        const response = await fetch('/__forms.html', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form) as any).toString() });
+        if (!response.ok) throw new Error();
+        form.reset();
+        if (status) status.textContent = 'Message sent. Taz typically responds within 24 to 72 hours.';
+      } catch {
+        if (status) status.textContent = 'The message could not be sent. Please email taz@kruigerlabsllc.com directly.';
+      } finally {
+        if (button) button.disabled = false;
+      }
+    });
+  </script>
+</PortfolioLayout>
