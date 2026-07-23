@@ -6,9 +6,10 @@ import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal
 interface Props {
     title: string;
     description?: string;
+    wide?: boolean;
 }
 
-const { title, description = "Gaming Content Creator & Community Builder - Stranger Things Season 5" } = Astro.props;
+const { title, description = "Gaming Content Creator & Community Builder - Stranger Things Season 5", wide = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -69,7 +70,7 @@ const { title, description = "Gaming Content Creator & Community Builder - Stran
         <div class="upside-down-particles"></div>
         <div class="upside-down-overlay"></div>
         <div class="flex flex-col min-h-screen px-6 sm:px-12 relative z-10">
-            <div class="flex flex-col w-full max-w-4xl mx-auto grow">
+            <div class:list={["flex flex-col w-full mx-auto grow", wide ? "max-w-6xl" : "max-w-4xl"]}>
                 <main class="grow py-8"><slot /></main>
             </div>
         </div>
