@@ -4,11 +4,11 @@
 <header class="site-header">
     <div class="header-inner">
         <a href="/" class="header-brand">
-            <img src="/images/taz.gif" alt="TazElite" class="header-logo" />
+            <img src="/images/brand/taz-elite-logo-128.webp" alt="Taz Elite logo" class="header-logo" width="48" height="48" />
             <span class="header-title">TazElite</span>
         </a>
 
-        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Toggle menu">
+        <button id="mobile-menu-btn" class="mobile-menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="header-nav">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
@@ -16,26 +16,17 @@
 
         <nav id="header-nav" class="header-nav">
             <a href="/" class="nav-link">Home</a>
-            <a href="/cod-tracker" class="nav-link">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-                COD Tracker
-            </a>
-            <a href="/vpn" class="nav-link">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l7 3v5c0 4.4-2.98 8.5-7 10-4.02-1.5-7-5.6-7-10V6l7-3zm-3 9l2 2 4-4"/>
-                </svg>
-                VPN & Security
-            </a>
-            <a href="/cloudnord" class="nav-link">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 18h10a4 4 0 00.7-7.94A6 6 0 006.26 8.5 4.5 4.5 0 007 18zm1-4h8M9 11h.01M12 11h.01"/>
-                </svg>
-                Game Hosting
-            </a>
-            <a href="/tip" class="nav-link nav-tip">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                Support Me
-            </a>
+            <a href="/about" class="nav-link">About</a>
+            <a href="/experience" class="nav-link">Experience</a>
+            <a href="/projects" class="nav-link">Projects</a>
+            <a href="/discord" class="nav-link">Discord</a>
+            <a href="/twitch" class="nav-link">Twitch</a>
+            <a href="/tiktok" class="nav-link">TikTok</a>
+            <a href="/youtube" class="nav-link">YouTube</a>
+            <a href="/instagram" class="nav-link">Instagram</a>
+            <a href="/contact" class="nav-link">Contact</a>
+            <a href="/cloudnord" class="nav-link">Game Hosting</a>
+            <a href="/vpn" class="nav-link">VPN</a>
         </nav>
     </div>
 </header>
@@ -46,7 +37,7 @@
         top: 0;
         left: 0;
         right: 0;
-        z-index: 40;
+        z-index: 100;
         background: rgba(10, 10, 10, 0.85);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
@@ -71,9 +62,10 @@
     }
 
     .header-logo {
-        width: 36px;
-        height: 36px;
-        border-radius: 0.5rem;
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+        border-radius: 0.65rem;
         box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
     }
 
@@ -134,22 +126,29 @@
         cursor: pointer;
     }
 
-    @media (max-width: 980px) {
+    @media (max-width: 1280px) {
         .mobile-menu-btn {
             display: block;
         }
 
         .header-nav {
             display: none;
-            position: absolute;
+            position: fixed;
             top: 64px;
             left: 0;
             right: 0;
+            bottom: 0;
+            height: calc(100dvh - 64px);
+            max-height: calc(100dvh - 64px);
             flex-direction: column;
+            align-items: stretch;
+            overflow-y: auto;
+            overscroll-behavior: contain;
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(20px);
-            padding: 1rem;
+            padding: 1rem 1rem calc(2rem + env(safe-area-inset-bottom));
             border-bottom: 1px solid rgba(229, 9, 20, 0.2);
+            scrollbar-width: thin;
         }
 
         .header-nav.open {
@@ -159,6 +158,7 @@
         .nav-link {
             width: 100%;
             justify-content: center;
+            min-height: 48px;
             padding: 0.75rem 1rem;
         }
     }
@@ -167,7 +167,8 @@
 <script>
     const menuBtn = document.getElementById('mobile-menu-btn');
     const nav = document.getElementById('header-nav');
-    menuBtn?.addEventListener('click', () => {
-        nav?.classList.toggle('open');
-    });
+    const setMenu = (open: boolean) => { nav?.classList.toggle('open', open); menuBtn?.setAttribute('aria-expanded', String(open)); menuBtn?.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); document.body.style.overflow = open ? 'hidden' : ''; };
+    menuBtn?.addEventListener('click', () => setMenu(menuBtn.getAttribute('aria-expanded') !== 'true'));
+    nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setMenu(false); });
 </script>

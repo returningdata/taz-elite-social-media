@@ -1,0 +1,19 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import { projects } from '../data/content';
+const categories = ['All', ...new Set(projects.map((project) => project.category))];
+const projectSchema = projects.map((project) => ({ '@context': 'https://schema.org', '@type': 'CreativeWork', name: project.name, description: project.description, creator: { '@type': 'Person', name: 'Taz' } }));
+---
+<PortfolioLayout title="Projects | Taz Elite" description="Explore software, Discord, hosting, mobile, automation, security, infrastructure, and creator-platform projects designed by Taz.">
+  <script type="application/ld+json" set:html={JSON.stringify(projectSchema)}></script>
+  <header class="page-shell page-intro"><span class="page-kicker">Selected projects</span><h1>Practical ideas engineered into connected platforms.</h1><p>Project labels reflect their current stage without overstating completion. Filter the collection by the type of problem each project addresses.</p></header>
+  <section class="section"><div class="section-shell">
+    <div class="project-filters" aria-label="Project filters">{categories.map((category, index) => <button class:list={['filter-button', { active: index === 0 }]} data-project-filter={category}>{category}</button>)}</div>
+    <div class="project-grid">{projects.map((project) => <article class="project-card" data-project-category={project.category} data-reveal><div class="project-meta"><span>{project.category}</span><span class="status">{project.status}</span></div><h2>{project.name}</h2><p>{project.description}</p><div class="tag-list">{project.tags.map((tag) => <span class="tag">{tag}</span>)}</div></article>)}</div>
+  </div></section>
+  <script>
+    const buttons = document.querySelectorAll<HTMLButtonElement>('[data-project-filter]');
+    const projects = document.querySelectorAll<HTMLElement>('[data-project-category]');
+    buttons.forEach((button) => button.addEventListener('click', () => { buttons.forEach((item) => item.classList.remove('active')); button.classList.add('active'); projects.forEach((project) => project.hidden = button.dataset.projectFilter !== 'All' && project.dataset.projectCategory !== button.dataset.projectFilter); }));
+  </script>
+</PortfolioLayout>

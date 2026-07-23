@@ -1,0 +1,21 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import { experiences } from '../data/content';
+import TechnologyStrip from '../components/brand/TechnologyStrip.astro';
+---
+<PortfolioLayout title="Experience | Taz Elite" description="Explore Taz Elite experience across software development, Discord systems, infrastructure, mobile, APIs, security, and product planning.">
+  <header class="page-shell page-intro"><span class="page-kicker">Technical experience</span><h1>Systems thinking from interface to infrastructure.</h1><p>Filter by discipline, then expand each category to see the technologies and workflows used across product, community, and platform work.</p></header>
+  <section class="section"><div class="section-shell">
+    <TechnologyStrip />
+    <div class="experience-toolbar" aria-label="Experience filters"><button class="filter-button active" data-filter="all">All</button>{experiences.map((item) => <button class="filter-button" data-filter={item.category}>{item.category}</button>)}</div>
+    <div class="experience-list">{experiences.map((experience, index) => <details class="experience-card" data-category={experience.category} open={index === 0}><summary><h2>{experience.category}</h2><span>+</span></summary><div class="experience-content"><p>{experience.summary}</p><div class="tag-list">{experience.items.map((item) => <span class="tag">{item}</span>)}</div></div></details>)}</div>
+  </div></section>
+  <script>
+    const filters = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+    const cards = document.querySelectorAll<HTMLElement>('[data-category]');
+    filters.forEach((button) => button.addEventListener('click', () => {
+      filters.forEach((item) => item.classList.remove('active')); button.classList.add('active');
+      cards.forEach((card) => card.hidden = button.dataset.filter !== 'all' && card.dataset.category !== button.dataset.filter);
+    }));
+  </script>
+</PortfolioLayout>

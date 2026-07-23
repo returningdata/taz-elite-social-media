@@ -203,6 +203,16 @@
         animation: none;
     }
 
+    .server-retry {
+        margin-top: 0.75rem;
+        padding: 0.65rem 0.85rem;
+        border: 1px solid rgba(229, 9, 20, 0.35);
+        border-radius: 0.5rem;
+        background: rgba(229, 9, 20, 0.12);
+        color: white;
+        cursor: pointer;
+    }
+
     @keyframes pulse-dot {
         0%, 100% { opacity: 1; }
         50% { opacity: 0.5; }
@@ -275,6 +285,8 @@
 </style>
 
 <script>
+    import { fetchIntegration } from '../scripts/live-data';
+
     interface ServerStatusResponse {
         online: boolean;
         players: number;
@@ -289,13 +301,7 @@
 
         try {
             // Use our serverless function with CFX server code (ajv9r5) to get player count
-            const response = await fetch('/api/fivem-status?code=ajv9r5');
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch server status');
-            }
-
-            const data: ServerStatusResponse = await response.json();
+            const { data } = await fetchIntegration<ServerStatusResponse>('/.netlify/functions/fivem-status?code=ajv9r5');
 
             if (data.online) {
                 const players = data.players || 0;
@@ -338,6 +344,9 @@
             }
         } catch (error) {
             console.error('Failed to fetch server status:', error);
+            const message = error instanceof Error ? error.message : 'Server information is temporarily unavailable.';
+            statusElement.innerHTML = `<div class="server-info"><span class="server-name">California Roleplay</span><span class="server-offline">${message}</span></div><button type="button" id="retry-server-status" class="server-retry">Retry server status</button>`;
+            document.getElementById('retry-server-status')?.addEventListener('click', fetchServerStatus, { once: true });
 
             statusElement.innerHTML = `
                 <div class="status-grid">
@@ -367,7 +376,4 @@
 
     // Fetch on load
     fetchServerStatus();
-
-    // Refresh every 30 seconds
-    setInterval(fetchServerStatus, 30000);
 </script>

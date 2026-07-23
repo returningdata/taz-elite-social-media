@@ -1,0 +1,9 @@
+---
+import { siteConfig } from '../../config/site';
+import BrandLogo from '../brand/BrandLogo.astro';
+---
+<footer class="portfolio-footer">
+  <div><a class="brand-mark" href="/"><BrandLogo size="small" class="brand-logo" /><strong>Taz Elite</strong></a><p>Technology shaped by discipline, creativity, and purpose.</p></div>
+  <div class="footer-links"><a href="/about">About</a><a href="/projects">Projects</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></div>
+  <p class="copyright">© {new Date().getFullYear()} Taz Elite. Built for the next mission.</p>
+</footer>

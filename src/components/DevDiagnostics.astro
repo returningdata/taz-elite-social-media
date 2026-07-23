@@ -1,0 +1,9 @@
+<aside class="dev-diagnostics" data-dev-diagnostics>
+  <details><summary>Integration diagnostics</summary><div data-diagnostics-content>Loading local configuration status…</div></details>
+</aside>
+<style>.dev-diagnostics{position:fixed;left:10px;bottom:10px;z-index:65;width:min(330px,calc(100vw - 20px));font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;color:#d9e5ff}.dev-diagnostics details{padding:.6rem;border:1px solid #4d66a6;border-radius:10px;background:rgba(4,8,18,.96)}.dev-diagnostics summary{cursor:pointer}.dev-diagnostics div{display:grid;gap:.35rem;margin-top:.6rem}.dev-diagnostics p{margin:0}.dev-diagnostics .ok{color:#76efb1}.dev-diagnostics .missing{color:#ffad7d}</style>
+<script>
+  import { fetchIntegration } from '../scripts/live-data';
+  const root = document.querySelector<HTMLElement>('[data-dev-diagnostics]');
+  if (root) fetchIntegration<any>('/.netlify/functions/integration-diagnostics').then(({ data }) => { const content = root.querySelector<HTMLElement>('[data-diagnostics-content]'); if (!content) return; content.innerHTML = ''; Object.entries(data.integrations).forEach(([name, value]) => { const integration = value as { configured: boolean; missing: string[]; fallback: string | null }; const row = document.createElement('p'); row.className = integration.configured ? 'ok' : 'missing'; row.textContent = `${name}: ${integration.configured ? 'configured' : integration.fallback ? `fallback active (${integration.fallback})` : `missing ${integration.missing.join(', ')}`}`; content.append(row); }); }).catch(() => root.remove());
+</script>
