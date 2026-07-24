@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 const widths = [320, 360, 375, 390, 412, 768, 1024, 1280, 1440, 1920];
-const auditRoutes = ['/', '/discord', '/youtube', '/tiktok', '/instagram', '/contact'];
+const auditRoutes = ['/', '/discord', '/twitch', '/youtube', '/tiktok', '/instagram', '/contact'];
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -65,7 +65,17 @@ test('social integrations resolve to data or truthful errors', async ({ page }) 
 
   await page.goto('/twitch');
   await expect(page.locator('[data-twitch-loading]')).toBeHidden();
-  await expect(page.locator('[data-twitch-error]')).toBeVisible();
+  const twitchContent = page.locator('[data-twitch-content]');
+  const twitchError = page.locator('[data-twitch-error]');
+  expect(await twitchContent.isVisible() || await twitchError.isVisible()).toBeTruthy();
+  if (await twitchContent.isVisible()) {
+    await expect(page.locator('[data-twitch-status]')).toHaveText(/LIVE NOW|CURRENTLY OFFLINE/);
+    expect(await page.locator('[data-twitch-videos] .content-card').count()).toBeLessThanOrEqual(3);
+    expect(await page.locator('[data-twitch-clips] .content-card').count()).toBeLessThanOrEqual(6);
+    await expect(page.locator('body')).not.toContainText(/California Roleplay|Starz Empire/i);
+    const externalContentUrls = await page.locator('[data-twitch-videos] a, [data-twitch-clips] a').evaluateAll((links) => links.map((link) => (link as HTMLAnchorElement).hostname));
+    expect(externalContentUrls.every((hostname) => hostname.endsWith('twitch.tv'))).toBeTruthy();
+  }
 });
 
 test('branding, protected pages, and music player remain intact', async ({ page }) => {
@@ -84,4 +94,31 @@ test('branding, protected pages, and music player remain intact', async ({ page 
   expect(logoMetrics.naturalWidth).toBeGreaterThan(0);
   expect(logoMetrics.naturalWidth / logoMetrics.naturalHeight).toBeCloseTo(1, 1);
   expect(logoMetrics.fit).toBe('contain');
+});
+
+test('music player stays audio-first and persists during internal navigation', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const player = page.locator('#taz-mix');
+  await expect(player).toHaveAttribute('data-astro-transition-persist', 'taz-mix');
+  await expect(page.locator('.taz-mix__youtube')).toHaveCSS('left', '-10000px');
+  await expect(page.locator('[data-volume]')).toHaveValue('25');
+  const originalPlayer = await player.elementHandle();
+  await page.locator('a[href="/about"]').first().click();
+  await page.waitForURL('**/about');
+  expect(await originalPlayer?.evaluate((element) => element.isConnected)).toBeTruthy();
+  await expect(page.locator('#taz-mix')).toHaveCount(1);
+});
+
+test('reduced motion disables decorative looping effects', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const animations = await page.evaluate(() => ({
+    glow: getComputedStyle(document.querySelector('.site-effects__glow')!).animationName,
+    hero: getComputedStyle(document.querySelector('.hero-frame img')!).animationName,
+    cursor: getComputedStyle(document.querySelector('.site-effects__cursor')!).display
+  }));
+  expect(animations.glow).toBe('none');
+  expect(animations.hero).toBe('none');
+  expect(animations.cursor).toBe('none');
 });

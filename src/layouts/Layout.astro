@@ -3,8 +3,10 @@ import '../../src/styles/globals.css';
 import '@fontsource-variable/inter/wght.css';
 import interWoff2 from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import TazMixPlayer from '../components/TazMixPlayer.astro';
+import SiteEffects from '../components/SiteEffects.astro';
 import DevDiagnostics from '../components/DevDiagnostics.astro';
 import '../styles/repairs.css';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props { title: string; description?: string; wide?: boolean; }
 const { title, description = 'Gaming Content Creator & Community Builder', wide = false } = Astro.props;
@@ -15,7 +17,7 @@ const { title, description = 'Gaming Content Creator & Community Builder', wide 
     <meta charset="UTF-8" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32" />
@@ -29,12 +31,14 @@ const { title, description = 'Gaming Content Creator & Community Builder', wide 
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
+    <ClientRouter />
     <style>
       .stranger-things-title{font-family:'Cinzel',Georgia,serif;font-weight:900;color:#e50914;text-transform:uppercase;letter-spacing:.1em;text-shadow:0 0 10px rgba(229,9,20,.9),0 0 20px rgba(229,9,20,.7),0 0 30px rgba(229,9,20,.5),0 0 40px rgba(229,9,20,.3),2px 2px 4px rgba(0,0,0,.8);animation:stranger-flicker 4s infinite alternate}
       @keyframes stranger-flicker{0%,18%,22%,25%,53%,57%,100%{opacity:1;text-shadow:0 0 10px rgba(229,9,20,.9),0 0 20px rgba(229,9,20,.7),0 0 30px rgba(229,9,20,.5),0 0 40px rgba(229,9,20,.3)}20%,24%,55%{opacity:.8;text-shadow:0 0 5px rgba(229,9,20,.5)}}
     </style>
   </head>
   <body class="antialiased text-white gradient-bg">
+    <SiteEffects />
     <div class="upside-down-particles"></div><div class="upside-down-overlay"></div>
     <div class="flex flex-col min-h-screen px-6 sm:px-12 relative z-10"><div class:list={['flex flex-col w-full mx-auto grow', wide ? 'max-w-6xl' : 'max-w-4xl']}><main class="grow py-8"><slot /></main></div></div>
     <TazMixPlayer />
