@@ -3,9 +3,11 @@ import '../styles/portfolio.css';
 import PortfolioHeader from '../components/portfolio/PortfolioHeader.astro';
 import PortfolioFooter from '../components/portfolio/PortfolioFooter.astro';
 import TazMixPlayer from '../components/TazMixPlayer.astro';
+import SiteEffects from '../components/SiteEffects.astro';
 import DevDiagnostics from '../components/DevDiagnostics.astro';
 import '../styles/repairs.css';
 import { siteConfig } from '../config/site';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -61,8 +63,10 @@ const websiteSchema = { '@context': 'https://schema.org', '@type': 'WebSite', na
     <meta name="twitter:image" content={imageUrl} />
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)}></script>
     <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)}></script>
+    <ClientRouter />
   </head>
   <body>
+    <SiteEffects />
     <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="ambient" aria-hidden="true"><i></i><i></i><i></i></div>
     <PortfolioHeader />
@@ -70,11 +74,5 @@ const websiteSchema = { '@context': 'https://schema.org', '@type': 'WebSite', na
     <PortfolioFooter />
     <TazMixPlayer />
     {import.meta.env.DEV && <DevDiagnostics />}
-    <script>
-      const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add('is-visible'));
-      }, { threshold: 0.12 });
-      document.querySelectorAll('[data-reveal]').forEach((element) => revealObserver.observe(element));
-    </script>
   </body>
 </html>

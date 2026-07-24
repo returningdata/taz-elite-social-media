@@ -4,9 +4,9 @@ import { apiError, apiSuccess } from '../lib/api';
 const variables = {
   discordPresence: { required: [], optional: ['DISCORD_USER_ID'], fallback: 'Built-in Discord user ID + Lanyard' },
   discordServer: { required: [], optional: ['DISCORD_INVITE_CODE'], fallback: 'Built-in public invite code' },
-  twitch: { required: ['TWITCH_CLIENT_ID', 'TWITCH_CLIENT_SECRET'], optional: ['TWITCH_CHANNEL_LOGIN'], fallback: null },
+  twitch: { required: ['TWITCH_CLIENT_ID', 'TWITCH_CLIENT_SECRET'], optional: ['TWITCH_CHANNEL_LOGIN', 'TWITCH_USER_ID', 'TWITCH_USER_ACCESS_TOKEN'], fallback: null },
   youtube: { required: ['YOUTUBE_API_KEY'], optional: ['YOUTUBE_CHANNEL_ID'], fallback: 'Official RSS feed for recent videos only' },
-  tiktok: { required: ['TIKTOK_ACCESS_TOKEN'], optional: ['TIKTOK_USERNAME'], fallback: null },
+  tiktok: { required: [], optional: ['TIKTOK_ACCESS_TOKEN', 'TIKTOK_USERNAME', 'TIKTOK_FOLLOWER_COUNT'], fallback: 'Daily persisted cache or manually configured follower count' },
   instagram: { required: [], optional: ['INSTAGRAM_PROFILE_URL'], fallback: 'Approved local gallery' }
 };
 

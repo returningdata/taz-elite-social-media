@@ -29,6 +29,10 @@ export const siteConfig = {
     twitchLogin: 'tazeliteplays',
     youtubeChannelId: 'UCe2cGb8qKK-guxCtA7GZOEg',
     tiktokUsername: 'tazeliteplays'
+  },
+  twitch: {
+    biography: 'Live streams, gaming content, highlights, reactions, and community sessions from TazElitePlays.',
+    categories: ['Call of Duty: Warzone', 'FiveM roleplay', 'Community sessions', 'Highlights and reactions', 'Variety gaming']
   }
 } as const;
 

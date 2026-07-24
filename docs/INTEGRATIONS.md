@@ -14,7 +14,23 @@ Personal presence uses the public Lanyard service and does not require a bot tok
 
 Create an application in the Twitch Developer Console. Add its **Client ID** as `TWITCH_CLIENT_ID` and its client secret as `TWITCH_CLIENT_SECRET`. Set `TWITCH_CHANNEL_LOGIN` to `tazeliteplays`.
 
-The Netlify function requests a Twitch app access token server-side for each uncached request, then calls the official Helix Users, Streams, and Videos endpoints. Missing or rejected credentials produce a visible setup or authorization message and never expose the client secret.
+`TWITCH_USER_ID` is optional. When supplied, it lets the function request the exact broadcaster account by numeric Twitch user ID; otherwise the function resolves the account from `TWITCH_CHANNEL_LOGIN`.
+
+The Netlify function requests a Twitch app access token server-side for each uncached request, then calls the official Helix Users, Channels, Streams, Videos, Clips, Schedule, Games, and Channel Followers endpoints. This powers the live/offline state, current title and game, viewer count, uptime, channel profile, recent broadcasts, clips, upcoming schedule, and recent VOD views.
+
+Twitch may require broadcaster authorization before returning the follower total. To enable that stat, generate a Twitch **user access token** for the channel owner with the `moderator:read:followers` scope and save it as `TWITCH_USER_ACCESS_TOKEN`. The authorized Twitch user must be the broadcaster for `TWITCH_CHANNEL_LOGIN` or one of its moderators. If this optional token is absent or rejected, the page labels followers as unavailable while every app-token stat continues to work.
+
+After adding or changing any Twitch environment variable, redeploy the site. Never add Twitch credentials to source code or browser-side environment variables. Missing or rejected credentials produce a visible setup or authorization message and never expose a token or client secret.
+
+### Twitch setup checklist
+
+1. Register a Twitch application and copy the application Client ID and Client Secret into the matching Netlify variables.
+2. Set `TWITCH_CHANNEL_LOGIN` to the channel login exactly as it appears in the Twitch URL, without the `@` symbol.
+3. For follower totals, authorize the broadcaster account with `moderator:read:followers`, store the returned user access token as `TWITCH_USER_ACCESS_TOKEN`, and renew that token when Twitch expires or revokes it.
+4. Trigger a new deploy so the Netlify Function receives the updated values.
+5. Open `/twitch`. Live status, viewers, title, game, uptime, channel images, recent VODs, and VOD views use the app credentials. The follower card confirms separately whether broadcaster authorization is active.
+
+The live player uses Twitch’s official browser embed only when the channel is live. Its `parent` value is generated from `window.location.hostname`, so local development, Netlify previews, the production Netlify hostname, and a connected custom domain use their actual current hostname rather than a hardcoded production or localhost value.
 
 ## YouTube
 
@@ -26,7 +42,11 @@ The API key enables subscriber count, total channel views, total video count, vi
 
 ## TikTok
 
-Create a TikTok developer application with the required Display API scopes, complete the account authorization flow, and store the resulting access token as `TIKTOK_ACCESS_TOKEN`. Set `TIKTOK_USERNAME` to `tazeliteplays`.
+Set `TIKTOK_USERNAME` to `tazeliteplays`. The TikTok function stores the last successful profile response in Netlify Blobs and refreshes it at most once every 24 hours. If a refresh fails or the token later expires, the site continues showing the saved follower count instead of immediately losing the statistic.
+
+For the official automated refresh, create a TikTok developer application with the required Display API scopes, complete the account authorization flow, and store the resulting access token as `TIKTOK_ACCESS_TOKEN`.
+
+If TikTok OAuth cannot be completed, set `TIKTOK_FOLLOWER_COUNT` to the current whole-number follower count. The site persists and displays that manually maintained value for `@tazeliteplays`; update the environment variable and redeploy whenever the public count should change. Manual mode does not invent likes, posts, or live status.
 
 TikTok access tokens can expire or be revoked. The function reports authorization failures distinctly. TikTok does not provide every requested metric, including reliable public live status, through every connection; unsupported data remains labeled unavailable.
 

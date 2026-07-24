@@ -1,0 +1,110 @@
+---
+import { effectsConfig } from '../config/effects';
+import '../styles/effects.css';
+import '../styles/effects-enhancements.css';
+import '../styles/effects-layering.css';
+---
+
+{effectsConfig.enabled && (
+  <div
+    class="site-effects"
+    aria-hidden="true"
+    data-particles={effectsConfig.particles}
+    data-parallax={effectsConfig.parallax}
+    data-cursor-glow={effectsConfig.cursorGlow}
+    data-card-tilt={effectsConfig.cardTilt}
+    data-scroll-reveal={effectsConfig.scrollReveal}
+    data-mobile-intensity={effectsConfig.mobileIntensity}
+    data-desktop-intensity={effectsConfig.desktopIntensity}
+  >
+    <div class="site-effects__grid"></div>
+    <div class="site-effects__code"></div>
+    <div class="site-effects__glow site-effects__glow--one"></div>
+    <div class="site-effects__glow site-effects__glow--two"></div>
+    <div class="site-effects__streak"></div>
+    <div class="site-effects__particles"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="site-effects__noise"></div>
+    <div class="site-effects__cursor"></div>
+  </div>
+)}
+
+<script>
+  declare global { interface Window { __tazEffectsReady?: boolean; __tazEffectsAbort?: AbortController; } }
+
+  const initializePageEffects = () => {
+    const effects = document.querySelector<HTMLElement>('.site-effects');
+    if (!effects) return;
+    window.__tazEffectsAbort?.abort();
+    const controller = new AbortController();
+    window.__tazEffectsAbort = controller;
+    const signal = controller.signal;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const touchDevice = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+    document.documentElement.dataset.effects = reducedMotion ? 'reduced' : 'active';
+    document.body.classList.add('page-effects-ready');
+
+    document.querySelectorAll<HTMLElement>('main section, [data-reveal], .card, .project-card, .social-card, .photo-card, .content-item, .discord-server-card, .stat-panel').forEach((element, index) => {
+      if (element.closest('.taz-mix')) return;
+      element.classList.add('effect-reveal');
+      element.style.setProperty('--reveal-order', String(index % 5));
+    });
+
+    if (!reducedMotion && effects.dataset.scrollReveal === 'true') {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('effect-revealed');
+          observer.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -7% 0px', threshold: 0.06 });
+      document.querySelectorAll('.effect-reveal').forEach((element) => observer.observe(element));
+      signal.addEventListener('abort', () => observer.disconnect(), { once: true });
+    } else {
+      document.querySelectorAll('.effect-reveal').forEach((element) => element.classList.add('effect-revealed'));
+    }
+
+    if (!reducedMotion && !touchDevice && effects.dataset.cardTilt === 'true') {
+      document.querySelectorAll<HTMLElement>('.project-card, .social-card, .photo-card, .discord-server-card').forEach((card) => {
+        card.classList.add('effect-tilt');
+        card.addEventListener('pointermove', (event) => {
+          const bounds = card.getBoundingClientRect();
+          const rotateX = ((event.clientY - bounds.top) / bounds.height - .5) * -2.2;
+          const rotateY = ((event.clientX - bounds.left) / bounds.width - .5) * 2.2;
+          card.style.setProperty('--tilt-x', `${rotateX}deg`);
+          card.style.setProperty('--tilt-y', `${rotateY}deg`);
+        }, { signal });
+        card.addEventListener('pointerleave', () => {
+          card.style.setProperty('--tilt-x', '0deg');
+          card.style.setProperty('--tilt-y', '0deg');
+        }, { signal });
+      });
+    }
+
+    const header = document.querySelector<HTMLElement>('.portfolio-header, .site-header, .twitch-nav');
+    const updateHeader = () => header?.classList.toggle('is-scrolled', window.scrollY > 18);
+    updateHeader();
+    window.addEventListener('scroll', updateHeader, { passive: true, signal });
+
+    const path = window.location.pathname.replace(/\/$/, '') || '/';
+    document.querySelectorAll<HTMLAnchorElement>('header a[href^="/"]').forEach((link) => {
+      const href = new URL(link.href).pathname.replace(/\/$/, '') || '/';
+      const active = href === path;
+      link.classList.toggle('is-active', active);
+      if (active) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
+    });
+  };
+
+  if (!window.__tazEffectsReady) {
+    window.__tazEffectsReady = true;
+    document.documentElement.classList.add('js');
+    const cursorMedia = window.matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+    window.addEventListener('pointermove', (event) => {
+      if (!cursorMedia.matches) return;
+      document.documentElement.style.setProperty('--cursor-x', `${event.clientX}px`);
+      document.documentElement.style.setProperty('--cursor-y', `${event.clientY}px`);
+    }, { passive: true });
+    document.addEventListener('astro:page-load', initializePageEffects);
+  }
+  initializePageEffects();
+</script>

@@ -1,40 +1,208 @@
 ---
+import BrandLogo from './brand/BrandLogo.astro';
 import PlatformIcon from './brand/PlatformIcon.astro';
+import { siteConfig } from '../config/site';
+
 interface Props { username: string; }
 const { username } = Astro.props;
 const twitchUrl = `https://www.twitch.tv/${username}`;
 ---
-<section class="twitch-card" data-twitch-card data-username={username}>
-  <div class="twitch-loading" data-twitch-loading><span></span><div><i></i><i></i><i></i></div><p>Loading Twitch channel information…</p></div>
-  <div class="twitch-content" data-twitch-content hidden>
-    <header><img data-twitch-avatar src="/images/brand/taz-elite-logo-256.webp" alt="Taz Elite Twitch profile fallback" width="88" height="88" /><div><p><PlatformIcon name="twitch" size={15} /> TWITCH CHANNEL</p><h3 data-twitch-name>TazElitePlays</h3><span data-twitch-login>@tazeliteplays</span></div><strong data-twitch-live>OFFLINE</strong></header>
-    <p data-twitch-description></p>
-    <div class="twitch-stream" data-twitch-stream hidden><img data-stream-thumbnail src="/images/brand/taz-elite-logo-512.webp" alt="Current Twitch stream thumbnail" /><div><span>LIVE NOW</span><strong data-stream-title></strong><p data-stream-meta></p></div></div>
-    <div class="twitch-recent" data-twitch-recent></div>
-    <footer><span data-twitch-updated></span><a href={twitchUrl} target="_blank" rel="noopener noreferrer">Open Twitch ↗</a></footer>
+
+<section class="twitch-hub" data-twitch-hub data-username={username} aria-live="polite">
+  <div class="hub-loading" data-twitch-loading>
+    <div class="loading-hero"><i></i><div><span></span><span></span><span></span></div></div>
+    <div class="loading-stage"></div>
+    <div class="loading-cards"><i></i><i></i><i></i></div>
+    <p>Connecting to TazElitePlays on Twitch…</p>
   </div>
-  <div class="twitch-error" data-twitch-error hidden><strong data-twitch-error-title>Twitch information is temporarily unavailable.</strong><p data-twitch-error-message></p><div><button type="button" data-twitch-retry>Retry</button><a href={twitchUrl} target="_blank" rel="noopener noreferrer">Visit Twitch</a></div></div>
+
+  <div class="hub-content" data-twitch-content hidden>
+    <section class="channel-hero" aria-labelledby="twitch-channel-name">
+      <div class="hero-brand" aria-hidden="true"><BrandLogo size="large" class="hero-brand-logo" eager /><span>OFFICIAL STREAMING HUB</span></div>
+      <div class="hero-profile">
+        <div class="profile-stack"><div class="profile-glow"></div><img data-twitch-avatar src={siteConfig.brand.logoMedium} alt="TazElitePlays Twitch profile" width="132" height="132" /><span class="platform-corner"><PlatformIcon name="twitch" size={20} /></span></div>
+        <div class="hero-copy">
+          <p class="hero-kicker"><span data-twitch-status>CHECKING STATUS</span><i></i> TWITCH · @{username}</p>
+          <h1 id="twitch-channel-name" data-twitch-name>TazElitePlays</h1>
+          <p class="hero-subtitle">Live streams, gaming content, highlights, and community.</p>
+          <p class="hero-description" data-twitch-description>{siteConfig.twitch.biography}</p>
+          <div class="live-summary" data-live-summary>
+            <span data-current-game>Channel status loading</span>
+            <strong data-current-title>Connecting to Twitch…</strong>
+            <small data-current-meta></small>
+          </div>
+          <div class="hero-actions">
+            <a class="twitch-button primary" href={twitchUrl} target="_blank" rel="noopener noreferrer"><PlatformIcon name="twitch" size={18} /> Follow on Twitch</a>
+            <a class="twitch-button live-action" data-watch-live href={twitchUrl} target="_blank" rel="noopener noreferrer" hidden>Watch Live <span>↗</span></a>
+            <a class="twitch-button" href={twitchUrl} target="_blank" rel="noopener noreferrer">Open Twitch Channel <span>↗</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="broadcast-section" id="watch" aria-labelledby="broadcast-heading">
+      <header class="section-heading"><div><span>NOW ON TWITCH</span><h2 id="broadcast-heading">The broadcast</h2></div><p data-broadcast-label>Checking channel status…</p></header>
+      <div class="live-player" data-live-player hidden>
+        <div class="player-shell"><div data-twitch-player title="TazElitePlays live Twitch stream"></div></div>
+        <div class="audio-notice" data-audio-notice hidden>Taz’s Mix was paused while the Twitch stream plays.</div>
+      </div>
+      <div class="offline-panel" data-offline-panel hidden>
+        <img class="offline-banner" data-offline-banner src={siteConfig.brand.logoLarge} alt="TazElitePlays offline channel artwork" />
+        <div class="offline-art"><BrandLogo size="large" class="offline-logo" /><img data-offline-avatar src={siteConfig.brand.logoMedium} alt="TazElitePlays profile" width="100" height="100" /></div>
+        <div class="offline-copy"><span>CURRENTLY OFFLINE</span><h2>TazElitePlays is currently offline</h2><p>Follow the channel to get notified when the next stream begins. Recent Twitch content and the latest known schedule remain available below.</p><div><a class="twitch-button primary" href={twitchUrl} target="_blank" rel="noopener noreferrer">Follow on Twitch</a><a class="twitch-button" href={`${twitchUrl}/videos`} target="_blank" rel="noopener noreferrer">Visit channel</a></div></div>
+        <div class="offline-latest" data-offline-latest></div>
+      </div>
+    </section>
+
+    <section class="metric-grid" aria-label="Twitch channel statistics">
+      <article><span>Live viewers</span><strong data-stat-viewers>—</strong><small data-stat-viewers-note>Loading</small></article>
+      <article><span>Followers</span><strong data-stat-followers>—</strong><small data-stat-followers-note>Loading</small></article>
+      <article><span>Stream duration</span><strong data-stat-uptime>—</strong><small data-stat-uptime-note>Loading</small></article>
+      <article><span>Recent VOD views</span><strong data-stat-vod-views>—</strong><small>Latest three broadcasts</small></article>
+    </section>
+
+    <section class="profile-section" aria-labelledby="profile-heading">
+      <div class="profile-card">
+        <span class="section-label">CHANNEL PROFILE</span><h2 id="profile-heading">About TazElitePlays</h2><p data-profile-biography>{siteConfig.twitch.biography}</p>
+        <div class="channel-tags" data-channel-tags></div>
+      </div>
+      <nav class="social-panel" aria-label="TazElitePlays social links">
+        <span class="section-label">CONNECT</span>
+        <a href={twitchUrl} target="_blank" rel="noopener noreferrer"><PlatformIcon name="twitch" size={20} /><span><strong>Twitch</strong><small>@tazeliteplays</small></span><i>↗</i></a>
+        <a href={siteConfig.socials.discord} target="_blank" rel="noopener noreferrer"><PlatformIcon name="discord" size={20} /><span><strong>Discord</strong><small>Join the community</small></span><i>↗</i></a>
+        <a href={siteConfig.socials.youtube} target="_blank" rel="noopener noreferrer"><PlatformIcon name="youtube" size={20} /><span><strong>YouTube</strong><small>Videos and highlights</small></span><i>↗</i></a>
+        <a href={siteConfig.socials.tiktok} target="_blank" rel="noopener noreferrer"><PlatformIcon name="tiktok" size={20} /><span><strong>TikTok</strong><small>@tazeliteplays</small></span><i>↗</i></a>
+        <a href={siteConfig.socials.instagram} target="_blank" rel="noopener noreferrer"><PlatformIcon name="instagram" size={20} /><span><strong>Instagram</strong><small>Approved photos</small></span><i>↗</i></a>
+      </nav>
+    </section>
+
+    <section class="schedule-section" aria-labelledby="schedule-heading">
+      <header class="section-heading"><div><span>STREAMING SCHEDULE</span><h2 id="schedule-heading">Upcoming streams</h2></div><p data-schedule-timezone>Your local time</p></header>
+      <div class="schedule-grid" data-schedule-grid></div>
+    </section>
+
+    <section class="content-section" id="recent-broadcasts" aria-labelledby="videos-heading">
+      <header class="section-heading"><div><span>RECENT BROADCASTS</span><h2 id="videos-heading">Watch it back</h2></div><a href={`${twitchUrl}/videos`} target="_blank" rel="noopener noreferrer">All Twitch videos ↗</a></header>
+      <div class="broadcast-grid" data-twitch-videos></div>
+    </section>
+
+    <section class="content-section" aria-labelledby="clips-heading">
+      <header class="section-heading"><div><span>CHANNEL CLIPS</span><h2 id="clips-heading">Moments from the stream</h2></div><a href={`${twitchUrl}/clips`} target="_blank" rel="noopener noreferrer">Open clips ↗</a></header>
+      <div class="clip-grid" data-twitch-clips></div>
+    </section>
+
+    <section class="category-section" aria-labelledby="categories-heading">
+      <header class="section-heading"><div><span>WHAT TO EXPECT</span><h2 id="categories-heading">Streams built around the community</h2></div></header>
+      <div class="category-grid">{siteConfig.twitch.categories.map((category, index) => <article><span>{String(index + 1).padStart(2, '0')}</span><h3>{category}</h3><p>{category === 'Call of Duty: Warzone' ? 'Competitive matches, squad sessions, and live reactions.' : category === 'FiveM roleplay' ? 'Roleplay sessions and stories from the FiveM community.' : category === 'Community sessions' ? 'Gaming with viewers, friends, and the wider Taz Elite community.' : category === 'Highlights and reactions' ? 'Memorable moments, reactions, and stream highlights.' : 'A flexible mix of games selected for the stream and community.'}</p></article>)}</div>
+    </section>
+
+    <section class="twitch-cta">
+      <BrandLogo size="medium" class="cta-logo" /><div><span>TAZELITEPLAYS</span><h2>Follow TazElitePlays on Twitch</h2><p>Join the streams, catch new gaming content, and become part of the community.</p></div><div class="cta-actions"><a class="twitch-button primary" href={twitchUrl} target="_blank" rel="noopener noreferrer">Follow on Twitch</a><a class="twitch-button" href={siteConfig.socials.discord} target="_blank" rel="noopener noreferrer">Join the Community</a><a class="twitch-button" href="#recent-broadcasts">Watch Recent Broadcasts</a></div>
+    </section>
+
+    <p class="data-updated" data-twitch-updated></p>
+  </div>
+
+  <div class="hub-error" data-twitch-error hidden>
+    <BrandLogo size="medium" class="error-logo" /><div><span>TWITCH CONNECTION</span><h2 data-twitch-error-title>Twitch information is temporarily unavailable</h2><p data-twitch-error-message>Visit TazElitePlays directly on Twitch for the latest stream status.</p></div><div><button type="button" data-twitch-retry>Retry Twitch data</button><a href={twitchUrl} target="_blank" rel="noopener noreferrer">Visit Twitch Channel ↗</a></div>
+  </div>
 </section>
-<style>
-  .twitch-card{width:100%;min-width:0;padding:1rem;overflow:hidden;border:1px solid rgba(169,112,255,.3);border-radius:14px;background:linear-gradient(145deg,rgba(145,70,255,.15),rgba(8,7,18,.8));text-align:left}.twitch-loading{display:grid;grid-template-columns:58px 1fr;gap:.8rem}.twitch-loading>span{width:58px;height:58px;border-radius:15px;background:linear-gradient(90deg,#181226,#372552,#181226);background-size:200%;animation:twitch-shimmer 1.4s infinite}.twitch-loading>div{display:grid;gap:.4rem;align-content:center}.twitch-loading i{display:block;height:9px;border-radius:999px;background:#2a203d}.twitch-loading i:nth-child(2){width:70%}.twitch-loading i:nth-child(3){width:45%}.twitch-loading p{grid-column:1/-1;margin:0;color:#a8a0b7;font-size:.75rem}.twitch-content header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.8rem;align-items:center}.twitch-content header img{width:64px;height:64px;object-fit:cover;border-radius:16px;border:2px solid rgba(169,112,255,.55)}.twitch-content header p{display:flex;align-items:center;gap:.3rem;margin:0;color:#c4a4ff;font-size:.62rem;font-weight:800;letter-spacing:.12em}.twitch-content header h3{margin:.3rem 0 0;color:white;font-size:1.05rem}.twitch-content header span{color:#9d95ab;font-size:.75rem}.twitch-content header>strong{padding:.35rem .5rem;border-radius:999px;background:#40384d;color:#c4bccd;font-size:.6rem;letter-spacing:.08em}.twitch-content header>strong.live{background:#eb2949;color:white;box-shadow:0 0 18px rgba(235,41,73,.3)}.twitch-content>p{color:#aaa2b6;font-size:.78rem;line-height:1.6}.twitch-stream{display:grid;gap:.7rem;padding:.75rem;border:1px solid rgba(169,112,255,.2);border-radius:11px;background:rgba(4,3,10,.4)}.twitch-stream img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px}.twitch-stream div{display:grid;gap:.25rem}.twitch-stream span{color:#ff6683;font-size:.62rem;font-weight:900;letter-spacing:.12em}.twitch-stream strong{color:white}.twitch-stream p{margin:0;color:#a9a0b6;font-size:.72rem}.twitch-recent{display:grid;gap:.45rem;margin-top:.7rem}.twitch-recent a{display:block;padding:.6rem;border:1px solid rgba(255,255,255,.08);border-radius:8px;color:#ddd5e8;font-size:.72rem;text-decoration:none;overflow-wrap:anywhere}.twitch-content footer{display:flex;justify-content:space-between;gap:.6rem;margin-top:.8rem;color:#847c90;font-size:.65rem}.twitch-content footer a{color:#c7a5ff;text-decoration:none}.twitch-error{padding:.9rem;border:1px solid rgba(255,94,127,.25);border-radius:10px;background:rgba(77,15,33,.15)}.twitch-error strong{color:#ffd3dc}.twitch-error p{color:#aaa2b6;line-height:1.55}.twitch-error div{display:flex;flex-wrap:wrap;gap:.5rem}.twitch-error button,.twitch-error a{min-height:42px;padding:.65rem .8rem;border:1px solid rgba(169,112,255,.3);border-radius:8px;background:rgba(145,70,255,.13);color:white;text-decoration:none;cursor:pointer}@keyframes twitch-shimmer{to{background-position:-200%}}@media(max-width:430px){.twitch-content header{grid-template-columns:52px minmax(0,1fr)}.twitch-content header img{width:52px;height:52px}.twitch-content header>strong{grid-column:1/-1;justify-self:start}}
+
+<style is:global>
+  .twitch-hub{--purple:#9146ff;--purple-light:#b884ff;--blue:#5bc8ff;--cyan:#6ef7e1;--panel:rgba(12,9,23,.82);width:100%;min-width:0}.hub-loading{display:grid;gap:1rem}.loading-hero,.loading-stage,.loading-cards i{position:relative;overflow:hidden;border:1px solid rgba(184,132,255,.13);background:#130d20}.loading-hero::after,.loading-stage::after,.loading-cards i::after{content:'';position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(184,132,255,.13),transparent);animation:hub-shimmer 1.4s infinite}.loading-hero{display:grid;grid-template-columns:120px 1fr;gap:1rem;min-height:300px;padding:2rem;border-radius:24px}.loading-hero>i{width:112px;height:112px;border-radius:24px;background:#24163b}.loading-hero div{display:grid;align-content:center;gap:.75rem}.loading-hero span{display:block;width:75%;height:14px;border-radius:999px;background:#24163b}.loading-hero span:nth-child(2){width:55%;height:42px}.loading-hero span:nth-child(3){width:88%}.loading-stage{aspect-ratio:16/9;border-radius:20px}.loading-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}.loading-cards i{height:150px;border-radius:15px}.hub-loading p{margin:0;color:#9f93aa}.channel-hero{position:relative;isolation:isolate;min-height:570px;padding:clamp(1.4rem,5vw,4.5rem);overflow:hidden;border:1px solid rgba(184,132,255,.24);border-radius:28px;background:radial-gradient(circle at 80% 28%,rgba(145,70,255,.24),transparent 25rem),linear-gradient(135deg,rgba(16,10,28,.98),rgba(7,8,18,.96));box-shadow:0 35px 100px rgba(0,0,0,.32)}.channel-hero::before{content:'// LIVE // CHAT // GAME // COMMUNITY //';position:absolute;inset:0;z-index:-1;display:flex;align-items:end;padding:1.2rem;color:rgba(184,132,255,.035);font-size:clamp(2rem,7vw,6rem);font-weight:900;letter-spacing:.05em;white-space:nowrap;transform:rotate(-7deg) scale(1.2)}.hero-brand{position:absolute;top:clamp(1.2rem,3vw,2rem);right:clamp(1.2rem,3vw,2rem);display:grid;justify-items:center;gap:.5rem;color:#8f819e;font-size:.55rem;font-weight:900;letter-spacing:.16em}.hero-brand-logo{width:88px!important;height:88px!important;object-fit:contain;filter:drop-shadow(0 0 28px rgba(91,200,255,.24))}.hero-profile{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:clamp(1.4rem,5vw,4rem);min-height:480px;max-width:1000px}.profile-stack{position:relative;width:clamp(120px,18vw,190px);aspect-ratio:1}.profile-stack>img{position:relative;width:100%;height:100%;object-fit:cover;border:4px solid rgba(184,132,255,.72);border-radius:30%;box-shadow:0 25px 65px rgba(0,0,0,.4)}.profile-glow{position:absolute;inset:-18%;border-radius:50%;background:radial-gradient(circle,rgba(145,70,255,.32),transparent 68%);filter:blur(16px)}.platform-corner{position:absolute;right:-8px;bottom:4px;display:grid;width:46px;height:46px;place-items:center;border:4px solid #0d0917;border-radius:14px;background:var(--purple)}.hero-copy{min-width:0;max-width:720px}.hero-kicker{display:flex;align-items:center;gap:.55rem;margin:0;color:#bca9ce;font-size:.63rem;font-weight:900;letter-spacing:.15em}.hero-kicker>span{padding:.4rem .55rem;border-radius:6px;background:#332a3c;color:#d8cedf}.hero-kicker>span.live{background:#eb2949;color:white;box-shadow:0 0 24px rgba(235,41,73,.35);animation:live-pulse 2s ease-in-out infinite}.hero-kicker>i{width:18px;height:1px;background:#7a6c88}.hero-copy h1{margin:.8rem 0 .5rem;font-family:'Space Grotesk',sans-serif;font-size:clamp(3.3rem,9vw,7.4rem);line-height:.85;letter-spacing:-.085em;overflow-wrap:anywhere}.hero-subtitle{margin:0;color:#d9cfe2;font-size:clamp(1rem,2vw,1.25rem)}.hero-description{max-width:650px;margin:1.1rem 0 0;color:#a99db3;line-height:1.7}.live-summary{display:grid;gap:.35rem;margin-top:1.4rem;padding:1rem 0;border-top:1px solid rgba(255,255,255,.09);border-bottom:1px solid rgba(255,255,255,.09)}.live-summary>span{color:var(--purple-light);font-size:.65rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.live-summary strong{font-size:clamp(1rem,2vw,1.25rem);overflow-wrap:anywhere}.live-summary small{color:#91869b}.hero-actions,.cta-actions,.offline-copy>div{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1.35rem}.twitch-button{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;padding:.8rem 1rem;border:1px solid rgba(184,132,255,.26);border-radius:10px;background:rgba(145,70,255,.09);color:white;font-size:.78rem;font-weight:850;text-decoration:none;transition:transform .2s,border-color .2s,background .2s}.twitch-button:hover{transform:translateY(-2px);border-color:rgba(184,132,255,.62);background:rgba(145,70,255,.18)}.twitch-button.primary{border-color:transparent;background:linear-gradient(135deg,#9146ff,#6e4cff);box-shadow:0 12px 32px rgba(145,70,255,.24)}.broadcast-section,.profile-section,.schedule-section,.content-section,.category-section{padding-top:clamp(3.5rem,8vw,6.5rem)}.section-heading{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}.section-heading span,.section-label{color:var(--purple-light);font-size:.62rem;font-weight:900;letter-spacing:.16em}.section-heading h2,.profile-card h2{margin:.35rem 0 0;font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,4vw,2.8rem);letter-spacing:-.045em}.section-heading p,.section-heading>a{margin:0;color:#8f8598;font-size:.72rem;text-decoration:none}.player-shell{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border:1px solid rgba(184,132,255,.3);border-radius:20px;background:#050308;box-shadow:0 30px 80px rgba(0,0,0,.35)}.player-shell>div,.player-shell iframe{width:100%!important;height:100%!important;border:0}.audio-notice{margin-top:.65rem;padding:.7rem .85rem;border:1px solid rgba(110,247,225,.17);border-radius:9px;background:rgba(110,247,225,.06);color:#a9d8d1;font-size:.72rem}.offline-panel{display:grid;grid-template-columns:190px minmax(0,1fr) minmax(240px,.65fr);align-items:center;gap:clamp(1rem,4vw,3rem);min-height:390px;padding:clamp(1.2rem,4vw,3rem);overflow:hidden;border:1px solid rgba(184,132,255,.22);border-radius:20px;background:radial-gradient(circle at 10% 50%,rgba(91,200,255,.12),transparent 20rem),linear-gradient(145deg,rgba(18,12,31,.95),rgba(8,8,17,.95))}.offline-art{position:relative;display:grid;place-items:center;min-height:190px}.offline-logo{width:180px!important;height:180px!important;object-fit:contain;opacity:.35;filter:drop-shadow(0 0 24px rgba(91,200,255,.2))}.offline-art>img{position:absolute;width:96px;height:96px;object-fit:cover;border:3px solid var(--purple);border-radius:25%}.offline-copy>span{color:#b9a6c9;font-size:.65rem;font-weight:900;letter-spacing:.15em}.offline-copy h2{margin:.5rem 0;font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,4vw,2.7rem);line-height:1}.offline-copy p{color:#9f94a9;line-height:1.65}.offline-latest{min-width:0}.offline-latest a{display:block;overflow:hidden;border:1px solid rgba(184,132,255,.16);border-radius:13px;background:rgba(5,3,9,.5);text-decoration:none}.offline-latest img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}.offline-latest div{padding:.8rem}.offline-latest span{color:#a894ba;font-size:.6rem;font-weight:900;letter-spacing:.12em}.offline-latest strong{display:block;margin-top:.35rem;font-size:.78rem;line-height:1.4}.metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;padding-top:1rem}.metric-grid article{min-width:0;padding:1.15rem;border:1px solid rgba(184,132,255,.14);border-radius:14px;background:linear-gradient(145deg,rgba(145,70,255,.08),rgba(10,8,18,.75))}.metric-grid span{color:#9f94a9;font-size:.68rem}.metric-grid strong{display:block;margin:.65rem 0 .35rem;font-family:'Space Grotesk',sans-serif;font-size:clamp(1.45rem,4vw,2.4rem);line-height:1;overflow-wrap:anywhere}.metric-grid small{color:#756d7d;font-size:.62rem}.profile-section{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:1rem}.profile-card,.social-panel{padding:clamp(1.2rem,3vw,2rem);border:1px solid rgba(184,132,255,.16);border-radius:18px;background:var(--panel)}.profile-card>p{max-width:720px;color:#a99db3;line-height:1.75}.channel-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.2rem}.channel-tags span{padding:.5rem .65rem;border:1px solid rgba(91,200,255,.18);border-radius:999px;background:rgba(91,200,255,.05);color:#c8dbe9;font-size:.68rem}.social-panel{display:grid;gap:.45rem}.social-panel>a{display:grid;grid-template-columns:36px minmax(0,1fr) auto;align-items:center;gap:.65rem;padding:.7rem;border:1px solid transparent;border-radius:10px;text-decoration:none;transition:background .2s,border-color .2s}.social-panel>a:hover{border-color:rgba(184,132,255,.2);background:rgba(145,70,255,.08)}.social-panel>a>span{display:grid}.social-panel strong{font-size:.78rem}.social-panel small{color:#857b8e;font-size:.64rem}.social-panel i{color:#786d82;font-style:normal}.schedule-grid,.broadcast-grid,.clip-grid,.category-grid{display:grid;gap:.85rem}.schedule-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.schedule-card{padding:1.1rem;border:1px solid rgba(184,132,255,.16);border-radius:14px;background:var(--panel)}.schedule-card>span{color:var(--purple-light);font-size:.64rem;font-weight:900;letter-spacing:.12em}.schedule-card h3{margin:.65rem 0 .25rem;font-family:'Space Grotesk',sans-serif}.schedule-card p{margin:.25rem 0;color:#958a9f;font-size:.72rem}.schedule-card a{display:inline-block;margin-top:.8rem;color:#c3a5ef;font-size:.7rem;text-decoration:none}.broadcast-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.clip-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.content-card{min-width:0;overflow:hidden;border:1px solid rgba(184,132,255,.16);border-radius:15px;background:var(--panel);text-decoration:none;transition:transform .22s,border-color .22s}.content-card:hover{transform:translateY(-4px);border-color:rgba(184,132,255,.42)}.content-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#160e24;transition:transform .35s}.content-card:hover img{transform:scale(1.025)}.content-card-copy{display:grid;gap:.55rem;padding:1rem}.content-card-copy>span{color:var(--purple-light);font-size:.6rem;font-weight:900;letter-spacing:.1em}.content-card-copy strong{display:-webkit-box;min-height:2.5em;overflow:hidden;color:white;font-size:.84rem;line-height:1.3;-webkit-box-orient:vertical;-webkit-line-clamp:2}.content-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem;color:#887e91;font-size:.64rem}.empty-state{grid-column:1/-1;padding:2rem;border:1px dashed rgba(184,132,255,.24);border-radius:15px;background:rgba(145,70,255,.035);color:#9d92a6;text-align:center}.category-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.category-grid article{padding:1rem;border-top:1px solid rgba(184,132,255,.28);background:linear-gradient(180deg,rgba(145,70,255,.045),transparent)}.category-grid span{color:#756681;font-size:.62rem;font-weight:900}.category-grid h3{margin:.7rem 0 .45rem;font-family:'Space Grotesk',sans-serif;font-size:1rem}.category-grid p{margin:0;color:#8d8395;font-size:.7rem;line-height:1.6}.twitch-cta{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:1.5rem;margin-top:clamp(4rem,9vw,8rem);padding:clamp(1.3rem,4vw,2.6rem);border:1px solid rgba(184,132,255,.25);border-radius:22px;background:radial-gradient(circle at 0 50%,rgba(91,200,255,.13),transparent 18rem),linear-gradient(135deg,rgba(30,14,52,.92),rgba(9,8,18,.94))}.cta-logo{width:88px!important;height:88px!important;object-fit:contain}.twitch-cta>div>span{color:var(--purple-light);font-size:.62rem;font-weight:900;letter-spacing:.16em}.twitch-cta h2{margin:.35rem 0;font-family:'Space Grotesk',sans-serif;font-size:clamp(1.5rem,3vw,2.3rem)}.twitch-cta p{margin:0;color:#9b90a4}.cta-actions{justify-content:flex-end;margin:0}.data-updated{margin:1.2rem 0 0;color:#746b7c;font-size:.65rem;text-align:right}.hub-error{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:1.3rem;padding:clamp(1.2rem,4vw,2rem);border:1px solid rgba(184,132,255,.25);border-radius:18px;background:linear-gradient(145deg,rgba(38,18,62,.76),rgba(10,8,18,.94))}.error-logo{width:72px!important;height:72px!important;object-fit:contain}.hub-error span{color:var(--purple-light);font-size:.62rem;font-weight:900;letter-spacing:.14em}.hub-error h2{margin:.35rem 0;font-family:'Space Grotesk',sans-serif}.hub-error p{margin:0;color:#a397ad}.hub-error>div:last-child{display:flex;flex-wrap:wrap;gap:.55rem}.hub-error button,.hub-error a{min-height:44px;padding:.7rem .85rem;border:1px solid rgba(184,132,255,.3);border-radius:9px;background:rgba(145,70,255,.12);color:white;font:inherit;font-size:.72rem;font-weight:850;text-decoration:none;cursor:pointer}@keyframes hub-shimmer{to{transform:translateX(100%)}}@keyframes live-pulse{50%{box-shadow:0 0 8px rgba(235,41,73,.2)}}@media(max-width:980px){.offline-panel{grid-template-columns:150px 1fr}.offline-latest{grid-column:1/-1}.profile-section{grid-template-columns:1fr}.category-grid{grid-template-columns:repeat(3,1fr)}.twitch-cta{grid-template-columns:auto 1fr}.cta-actions{grid-column:1/-1;justify-content:flex-start}}@media(max-width:760px){.hero-brand{opacity:.45}.hero-profile{grid-template-columns:1fr;align-content:center}.profile-stack{width:120px}.channel-hero{min-height:690px}.metric-grid{grid-template-columns:repeat(2,1fr)}.schedule-grid,.broadcast-grid,.clip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.offline-panel{grid-template-columns:1fr;text-align:center}.offline-art{min-height:150px}.offline-logo{width:150px!important;height:150px!important}.offline-copy>div{justify-content:center}.section-heading{align-items:start}.category-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.channel-hero{min-height:auto;padding:1.1rem;border-radius:18px}.hero-brand{position:static;justify-items:start;margin-bottom:2rem}.hero-brand-logo{width:64px!important;height:64px!important}.profile-stack{width:96px}.platform-corner{width:38px;height:38px}.hero-copy h1{font-size:clamp(3rem,17vw,4.4rem)}.hero-kicker{flex-wrap:wrap}.hero-actions,.cta-actions,.offline-copy>div{display:grid;grid-template-columns:1fr}.twitch-button{width:100%}.player-shell{border-radius:12px}.metric-grid{gap:.5rem}.metric-grid article{padding:.9rem .75rem}.metric-grid strong{font-size:clamp(1.25rem,8vw,1.8rem)}.schedule-grid,.broadcast-grid,.clip-grid,.category-grid{grid-template-columns:1fr}.section-heading{display:grid}.section-heading>p,.section-heading>a{text-align:left}.offline-panel{padding:1rem}.offline-latest{text-align:left}.twitch-cta{grid-template-columns:1fr}.cta-logo{width:70px!important;height:70px!important}.hub-error{grid-template-columns:1fr}.hub-error>div:last-child>*{flex:1}.loading-hero{grid-template-columns:70px 1fr;min-height:220px;padding:1rem}.loading-hero>i{width:68px;height:68px}.loading-cards{grid-template-columns:1fr}.loading-cards i:nth-child(n+2){display:none}.broadcast-section,.profile-section,.schedule-section,.content-section,.category-section{padding-top:3.5rem}}@media(prefers-reduced-motion:reduce){.hero-kicker>span.live,.loading-hero::after,.loading-stage::after,.loading-cards i::after{animation:none!important}.content-card,.content-card img,.twitch-button{transition:none!important}}
 </style>
+
+<style is:global>
+  .offline-panel{position:relative;isolation:isolate}.offline-panel>.offline-banner{position:absolute;inset:0;z-index:-1;width:100%;height:100%;object-fit:cover;opacity:.075;filter:saturate(.8)}.offline-panel>*:not(.offline-banner){position:relative;z-index:1}.player-shell{background:#050308 url('/images/brand/taz-elite-logo-512.webp') center/120px no-repeat}
+</style>
+
 <script>
-  import { errorLabel, fetchIntegration, formatCount } from '../scripts/live-data';
-  interface TwitchData { channel: { login: string; displayName: string; description: string; profileImageUrl: string; url: string }; live: { isLive: boolean; title?: string; game?: string; viewerCount?: number; thumbnailUrl?: string }; recentContent: Array<{ title: string; url: string; viewCount: number }> }
-  document.querySelectorAll<HTMLElement>('[data-twitch-card]').forEach((root) => {
-    const set = (selector: string, value: string) => { const element = root.querySelector<HTMLElement>(selector); if (element) element.textContent = value; };
+  import { errorLabel, fetchIntegration, formatCount, formatDate } from '../scripts/live-data';
+
+  interface TwitchVideo { id: string; title: string; publishedAt: string; duration: string; viewCount: number; thumbnailUrl: string | null; url: string; }
+  interface TwitchClip { id: string; title: string; creatorName: string; game: string | null; viewCount: number; createdAt: string; thumbnailUrl: string | null; url: string; }
+  interface ScheduleSegment { id: string; title: string | null; startTime: string; endTime: string; category: string | null; }
+  interface TwitchData {
+    channel: { login: string; displayName: string; description: string; profileImageUrl: string; offlineImageUrl: string; tags: string[]; url: string; };
+    live: { isLive: boolean; title?: string; game?: string; viewerCount?: number; startedAt?: string; thumbnailUrl?: string | null; };
+    stats: { followers: number | null; recentVideoViews: number };
+    recentContent: TwitchVideo[];
+    clips: TwitchClip[];
+    schedule: { available: boolean; segments: ScheduleSegment[] };
+  }
+
+  declare global { interface Window { Twitch?: any; } }
+  const setText = (root: Element, selector: string, value: string) => { const element = root.querySelector(selector); if (element) element.textContent = value; };
+  const setImage = (root: Element, selector: string, source: string | null | undefined, alt: string) => { const element = root.querySelector<HTMLImageElement>(selector); if (element && source) { element.src = source; element.alt = alt; } };
+  const formatDuration = (duration: string) => duration.replace(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/, (_, hours, minutes, seconds) => [hours && `${hours}h`, minutes && `${minutes}m`, !hours && seconds && `${seconds}s`].filter(Boolean).join(' ') || duration);
+  const formatUptime = (startedAt?: string) => { if (!startedAt) return 'Unavailable'; const minutes = Math.max(0, Math.floor((Date.now() - new Date(startedAt).getTime()) / 60000)); const hours = Math.floor(minutes / 60); return hours ? `${hours}h ${minutes % 60}m` : `${minutes}m`; };
+  const calendarUrl = (segment: ScheduleSegment) => { const stamp = (value: string) => new Date(value).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, ''); const params = new URLSearchParams({ action: 'TEMPLATE', text: segment.title || 'TazElitePlays Twitch stream', dates: `${stamp(segment.startTime)}/${stamp(segment.endTime)}`, details: 'Watch TazElitePlays live on Twitch', location: 'https://www.twitch.tv/tazeliteplays' }); return `https://calendar.google.com/calendar/render?${params}`; };
+
+  const createContentCard = (item: TwitchVideo | TwitchClip, type: 'video' | 'clip') => {
+    const link = document.createElement('a'); link.className = 'content-card'; link.href = item.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    const image = document.createElement('img'); image.src = item.thumbnailUrl || '/images/brand/taz-elite-logo-512.webp'; image.alt = `${item.title} Twitch ${type} thumbnail`; image.loading = 'lazy';
+    const copy = document.createElement('div'); copy.className = 'content-card-copy';
+    const label = document.createElement('span'); label.textContent = type === 'video' ? 'TWITCH BROADCAST' : ((item as TwitchClip).game || 'TWITCH CLIP').toUpperCase();
+    const title = document.createElement('strong'); title.textContent = item.title;
+    const meta = document.createElement('div'); meta.className = 'content-meta';
+    const date = document.createElement('span'); date.textContent = formatDate(type === 'video' ? (item as TwitchVideo).publishedAt : (item as TwitchClip).createdAt);
+    const details = document.createElement('span'); details.textContent = type === 'video' ? `${formatCount((item as TwitchVideo).viewCount)} views · ${formatDuration((item as TwitchVideo).duration)}` : `${formatCount((item as TwitchClip).viewCount)} views · clipped by ${(item as TwitchClip).creatorName}`;
+    meta.append(date, details); copy.append(label, title, meta); link.append(image, copy); return link;
+  };
+
+  const loadTwitchEmbed = async (root: HTMLElement, channel: string) => {
+    const mount = root.querySelector<HTMLElement>('[data-twitch-player]');
+    if (!mount || mount.dataset.ready === 'true') return;
+    mount.dataset.ready = 'true';
+    if (!window.Twitch?.Player) await new Promise<void>((resolve, reject) => {
+      const existing = document.querySelector<HTMLScriptElement>('script[data-twitch-embed-api]');
+      if (existing) { existing.addEventListener('load', () => resolve(), { once: true }); existing.addEventListener('error', () => reject(new Error('Twitch player failed to load')), { once: true }); return; }
+      const script = document.createElement('script'); script.src = 'https://player.twitch.tv/js/embed/v1.js'; script.async = true; script.dataset.twitchEmbedApi = 'true'; script.addEventListener('load', () => resolve(), { once: true }); script.addEventListener('error', () => reject(new Error('Twitch player failed to load')), { once: true }); document.head.append(script);
+    });
+    if (!window.Twitch?.Player) return;
+    const player = new window.Twitch.Player(mount, { channel, parent: [window.location.hostname], autoplay: false, muted: true, width: '100%', height: '100%' });
+    player.addEventListener(window.Twitch.Player.PLAY, () => {
+      document.dispatchEvent(new CustomEvent('tazmix:pause-request', { detail: { source: 'twitch' } }));
+      const notice = root.querySelector<HTMLElement>('[data-audio-notice]'); if (notice) notice.hidden = false;
+    });
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-twitch-hub]').forEach((root) => {
+    const username = root.dataset.username || 'tazeliteplays';
+    const loading = root.querySelector<HTMLElement>('[data-twitch-loading]');
+    const content = root.querySelector<HTMLElement>('[data-twitch-content]');
+    const errorBox = root.querySelector<HTMLElement>('[data-twitch-error]');
     const load = async () => {
-      const loading = root.querySelector<HTMLElement>('[data-twitch-loading]'); const content = root.querySelector<HTMLElement>('[data-twitch-content]'); const error = root.querySelector<HTMLElement>('[data-twitch-error]');
-      if (loading) loading.hidden = false; if (content) content.hidden = true; if (error) error.hidden = true;
+      if (loading) loading.hidden = false; if (content) content.hidden = true; if (errorBox) errorBox.hidden = true;
       try {
-        const result = await fetchIntegration<TwitchData>(`/.netlify/functions/twitch-status?username=${encodeURIComponent(root.dataset.username || '')}`); const data = result.data;
-        set('[data-twitch-name]', data.channel.displayName); set('[data-twitch-login]', `@${data.channel.login}`); set('[data-twitch-description]', data.channel.description || 'Gaming streams and creator content from Taz Elite.');
-        const avatar = root.querySelector<HTMLImageElement>('[data-twitch-avatar]'); if (avatar) { avatar.src = data.channel.profileImageUrl; avatar.onerror = () => { avatar.src = '/images/brand/taz-elite-logo-256.webp'; }; }
-        const live = root.querySelector<HTMLElement>('[data-twitch-live]'); if (live) { live.textContent = data.live.isLive ? 'LIVE NOW' : 'OFFLINE'; live.classList.toggle('live', data.live.isLive); }
-        const stream = root.querySelector<HTMLElement>('[data-twitch-stream]'); if (stream && data.live.isLive) { stream.hidden = false; set('[data-stream-title]', data.live.title || 'Live on Twitch'); set('[data-stream-meta]', `${data.live.game || 'Streaming'} · ${formatCount(data.live.viewerCount)} viewers`); const image = root.querySelector<HTMLImageElement>('[data-stream-thumbnail]'); if (image && data.live.thumbnailUrl) image.src = data.live.thumbnailUrl; }
-        const recent = root.querySelector<HTMLElement>('[data-twitch-recent]'); if (recent) { recent.replaceChildren(...data.recentContent.slice(0,3).map((video) => { const link = document.createElement('a'); link.href = video.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = `${video.title} · ${formatCount(video.viewCount)} views`; return link; })); }
-        set('[data-twitch-updated]', `Updated ${new Date(result.updatedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`); if (loading) loading.hidden = true; if (content) content.hidden = false;
-      } catch (requestError) { const details = requestError as { code?: string; message?: string }; if (loading) loading.hidden = true; if (error) error.hidden = false; set('[data-twitch-error-title]', errorLabel(details.code || '')); set('[data-twitch-error-message]', details.message || 'Twitch information is temporarily unavailable.'); }
+        const result = await fetchIntegration<TwitchData>(`/.netlify/functions/twitch-status?username=${encodeURIComponent(username)}`);
+        const data = result.data; const biography = data.channel.description || 'Live streams, gaming content, highlights, reactions, and community sessions from TazElitePlays.';
+        setText(root, '[data-twitch-name]', data.channel.displayName || 'TazElitePlays'); setText(root, '[data-twitch-description]', biography); setText(root, '[data-profile-biography]', biography);
+        setImage(root, '[data-twitch-avatar]', data.channel.profileImageUrl, `${data.channel.displayName} Twitch profile`); setImage(root, '[data-offline-avatar]', data.channel.profileImageUrl, `${data.channel.displayName} Twitch profile`); setImage(root, '[data-offline-banner]', data.channel.offlineImageUrl, `${data.channel.displayName} offline Twitch banner`);
+        const status = root.querySelector<HTMLElement>('[data-twitch-status]'); if (status) { status.textContent = data.live.isLive ? 'LIVE NOW' : 'CURRENTLY OFFLINE'; status.classList.toggle('live', data.live.isLive); }
+        root.querySelector<HTMLElement>('[data-watch-live]')?.toggleAttribute('hidden', !data.live.isLive);
+        setText(root, '[data-current-game]', data.live.isLive ? data.live.game || 'Live on Twitch' : 'Between live broadcasts');
+        setText(root, '[data-current-title]', data.live.isLive ? data.live.title || 'TazElitePlays is live' : 'Follow the channel to catch the next stream');
+        setText(root, '[data-current-meta]', data.live.isLive ? `${formatCount(data.live.viewerCount)} watching · live for ${formatUptime(data.live.startedAt)}` : 'Recent broadcasts, clips, and channel information are available below.');
+        setText(root, '[data-broadcast-label]', data.live.isLive ? `${data.live.game || 'Live stream'} · ${formatCount(data.live.viewerCount)} viewers` : 'Complete branded offline state');
+        setText(root, '[data-stat-viewers]', data.live.isLive ? formatCount(data.live.viewerCount) : 'Offline'); setText(root, '[data-stat-viewers-note]', data.live.isLive ? 'Watching right now' : 'No live count');
+        setText(root, '[data-stat-followers]', formatCount(data.stats.followers)); setText(root, '[data-stat-followers-note]', data.stats.followers === null ? 'Authorization not available' : 'Verified Twitch total');
+        setText(root, '[data-stat-uptime]', data.live.isLive ? formatUptime(data.live.startedAt) : 'Offline'); setText(root, '[data-stat-uptime-note]', data.live.isLive ? 'Current stream' : 'No active stream');
+        setText(root, '[data-stat-vod-views]', formatCount(data.stats.recentVideoViews));
+        root.querySelector<HTMLElement>('[data-live-player]')?.toggleAttribute('hidden', !data.live.isLive); root.querySelector<HTMLElement>('[data-offline-panel]')?.toggleAttribute('hidden', data.live.isLive);
+        if (data.live.isLive) loadTwitchEmbed(root, data.channel.login).catch(() => setText(root, '[data-broadcast-label]', 'Open Twitch directly if the embedded player is unavailable'));
+
+        const latest = root.querySelector<HTMLElement>('[data-offline-latest]'); if (latest) { latest.replaceChildren(); const video = data.recentContent[0]; const clip = data.clips[0]; if (video || clip) { const card = createContentCard(video || clip, video ? 'video' : 'clip'); const label = card.querySelector('.content-card-copy>span'); if (label) label.textContent = video ? 'LATEST TWITCH BROADCAST' : 'FEATURED TWITCH CLIP'; latest.append(card); } else { const empty = document.createElement('p'); empty.className = 'empty-state'; empty.textContent = 'No recent public Twitch video or clip is available.'; latest.append(empty); } }
+        const tags = root.querySelector<HTMLElement>('[data-channel-tags]'); if (tags) { const values = data.channel.tags.length ? data.channel.tags : ['Gaming streams', 'Community sessions', 'Highlights', 'Variety gaming']; tags.replaceChildren(...values.slice(0, 8).map((value) => { const tag = document.createElement('span'); tag.textContent = value; return tag; })); }
+        const videos = root.querySelector<HTMLElement>('[data-twitch-videos]'); if (videos) { videos.replaceChildren(...data.recentContent.map((video) => createContentCard(video, 'video'))); if (!data.recentContent.length) { const empty = document.createElement('p'); empty.className = 'empty-state'; empty.textContent = 'No recent public broadcasts were returned for TazElitePlays.'; videos.append(empty); } }
+        const clips = root.querySelector<HTMLElement>('[data-twitch-clips]'); if (clips) { clips.replaceChildren(...data.clips.map((clip) => createContentCard(clip, 'clip'))); if (!data.clips.length) { const empty = document.createElement('p'); empty.className = 'empty-state'; empty.textContent = 'No public clips are available for TazElitePlays yet.'; clips.append(empty); } }
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local time'; setText(root, '[data-schedule-timezone]', `Times shown in ${timezone}`);
+        const schedule = root.querySelector<HTMLElement>('[data-schedule-grid]'); if (schedule) { schedule.replaceChildren(...data.schedule.segments.map((segment) => { const card = document.createElement('article'); card.className = 'schedule-card'; const day = document.createElement('span'); day.textContent = new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'short', day: 'numeric' }).format(new Date(segment.startTime)).toUpperCase(); const title = document.createElement('h3'); title.textContent = segment.title || segment.category || 'TazElitePlays stream'; const time = document.createElement('p'); time.textContent = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }).format(new Date(segment.startTime)); const category = document.createElement('p'); category.textContent = segment.category || 'Variety Gaming'; const calendar = document.createElement('a'); calendar.href = calendarUrl(segment); calendar.target = '_blank'; calendar.rel = 'noopener noreferrer'; calendar.textContent = 'Add to Google Calendar ↗'; card.append(day, title, time, category, calendar); return card; })); if (!data.schedule.segments.length) { const empty = document.createElement('p'); empty.className = 'empty-state'; empty.textContent = 'Follow TazElitePlays on Twitch to be notified when the next stream begins.'; schedule.append(empty); } }
+        setText(root, '[data-twitch-updated]', `Twitch data updated ${new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(result.updatedAt))}`);
+        if (loading) loading.hidden = true; if (content) content.hidden = false;
+      } catch (requestError) {
+        const details = requestError as { code?: string; message?: string }; if (loading) loading.hidden = true; if (errorBox) errorBox.hidden = false; setText(root, '[data-twitch-error-title]', errorLabel(details.code || '')); setText(root, '[data-twitch-error-message]', details.message || 'Twitch information is temporarily unavailable. Visit TazElitePlays directly on Twitch for the latest stream status.');
+      }
     };
     root.querySelector('[data-twitch-retry]')?.addEventListener('click', load); load();
   });

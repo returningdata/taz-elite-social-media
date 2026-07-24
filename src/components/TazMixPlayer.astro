@@ -2,82 +2,58 @@
 const playlistUrl = 'https://youtube.com/playlist?list=RDk04tX2fvh0o&playnext=1&si=XgpP9bphumpmctS4';
 ---
 
-<aside class="taz-mix" id="taz-mix" aria-label="Taz’s Mix music player" data-playlist-url={playlistUrl}>
+<aside class="taz-mix" id="taz-mix" aria-label="Taz’s Mix music player" data-playlist-url={playlistUrl} transition:persist="taz-mix">
+  <div class="taz-mix__youtube" aria-hidden="true"><div id="taz-mix-youtube"></div></div>
+
   <button class="taz-mix__collapsed" type="button" aria-label="Expand Taz’s Mix" hidden>
-    <span class="taz-mix__note" aria-hidden="true">♫</span>
+    <img data-thumbnail-mini src="/images/taz-approved/june-2025.jpg" alt="" width="54" height="54" />
     <span class="taz-mix__equalizer" aria-hidden="true"><i></i><i></i><i></i></span>
   </button>
 
   <div class="taz-mix__expanded">
-    <header class="taz-mix__header">
-      <div><span>GLOBAL AUDIO</span><strong>Taz’s Mix</strong></div>
-      <div class="taz-mix__window-controls">
-        <button type="button" data-action="minimize" aria-label="Minimize Taz’s Mix">−</button>
-        <button type="button" data-action="stop" aria-label="Stop Taz’s Mix">×</button>
+    <div class="taz-mix__art">
+      <img data-thumbnail src="/images/taz-approved/june-2025.jpg" alt="Current Taz’s Mix track artwork" width="68" height="68" />
+      <span class="taz-mix__art-loading" data-player-loading aria-label="Loading Taz’s Mix"></span>
+      <span class="taz-mix__equalizer taz-mix__equalizer--art" aria-hidden="true"><i></i><i></i><i></i></span>
+    </div>
+
+    <div class="taz-mix__main">
+      <div class="taz-mix__title-row">
+        <div class="taz-mix__track"><span>TAZ’S MIX</span><strong data-track-title>Taz’s Mix</strong></div>
+        <div class="taz-mix__window-controls">
+          <button type="button" data-action="minimize" aria-label="Minimize Taz’s Mix">−</button>
+          <button type="button" data-action="stop" aria-label="Stop Taz’s Mix">×</button>
+        </div>
       </div>
-    </header>
 
-    <div class="taz-mix__body">
-      <div class="taz-mix__viewport" aria-label="YouTube player viewport">
-        <div id="taz-mix-youtube"></div>
-        <div class="taz-mix__loading" data-player-loading><span></span><p>Connecting to Taz’s Mix…</p></div>
+      <div class="taz-mix__progress-row">
+        <span data-current-time>0:00</span>
+        <input type="range" min="0" max="1000" step="1" value="0" data-progress aria-label="Track progress" />
+        <span data-duration>0:00</span>
       </div>
 
-      <div class="taz-mix__console">
-        <div class="taz-mix__track">
-          <img data-thumbnail src="/images/taz-approved/june-2025.jpg" alt="Current Taz’s Mix track thumbnail" width="48" height="48" />
-          <div><span>NOW QUEUED</span><strong data-track-title>Taz’s Mix</strong></div>
-        </div>
-
-        <div class="taz-mix__enable" data-enable-panel hidden>
-          <p data-enable-message>Autoplay is unavailable on this browser.</p>
-          <button type="button" data-action="enable">Play Taz’s Mix</button>
-        </div>
-
-        <div class="taz-mix__error" data-error-panel hidden>
-          <strong>Player unavailable</strong>
-          <p>Taz’s Mix could not load here.</p>
-          <a href={playlistUrl} target="_blank" rel="noopener noreferrer">Open on YouTube</a>
-        </div>
-
+      <div class="taz-mix__controls">
         <div class="taz-mix__transport" aria-label="Playback controls">
           <button type="button" data-action="previous" aria-label="Previous track">‹</button>
           <button class="taz-mix__play" type="button" data-action="play" aria-label="Play Taz’s Mix"><span data-play-symbol>▶</span></button>
           <button type="button" data-action="next" aria-label="Next track">›</button>
-          <button type="button" data-action="mute" aria-label="Mute Taz’s Mix"><span data-mute-symbol>◕</span></button>
         </div>
-
         <label class="taz-mix__volume">
-          <span>VOLUME</span>
+          <button type="button" data-action="mute" aria-label="Mute Taz’s Mix"><span data-mute-symbol>◕</span></button>
           <input type="range" min="0" max="100" step="1" value="25" data-volume aria-label="Taz’s Mix volume: 25 percent" />
           <output data-volume-value>25%</output>
         </label>
-
-        <div class="taz-mix__footer-row">
-          <span class="taz-mix__status" data-status role="status" aria-live="polite">Loading player</span>
-          <span class="taz-mix__links"><a href="/privacy">Privacy</a><a href={playlistUrl} target="_blank" rel="noopener noreferrer" aria-label="Open Taz’s Mix playlist on YouTube">YouTube ↗</a></span>
-        </div>
       </div>
+
+      <div class="taz-mix__enable" data-enable-panel hidden><p data-enable-message>Autoplay is unavailable on this browser.</p><button type="button" data-action="enable">Play Taz’s Mix</button></div>
+      <div class="taz-mix__error" data-error-panel hidden><strong>Player unavailable</strong><p>Taz’s Mix could not load here.</p><a href={playlistUrl} target="_blank" rel="noopener noreferrer">Open on YouTube</a></div>
+      <div class="taz-mix__footer"><span data-status role="status" aria-live="polite">Loading player</span><a href={playlistUrl} target="_blank" rel="noopener noreferrer">YouTube ↗</a></div>
     </div>
   </div>
 </aside>
 
 <style>
-  .taz-mix{--mix-blue:#5bc8ff;--mix-purple:#956cff;--mix-ink:#f7f9ff;--mix-muted:#98a5bd;position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));z-index:70;width:min(390px,calc(100vw - 28px));font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--mix-ink);filter:drop-shadow(0 22px 38px rgba(0,0,0,.52))}
-  .taz-mix__expanded{overflow:hidden;border:1px solid rgba(112,183,255,.3);border-radius:18px;background:linear-gradient(145deg,rgba(8,13,29,.98),rgba(5,8,18,.98));box-shadow:inset 0 1px rgba(255,255,255,.05),0 0 38px rgba(70,111,255,.12);transform-origin:bottom right;transition:opacity .2s,transform .2s}
-  .taz-mix__header{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 15px;border-bottom:1px solid rgba(137,171,240,.14);background:linear-gradient(90deg,rgba(71,135,255,.1),rgba(143,83,255,.08))}
-  .taz-mix__header>div:first-child{display:grid;gap:1px}.taz-mix__header span,.taz-mix__track span,.taz-mix__volume>span{color:var(--mix-blue);font-size:9px;font-weight:800;letter-spacing:.15em}.taz-mix__header strong{font-family:'Space Grotesk','Cinzel',sans-serif;font-size:14px;letter-spacing:.02em}
-  .taz-mix__window-controls{display:flex;gap:6px}.taz-mix button{font:inherit}.taz-mix__window-controls button{width:32px;height:32px;border:1px solid rgba(143,174,232,.18);border-radius:9px;background:rgba(255,255,255,.025);color:#dce6f7;cursor:pointer}.taz-mix__window-controls button:hover{border-color:rgba(91,200,255,.55);background:rgba(91,200,255,.08)}
-  .taz-mix__body{display:grid;grid-template-columns:210px minmax(0,1fr);gap:10px;padding:10px}.taz-mix__viewport{position:relative;width:210px;height:210px;overflow:hidden;border:1px solid rgba(135,169,236,.18);border-radius:12px;background:#02040a}.taz-mix__viewport iframe{display:block;width:210px!important;height:210px!important;border:0}.taz-mix__loading{position:absolute;inset:0;display:grid;place-content:center;gap:10px;text-align:center;background:radial-gradient(circle at 50% 35%,rgba(79,127,255,.17),transparent 65%),#050914}.taz-mix__loading[hidden]{display:none}.taz-mix__loading span{width:32px;height:32px;margin:auto;border:2px solid rgba(91,200,255,.18);border-top-color:var(--mix-blue);border-radius:50%;animation:taz-mix-spin .8s linear infinite}.taz-mix__loading p{margin:0;color:var(--mix-muted);font-size:10px}
-  .taz-mix__console{min-width:0;display:flex;flex-direction:column;gap:9px}.taz-mix__track{display:grid;grid-template-columns:42px minmax(0,1fr);align-items:center;gap:8px}.taz-mix__track img{width:42px;height:42px;object-fit:cover;border-radius:9px;border:1px solid rgba(91,200,255,.24);background:#0d1427}.taz-mix__track div{min-width:0;display:grid;gap:3px}.taz-mix__track strong{overflow:hidden;color:#eaf1ff;font-size:11px;line-height:1.3;text-overflow:ellipsis;white-space:nowrap}
-  .taz-mix__transport{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.taz-mix__transport button{min-width:0;height:38px;border:1px solid rgba(135,169,236,.2);border-radius:9px;background:rgba(255,255,255,.025);color:white;cursor:pointer}.taz-mix__transport button:hover{transform:translateY(-1px);border-color:rgba(91,200,255,.55)}.taz-mix__play{background:linear-gradient(135deg,rgba(67,142,255,.7),rgba(122,76,227,.75))!important;border-color:transparent!important}
-  .taz-mix__volume{display:grid;grid-template-columns:1fr auto;gap:4px 8px;align-items:center}.taz-mix__volume input{grid-column:1/-1;width:100%;height:4px;margin:2px 0;accent-color:var(--mix-blue);cursor:pointer}.taz-mix__volume output{color:#dbe7fa;font-size:10px}.taz-mix__footer-row{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-top:auto}.taz-mix__footer-row a{color:var(--mix-blue);font-size:9px;font-weight:800;text-decoration:none}.taz-mix__links{display:flex;gap:7px;white-space:nowrap}.taz-mix__status{overflow:hidden;color:var(--mix-muted);font-size:9px;text-overflow:ellipsis;white-space:nowrap}
-  .taz-mix__enable,.taz-mix__error{padding:8px;border:1px solid rgba(91,200,255,.22);border-radius:9px;background:rgba(91,200,255,.06)}.taz-mix__enable[hidden],.taz-mix__error[hidden]{display:none}.taz-mix__enable p,.taz-mix__error p{margin:0 0 7px;color:var(--mix-muted);font-size:9px;line-height:1.4}.taz-mix__enable button,.taz-mix__error a{display:block;width:100%;padding:7px;border:0;border-radius:7px;background:linear-gradient(135deg,#3f91ff,#7655df);color:white;font-size:9px;font-weight:800;text-align:center;text-decoration:none;cursor:pointer}.taz-mix__error strong{display:block;margin-bottom:2px;font-size:10px}
-  .taz-mix__collapsed{display:grid;width:58px;height:58px;margin-left:auto;place-items:center;border:1px solid rgba(91,200,255,.48);border-radius:17px;background:linear-gradient(145deg,#101a34,#080c1a);color:white;box-shadow:inset 0 1px rgba(255,255,255,.08),0 0 28px rgba(91,130,255,.22);cursor:pointer}.taz-mix__collapsed[hidden]{display:none}.taz-mix__note{font-size:23px}.taz-mix__equalizer{position:absolute;right:9px;bottom:8px;display:flex;align-items:end;gap:2px;height:11px}.taz-mix__equalizer i{width:2px;height:4px;border-radius:2px;background:#6ef7e1;animation:taz-mix-eq .65s ease-in-out infinite alternate;animation-play-state:paused}.taz-mix.is-playing .taz-mix__equalizer i{animation-play-state:running}.taz-mix__equalizer i:nth-child(2){height:9px;animation-delay:-.2s}.taz-mix__equalizer i:nth-child(3){height:6px;animation-delay:-.4s}.taz-mix.is-minimized{width:58px}.taz-mix.is-minimized .taz-mix__expanded{display:none}.taz-mix button:focus-visible,.taz-mix a:focus-visible,.taz-mix input:focus-visible{outline:2px solid #6ef7e1;outline-offset:2px}
-  @keyframes taz-mix-spin{to{transform:rotate(360deg)}}@keyframes taz-mix-eq{to{height:11px}}
-  @media(max-width:580px){.taz-mix{right:8px;bottom:max(8px,env(safe-area-inset-bottom));width:calc(100vw - 16px)}.taz-mix__body{grid-template-columns:200px minmax(0,1fr);gap:8px;padding:8px}.taz-mix__viewport,.taz-mix__viewport iframe{width:200px!important;height:200px!important}.taz-mix__header{height:48px}.taz-mix__track{grid-template-columns:34px minmax(0,1fr);gap:5px}.taz-mix__track img{width:34px;height:34px}.taz-mix__transport{grid-template-columns:repeat(2,1fr)}.taz-mix__transport button{height:38px}.taz-mix__console{gap:7px}.taz-mix.is-minimized{right:10px;width:58px}}
-  @media(max-width:350px){.taz-mix__body{grid-template-columns:1fr}.taz-mix__viewport{margin-inline:auto}.taz-mix__console{display:grid;grid-template-columns:1fr 1fr}.taz-mix__track,.taz-mix__enable,.taz-mix__error,.taz-mix__footer-row{grid-column:1/-1}.taz-mix__volume{align-self:center}}
-  @media(prefers-reduced-motion:reduce){.taz-mix *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.taz-mix__equalizer i{animation:none!important}}
+  .taz-mix{--mix-blue:#5bc8ff;--mix-purple:#956cff;--mix-cyan:#6ef7e1;--mix-ink:#f7f9ff;--mix-muted:#8e9bb1;position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));z-index:70;width:min(470px,calc(100vw - 28px));font-family:'Manrope','Inter',system-ui,sans-serif;color:var(--mix-ink);filter:drop-shadow(0 20px 40px rgba(0,0,0,.5))}.taz-mix__youtube{position:fixed;left:-10000px;top:0;width:200px;height:200px;overflow:hidden;pointer-events:none}.taz-mix__youtube iframe{width:200px!important;height:200px!important;border:0}.taz-mix__expanded{display:grid;grid-template-columns:82px minmax(0,1fr);gap:12px;padding:11px;overflow:hidden;border:1px solid rgba(112,183,255,.28);border-radius:18px;background:linear-gradient(145deg,rgba(8,13,29,.97),rgba(5,8,18,.98));box-shadow:inset 0 1px rgba(255,255,255,.05),0 0 38px rgba(70,111,255,.13);backdrop-filter:blur(20px);transform-origin:bottom right;transition:opacity .2s,transform .25s}.taz-mix__art{position:relative;width:82px;height:82px;align-self:center;overflow:hidden;border:1px solid rgba(91,200,255,.27);border-radius:13px;background:#0d1427}.taz-mix__art img{width:100%;height:100%;object-fit:cover;transition:opacity .22s,transform .3s}.taz-mix.is-playing .taz-mix__art img{transform:scale(1.03)}.taz-mix__art::after{content:'';position:absolute;inset:0;background:linear-gradient(145deg,transparent 45%,rgba(2,5,12,.62));pointer-events:none}.taz-mix__art-loading{position:absolute;inset:0;z-index:2;display:grid;place-items:center;background:rgba(4,8,18,.7)}.taz-mix__art-loading::after{content:'';width:23px;height:23px;border:2px solid rgba(91,200,255,.18);border-top-color:var(--mix-blue);border-radius:50%;animation:taz-mix-spin .8s linear infinite}.taz-mix__art-loading[hidden]{display:none}.taz-mix__main{min-width:0;display:grid;gap:7px}.taz-mix__title-row{display:flex;align-items:start;justify-content:space-between;gap:8px}.taz-mix__track{min-width:0;display:grid;gap:2px}.taz-mix__track span{color:var(--mix-blue);font-size:8px;font-weight:850;letter-spacing:.16em}.taz-mix__track strong{overflow:hidden;color:#edf3ff;font-size:12px;line-height:1.35;text-overflow:ellipsis;white-space:nowrap;transition:opacity .18s,transform .18s}.taz-mix__track strong.is-changing{opacity:0;transform:translateY(3px)}.taz-mix__window-controls{display:flex;gap:4px}.taz-mix button{font:inherit}.taz-mix__window-controls button,.taz-mix__transport button,.taz-mix__volume button{display:grid;place-items:center;border:1px solid rgba(135,169,236,.17);background:rgba(255,255,255,.025);color:white;cursor:pointer;transition:transform .18s,border-color .18s,background .18s}.taz-mix__window-controls button{width:27px;height:27px;border-radius:8px}.taz-mix__window-controls button:hover,.taz-mix__transport button:hover,.taz-mix__volume button:hover{transform:translateY(-1px);border-color:rgba(91,200,255,.55);background:rgba(91,200,255,.08)}.taz-mix__progress-row{display:grid;grid-template-columns:27px 1fr 27px;align-items:center;gap:6px;color:var(--mix-muted);font-size:8px;font-variant-numeric:tabular-nums}.taz-mix input[type='range']{width:100%;height:4px;margin:0;accent-color:var(--mix-blue);cursor:pointer}.taz-mix__controls{display:flex;align-items:center;justify-content:space-between;gap:10px}.taz-mix__transport{display:flex;align-items:center;gap:5px}.taz-mix__transport button{width:31px;height:31px;border-radius:9px;font-size:17px}.taz-mix__transport .taz-mix__play{width:38px;background:linear-gradient(135deg,#438eff,#7951dd);border-color:transparent;box-shadow:0 6px 18px rgba(79,112,255,.25);font-size:11px}.taz-mix__volume{display:grid;grid-template-columns:25px minmax(54px,1fr) 27px;align-items:center;gap:5px;min-width:130px}.taz-mix__volume button{width:25px;height:25px;border-radius:8px;font-size:12px}.taz-mix__volume output{color:#cbd7ea;font-size:8px;text-align:right}.taz-mix__footer{display:flex;justify-content:space-between;gap:8px;color:var(--mix-muted);font-size:8px}.taz-mix__footer span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.taz-mix__footer a{flex:none;color:var(--mix-blue);font-weight:800;text-decoration:none}.taz-mix__enable,.taz-mix__error{padding:7px;border:1px solid rgba(91,200,255,.2);border-radius:8px;background:rgba(91,200,255,.055)}.taz-mix__enable[hidden],.taz-mix__error[hidden]{display:none}.taz-mix__enable p,.taz-mix__error p{margin:0 0 6px;color:var(--mix-muted);font-size:8px}.taz-mix__enable button,.taz-mix__error a{display:block;width:100%;padding:6px;border:0;border-radius:6px;background:linear-gradient(135deg,#3f91ff,#7655df);color:white;font-size:8px;font-weight:850;text-align:center;text-decoration:none;cursor:pointer}.taz-mix__error strong{font-size:9px}.taz-mix__collapsed{position:relative;width:58px;height:58px;margin-left:auto;padding:0;overflow:hidden;border:1px solid rgba(91,200,255,.48);border-radius:17px;background:#080c1a;box-shadow:inset 0 1px rgba(255,255,255,.08),0 0 28px rgba(91,130,255,.22);cursor:pointer}.taz-mix__collapsed img{width:100%;height:100%;object-fit:cover}.taz-mix__collapsed[hidden]{display:none}.taz-mix__collapsed::after{content:'';position:absolute;inset:0;background:linear-gradient(145deg,transparent,rgba(3,6,14,.68))}.taz-mix__equalizer{position:absolute;z-index:3;right:8px;bottom:7px;display:flex;align-items:end;gap:2px;height:11px}.taz-mix__equalizer--art{right:7px;bottom:6px}.taz-mix__equalizer i{width:2px;height:4px;border-radius:2px;background:var(--mix-cyan);animation:taz-mix-eq .65s ease-in-out infinite alternate;animation-play-state:paused}.taz-mix.is-playing .taz-mix__equalizer i{animation-play-state:running}.taz-mix__equalizer i:nth-child(2){height:9px;animation-delay:-.2s}.taz-mix__equalizer i:nth-child(3){height:6px;animation-delay:-.4s}.taz-mix.is-minimized{width:58px}.taz-mix.is-minimized .taz-mix__expanded{display:none}.taz-mix button:focus-visible,.taz-mix a:focus-visible,.taz-mix input:focus-visible{outline:2px solid var(--mix-cyan);outline-offset:2px}@keyframes taz-mix-spin{to{transform:rotate(360deg)}}@keyframes taz-mix-eq{to{height:11px}}@media(max-width:520px){.taz-mix{right:8px;bottom:max(8px,env(safe-area-inset-bottom));width:calc(100vw - 16px)}.taz-mix__expanded{grid-template-columns:64px minmax(0,1fr);gap:9px;padding:9px;border-radius:15px}.taz-mix__art{width:64px;height:64px}.taz-mix__title-row{align-items:center}.taz-mix__track strong{font-size:10px}.taz-mix__progress-row{grid-template-columns:24px 1fr 24px}.taz-mix__controls{gap:6px}.taz-mix__transport{gap:3px}.taz-mix__transport button{width:29px;height:29px}.taz-mix__transport .taz-mix__play{width:34px}.taz-mix__volume{grid-template-columns:23px minmax(42px,1fr);min-width:84px}.taz-mix__volume output{display:none}.taz-mix__footer{display:none}.taz-mix__window-controls button:last-child{display:none}}@media(max-width:350px){.taz-mix__expanded{grid-template-columns:54px minmax(0,1fr)}.taz-mix__art{width:54px;height:54px}.taz-mix__volume{min-width:65px}.taz-mix__volume button{display:none}}@media(prefers-reduced-motion:reduce){.taz-mix *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.taz-mix__equalizer i{animation:none!important}}
 </style>
 
 <script is:inline>
@@ -88,24 +64,29 @@ const playlistUrl = 'https://youtube.com/playlist?list=RDk04tX2fvh0o&playnext=1&
 
     const PLAYLIST_ID = 'RDk04tX2fvh0o';
     const STORAGE = {
-      index: 'tazMixPlaylistIndex', time: 'tazMixCurrentTime', playing: 'tazMixPlaying',
-      volume: 'tazMixVolume', minimized: 'tazMixMinimized', enabled: 'tazMixEnabled', muted: 'tazMixMuted'
+      track: 'tazMixTrack', time: 'tazMixCurrentTime', playing: 'tazMixPlaying', volume: 'tazMixVolume',
+      minimized: 'tazMixMinimized', enabled: 'tazMixEnabled', muted: 'tazMixMuted'
     };
-    const getNumber = (storage, key, fallback) => {
-      const rawValue = storage.getItem(key);
+    const numberFromStorage = (key, fallback) => {
+      const rawValue = localStorage.getItem(key);
       if (rawValue === null || rawValue === '') return fallback;
       const value = Number(rawValue);
       return Number.isFinite(value) ? value : fallback;
     };
-    let volume = Math.min(100, Math.max(0, getNumber(localStorage, STORAGE.volume, 25)));
+    const formatTime = (seconds) => {
+      const safeSeconds = Math.max(0, Math.floor(Number(seconds) || 0));
+      return `${Math.floor(safeSeconds / 60)}:${String(safeSeconds % 60).padStart(2, '0')}`;
+    };
+
+    const hadSavedPlaying = localStorage.getItem(STORAGE.playing) !== null;
+    let volume = Math.min(100, Math.max(0, numberFromStorage(STORAGE.volume, 25)));
     let minimized = localStorage.getItem(STORAGE.minimized) === 'true';
-    let enabled = sessionStorage.getItem(STORAGE.enabled) === 'true';
+    let enabled = localStorage.getItem(STORAGE.enabled) === 'true';
+    let playing = localStorage.getItem(STORAGE.playing) === 'true';
+    let muted = localStorage.getItem(STORAGE.muted) === 'true';
     let player = null;
     let ready = false;
-    let playing = false;
-    let muted = false;
-    let autoplayBlocked = false;
-    let autoplayAttempted = false;
+    let seeking = false;
     let errorSkips = 0;
     let loadTimeout = null;
 
@@ -116,15 +97,17 @@ const playlistUrl = 'https://youtube.com/playlist?list=RDk04tX2fvh0o&playnext=1&
     const enableMessage = root.querySelector('[data-enable-message]');
     const errorPanel = root.querySelector('[data-error-panel]');
     const title = root.querySelector('[data-track-title]');
-    const thumbnail = root.querySelector('[data-thumbnail]');
+    const thumbnails = root.querySelectorAll('[data-thumbnail], [data-thumbnail-mini]');
     const status = root.querySelector('[data-status]');
     const volumeInput = root.querySelector('[data-volume]');
     const volumeValue = root.querySelector('[data-volume-value]');
+    const progress = root.querySelector('[data-progress]');
+    const currentTime = root.querySelector('[data-current-time]');
+    const duration = root.querySelector('[data-duration]');
     const playSymbol = root.querySelector('[data-play-symbol]');
     const muteSymbol = root.querySelector('[data-mute-symbol]');
 
     const setStatus = (message) => { if (status) status.textContent = message; };
-    const setAutoplayBlocked = (value) => { autoplayBlocked = value; root.dataset.autoplayBlocked = String(autoplayBlocked); };
     const setMinimized = (value) => {
       minimized = value;
       localStorage.setItem(STORAGE.minimized, String(value));
@@ -134,41 +117,51 @@ const playlistUrl = 'https://youtube.com/playlist?list=RDk04tX2fvh0o&playnext=1&
     };
     const setPlaying = (value) => {
       playing = value;
+      localStorage.setItem(STORAGE.playing, String(value));
       root.classList.toggle('is-playing', value);
       if (playSymbol) playSymbol.textContent = value ? 'Ⅱ' : '▶';
-      const playButton = root.querySelector('[data-action="play"]');
-      playButton?.setAttribute('aria-label', value ? 'Pause Taz’s Mix' : 'Play Taz’s Mix');
-      setStatus(value ? 'Taz’s Mix is playing' : 'Taz’s Mix is paused');
+      root.querySelector('[data-action="play"]')?.setAttribute('aria-label', value ? 'Pause Taz’s Mix' : 'Play Taz’s Mix');
+      setStatus(value ? 'Playing across the site' : 'Taz’s Mix is paused');
     };
     const updateVolume = (value, save = true) => {
       volume = Math.min(100, Math.max(0, Number(value)));
       if (volumeInput) { volumeInput.value = String(volume); volumeInput.setAttribute('aria-label', `Taz’s Mix volume: ${volume} percent`); }
       if (volumeValue) volumeValue.textContent = `${volume}%`;
       if (save) localStorage.setItem(STORAGE.volume, String(volume));
-      if (ready) { player.setVolume(volume); if (volume > 0 && player.isMuted()) player.unMute(); }
+      if (ready) { player.setVolume(volume); if (volume > 0 && player.isMuted()) { player.unMute(); muted = false; } }
     };
     const updateTrack = () => {
       if (!ready) return;
       const data = player.getVideoData?.() || {};
-      if (title) title.textContent = data.title || 'Taz’s Mix';
-      if (thumbnail && data.video_id) thumbnail.src = `https://i.ytimg.com/vi/${data.video_id}/mqdefault.jpg`;
+      if (title) {
+        title.classList.add('is-changing');
+        window.setTimeout(() => { title.textContent = data.title || 'Taz’s Mix'; title.classList.remove('is-changing'); }, 120);
+      }
+      if (data.video_id) thumbnails.forEach((thumbnail) => { thumbnail.src = `https://i.ytimg.com/vi/${data.video_id}/mqdefault.jpg`; });
+    };
+    const updateProgress = () => {
+      if (!ready || seeking) return;
+      const elapsed = Number(player.getCurrentTime?.()) || 0;
+      const total = Number(player.getDuration?.()) || 0;
+      if (progress) progress.value = total > 0 ? String(Math.round((elapsed / total) * 1000)) : '0';
+      if (currentTime) currentTime.textContent = formatTime(elapsed);
+      if (duration) duration.textContent = formatTime(total);
     };
     const saveState = () => {
       if (!ready) return;
-      const index = Number(player.getPlaylistIndex?.());
+      const track = Number(player.getPlaylistIndex?.());
       const time = Number(player.getCurrentTime?.());
-      if (Number.isFinite(index) && index >= 0) sessionStorage.setItem(STORAGE.index, String(index));
-      if (Number.isFinite(time)) sessionStorage.setItem(STORAGE.time, String(Math.floor(time)));
-      sessionStorage.setItem(STORAGE.playing, String(playing));
-      sessionStorage.setItem(STORAGE.enabled, String(enabled));
-      sessionStorage.setItem(STORAGE.muted, String(ready ? player.isMuted() : muted));
+      if (Number.isFinite(track) && track >= 0) localStorage.setItem(STORAGE.track, String(track));
+      if (Number.isFinite(time)) localStorage.setItem(STORAGE.time, String(Math.floor(time)));
+      localStorage.setItem(STORAGE.playing, String(playing));
+      localStorage.setItem(STORAGE.enabled, String(enabled));
+      localStorage.setItem(STORAGE.muted, String(ready ? player.isMuted() : muted));
     };
-    const showEnable = (message = 'Your browser paused autoplay until you interact.', blocked = false) => {
-      setAutoplayBlocked(blocked);
+    const showEnable = (message = 'Your browser paused autoplay until you interact.') => {
       if (enableMessage) enableMessage.textContent = message;
       enablePanel.hidden = false;
       setPlaying(false);
-      setStatus('Press Play Taz’s Mix to begin');
+      setStatus('Press play to continue');
     };
     const showError = () => {
       clearTimeout(loadTimeout);
@@ -181,39 +174,27 @@ const playlistUrl = 'https://youtube.com/playlist?list=RDk04tX2fvh0o&playnext=1&
     const startPlayback = () => {
       if (!ready) return;
       enabled = true;
-      setAutoplayBlocked(false);
-      sessionStorage.setItem(STORAGE.enabled, 'true');
+      localStorage.setItem(STORAGE.enabled, 'true');
       enablePanel.hidden = true;
       errorPanel.hidden = true;
       player.setVolume(volume);
       player.playVideo();
     };
     const restorePlaylist = () => {
-      const index = Math.max(0, getNumber(sessionStorage, STORAGE.index, 0));
-      const startSeconds = Math.max(0, getNumber(sessionStorage, STORAGE.time, 0));
-      const previousPlaying = sessionStorage.getItem(STORAGE.playing);
-      const shouldResume = previousPlaying === 'true';
-      const firstVisit = previousPlaying === null;
-      const shouldAutoplay = !minimized && (firstVisit || shouldResume);
-      const playlistOptions = { list: PLAYLIST_ID, listType: 'playlist', index, startSeconds, suggestedQuality: 'small' };
-      if (shouldAutoplay) player.loadPlaylist(playlistOptions);
-      else player.cuePlaylist(playlistOptions);
+      const index = Math.max(0, numberFromStorage(STORAGE.track, 0));
+      const startSeconds = Math.max(0, numberFromStorage(STORAGE.time, 0));
+      const shouldAutoplay = !minimized && (playing || !hadSavedPlaying);
+      const options = { list: PLAYLIST_ID, listType: 'playlist', index, startSeconds, suggestedQuality: 'small' };
+      if (shouldAutoplay) player.loadPlaylist(options); else player.cuePlaylist(options);
       player.setVolume(volume);
-      if (sessionStorage.getItem(STORAGE.muted) === 'true') { muted = true; player.mute(); if (muteSymbol) muteSymbol.textContent = '○'; }
+      if (muted) player.mute();
       return shouldAutoplay;
-    };
-    const attemptAutoplay = () => {
-      if (autoplayAttempted || minimized) return;
-      autoplayAttempted = true;
-      player.setVolume(volume);
-      player.playVideo();
-      window.setTimeout(() => {
-        if (!playing && player?.getPlayerState?.() !== 1) showEnable('Autoplay was blocked. Start the mix when you are ready.', true);
-      }, 1800);
     };
 
     setMinimized(minimized);
+    setPlaying(playing);
     updateVolume(volume, false);
+    if (muteSymbol) muteSymbol.textContent = muted ? '○' : '◕';
 
     root.addEventListener('click', (event) => {
       const button = event.target.closest('[data-action]');
@@ -224,46 +205,73 @@ const playlistUrl = 'https://youtube.com/playlist?list=RDk04tX2fvh0o&playnext=1&
       if (action === 'play' && ready) playing ? player.pauseVideo() : startPlayback();
       if (action === 'previous' && ready) { errorSkips = 0; player.previousVideo(); }
       if (action === 'next' && ready) { errorSkips = 0; player.nextVideo(); }
-      if (action === 'stop' && ready) { player.stopVideo(); setPlaying(false); saveState(); }
+      if (action === 'stop' && ready) { player.stopVideo(); setPlaying(false); localStorage.setItem(STORAGE.time, '0'); }
       if (action === 'mute' && ready) {
         muted = !player.isMuted();
         muted ? player.mute() : player.unMute();
-        sessionStorage.setItem(STORAGE.muted, String(muted));
+        localStorage.setItem(STORAGE.muted, String(muted));
         if (muteSymbol) muteSymbol.textContent = muted ? '○' : '◕';
         button.setAttribute('aria-label', muted ? 'Unmute Taz’s Mix' : 'Mute Taz’s Mix');
       }
     });
     collapsed.addEventListener('click', () => setMinimized(false));
     volumeInput?.addEventListener('input', (event) => updateVolume(event.target.value));
+    progress?.addEventListener('pointerdown', () => { seeking = true; });
+    progress?.addEventListener('input', () => {
+      if (!ready) return;
+      const total = Number(player.getDuration?.()) || 0;
+      const target = total * (Number(progress.value) / 1000);
+      if (currentTime) currentTime.textContent = formatTime(target);
+    });
+    progress?.addEventListener('change', () => {
+      if (!ready) return;
+      const total = Number(player.getDuration?.()) || 0;
+      player.seekTo(total * (Number(progress.value) / 1000), true);
+      seeking = false;
+      saveState();
+    });
+
+    document.addEventListener('tazmix:pause-request', () => {
+      if (!ready || !playing) return;
+      player.pauseVideo();
+      saveState();
+    });
 
     window.addEventListener('pagehide', saveState);
+    document.addEventListener('astro:before-swap', saveState);
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveState(); });
-    window.setInterval(() => { if (playing) saveState(); }, 5000);
+    window.setInterval(() => { updateProgress(); if (playing) saveState(); }, 1000);
 
     window.tazMixCreatePlayer = () => {
       if (player || !window.YT?.Player) return;
       player = new window.YT.Player('taz-mix-youtube', {
-        width: 210,
-        height: 210,
+        width: 200,
+        height: 200,
         host: 'https://www.youtube-nocookie.com',
-        playerVars: { autoplay: 1, controls: 1, enablejsapi: 1, playsinline: 1, listType: 'playlist', list: PLAYLIST_ID, origin: window.location.origin, rel: 0 },
+        playerVars: { autoplay: 1, controls: 0, disablekb: 1, enablejsapi: 1, playsinline: 1, listType: 'playlist', list: PLAYLIST_ID, origin: window.location.origin, rel: 0 },
         events: {
           onReady: (event) => {
             ready = true;
             clearTimeout(loadTimeout);
             loading.hidden = true;
-            event.target.getIframe()?.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+            event.target.getIframe()?.setAttribute('allow', 'autoplay; encrypted-media');
             updateVolume(volume, false);
             const shouldAutoplay = restorePlaylist();
-            window.setTimeout(() => { updateTrack(); if (shouldAutoplay) attemptAutoplay(); else if (minimized && sessionStorage.getItem(STORAGE.playing) === 'true') showEnable('Expand the player and press play to resume Taz’s Mix.'); }, 450);
+            window.setTimeout(() => {
+              updateTrack(); updateProgress();
+              if (shouldAutoplay) {
+                player.playVideo();
+                window.setTimeout(() => { if (player?.getPlayerState?.() !== 1) showEnable('Autoplay was blocked. Press play to resume from your saved track.'); }, 1600);
+              }
+            }, 400);
           },
           onStateChange: (event) => {
             const state = event.data;
-            if (state === window.YT.PlayerState.PLAYING) { enabled = true; setAutoplayBlocked(false); sessionStorage.setItem(STORAGE.enabled, 'true'); enablePanel.hidden = true; errorPanel.hidden = true; errorSkips = 0; setPlaying(true); updateTrack(); }
+            if (state === window.YT.PlayerState.PLAYING) { enabled = true; localStorage.setItem(STORAGE.enabled, 'true'); enablePanel.hidden = true; errorPanel.hidden = true; errorSkips = 0; setPlaying(true); updateTrack(); updateProgress(); }
             if (state === window.YT.PlayerState.PAUSED || state === window.YT.PlayerState.CUED) setPlaying(false);
             if (state === window.YT.PlayerState.ENDED) { setPlaying(false); player.nextVideo(); }
           },
-          onAutoplayBlocked: () => showEnable('Autoplay was blocked. Start the mix when you are ready.', true),
+          onAutoplayBlocked: () => showEnable('Autoplay was blocked. Press play to resume from your saved track.'),
           onError: () => {
             errorSkips += 1;
             if (errorSkips <= 5) { setStatus('Skipping an unavailable track'); window.setTimeout(() => player.nextVideo(), 350); }
