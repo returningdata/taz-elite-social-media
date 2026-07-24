@@ -15,14 +15,14 @@ const services = navigation.filter((item) => 'service' in item);
       <div>{services.map((item) => <a href={item.href}>{item.label}</a>)}</div>
     </details>
   </nav>
-  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu" data-site-menu-toggle>
     <span></span><span></span>
   </button>
 </header>
 
-<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true" data-site-menu inert>
   <div class="mobile-menu-panel" role="dialog" aria-modal="true" aria-label="Taz Elite navigation">
-    <div class="mobile-menu-top"><a class="mobile-brand" href="/"><BrandLogo size="small" class="brand-logo" /><span>Taz Elite</span></a><button type="button" class="menu-close" aria-label="Close menu">×</button></div>
+    <div class="mobile-menu-top"><a class="mobile-brand" href="/"><BrandLogo size="small" class="brand-logo" /><span>Taz Elite</span></a><button type="button" class="menu-close" aria-label="Close menu" data-site-menu-close>×</button></div>
     <nav aria-label="Mobile navigation">
       {primary.map((item, index) => <a style={`--order:${index}`} href={item.href}>{item.label}<span>↗</span></a>)}
       <p>Services</p>
@@ -32,26 +32,7 @@ const services = navigation.filter((item) => 'service' in item);
 </div>
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>('.menu-toggle');
-  const close = document.querySelector<HTMLButtonElement>('.menu-close');
-  const menu = document.querySelector<HTMLElement>('.mobile-menu');
-  let lockedScroll = 0;
-  const setOpen = (open: boolean) => {
-    if (!toggle || !menu) return;
-    toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    menu.setAttribute('aria-hidden', String(!open));
-    menu.classList.toggle('open', open);
-    document.body.classList.toggle('menu-open', open);
-    if (open) { lockedScroll = window.scrollY; document.body.style.position = 'fixed'; document.body.style.top = `-${lockedScroll}px`; document.body.style.width = '100%'; }
-    else { document.body.style.position = ''; document.body.style.top = ''; document.body.style.width = ''; window.scrollTo(0, lockedScroll); }
-    if (open) close?.focus(); else toggle.focus();
-  };
-  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
-  close?.addEventListener('click', () => setOpen(false));
-  menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
-  menu?.addEventListener('click', (event) => { if (event.target === menu) setOpen(false); });
-  document.addEventListener('keydown', (event) => event.key === 'Escape' && setOpen(false));
+  import '../../scripts/site-navigation';
 </script>
 
 <style>

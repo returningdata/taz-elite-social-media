@@ -46,6 +46,25 @@ test('mobile menu scrolls to every ordered link and stays above music', async ({
   await expect(menu).toHaveAttribute('aria-hidden', 'true');
 });
 
+test('Twitch menu survives transitions without blocking page clicks', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/twitch');
+  const toggle = page.locator('.twitch-menu-toggle');
+  const menu = page.locator('#twitch-menu');
+  await expect(toggle).toBeVisible();
+  await toggle.click();
+  await expect(menu).toHaveAttribute('aria-hidden', 'false');
+  await expect(menu.getByRole('link', { name: /About/ })).toBeVisible();
+  await menu.getByRole('link', { name: /About/ }).click();
+  await page.waitForURL('**/about');
+  await expect(page.locator('body')).not.toHaveClass(/menu-open/);
+  await expect(page.locator('body')).not.toHaveCSS('position', 'fixed');
+  await page.locator('.brand-mark').click();
+  await page.waitForURL(/\/$/);
+  await page.locator('.menu-toggle').click();
+  await expect(page.locator('#mobile-menu')).toHaveAttribute('aria-hidden', 'false');
+});
+
 test('social integrations resolve to data or truthful errors', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/discord');
