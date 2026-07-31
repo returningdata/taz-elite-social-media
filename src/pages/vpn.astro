@@ -1,18 +1,15 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import SiteHeader from '../components/SiteHeader.astro';
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
 
 const nordVpnLink = 'https://go.nordvpn.net/aff_c?offer_id=15&aff_id=152990&url_id=902';
 const nordPassLink = 'https://go.nordpass.io/aff_c?offer_id=488&aff_id=152990&url_id=9356';
 ---
 
-<Layout
-    title="NordVPN & NordPass | TazElite Security Picks"
+<PortfolioLayout
+    title="VPN | Taz Elite"
     description="Explore why TazElite recommends NordVPN for a more private connection and NordPass for safer, simpler password management."
-    wide
+    image="/images/vpn/security-theme-banner.webp"
 >
-    <SiteHeader />
-
     <div class="security-page">
         <div class="security-grid" aria-hidden="true"></div>
 
@@ -287,18 +284,13 @@ const nordPassLink = 'https://go.nordpass.io/aff_c?offer_id=488&aff_id=152990&ur
             </div>
         </section>
 
-        <div class="security-disclaimer">
+        <aside class="security-disclaimer service-disclaimer" aria-label="VPN service note">
             <p><strong>Important:</strong> No security tool can eliminate every online risk. Product features and availability can vary by plan, device, browser, and operating system. Review the provider’s current terms before purchasing.</p>
-            <a href="/">Back to TazElite</a>
-        </div>
+        </aside>
     </div>
-</Layout>
+</PortfolioLayout>
 
 <style>
-    :global(body) {
-        background: #070b12 !important;
-    }
-
     .security-page {
         --ink: #f5f8ff;
         --muted: #a7b1c2;

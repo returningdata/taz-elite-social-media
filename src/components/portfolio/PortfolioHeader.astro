@@ -9,10 +9,10 @@ const services = navigation.filter((item) => 'service' in item);
 <header class="portfolio-header">
   <a class="brand-mark" href="/" aria-label="Taz Elite home"><BrandLogo size="small" class="brand-logo" eager /><strong>Taz Elite</strong></a>
   <nav class="desktop-nav" aria-label="Main navigation">
-    {primary.map((item) => <a class:list={{ active: currentPath === item.href }} href={item.href}>{item.label}</a>)}
+    {primary.map((item) => <a class:list={{ active: currentPath === item.href }} href={item.href} aria-current={currentPath === item.href ? 'page' : undefined}>{item.label}</a>)}
     <details class="services-menu">
       <summary>Services <span aria-hidden="true">⌄</span></summary>
-      <div>{services.map((item) => <a href={item.href}>{item.label}</a>)}</div>
+      <div>{services.map((item) => <a class:list={{ active: currentPath === item.href }} href={item.href} aria-current={currentPath === item.href ? 'page' : undefined}>{item.label}</a>)}</div>
     </details>
   </nav>
   <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu" data-site-menu-toggle>

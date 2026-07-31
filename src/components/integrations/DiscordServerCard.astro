@@ -9,8 +9,8 @@ const { invite, title, description, featured = false } = Astro.props;
     <span class="server-live-dot"></span>
   </div>
   <div class="server-copy"><p><PlatformIcon name="discord" size={15} /> LIVE COMMUNITY</p><h3 data-server-name>{title || 'Discord Community'}</h3><span data-server-description>{description}</span></div>
-  <div class="server-stats" aria-live="polite"><div><span>Members</span><strong data-member-count>Loading…</strong></div><div><span>Online</span><strong data-online-count>Loading…</strong></div><div><span>Boost level</span><strong data-boost-level>—</strong></div></div>
-  <p class="server-message" data-server-message>Loading live Discord server information…</p>
+  <div class="server-stats" aria-live="polite"><div><span>Members</span><strong class="loading-value" data-member-count><span class="sr-only">Loading</span></strong></div><div><span>Online</span><strong class="loading-value" data-online-count><span class="sr-only">Loading</span></strong></div><div><span>Boost level</span><strong data-boost-level>—</strong></div></div>
+  <p class="server-message loading-copy" data-server-message><span class="sr-only">Loading live Discord server information</span></p>
   <div class="server-actions"><a href={`https://discord.gg/${invite}`} target="_blank" rel="noopener noreferrer">Join Discord</a><button type="button" data-server-retry hidden>Retry live data</button></div>
 </article>
 <style>
@@ -20,10 +20,10 @@ const { invite, title, description, featured = false } = Astro.props;
   import { errorLabel, fetchIntegration, formatCount } from '../../scripts/live-data';
   interface ServerData { name: string; description: string | null; iconUrl: string | null; bannerUrl: string | null; memberCount: number | null; onlineCount: number | null; boostLevel: number | null; }
   document.querySelectorAll<HTMLElement>('[data-discord-server]').forEach((root) => {
-    const set = (selector: string, value: string) => { const element = root.querySelector<HTMLElement>(selector); if (element) element.textContent = value; };
+    const set = (selector: string, value: string) => { const element = root.querySelector<HTMLElement>(selector); if (element) { element.classList.remove('loading-copy', 'loading-value'); element.textContent = value; } };
     const load = async () => {
       const retry = root.querySelector<HTMLButtonElement>('[data-server-retry]'); if (retry) retry.hidden = true;
-      set('[data-server-message]', 'Loading live Discord server information…');
+      const message = root.querySelector<HTMLElement>('[data-server-message]'); if (message) { message.classList.remove('error'); message.classList.add('loading-copy'); message.textContent = ''; }
       try {
         const result = await fetchIntegration<ServerData>(`/.netlify/functions/discord-server?invite=${encodeURIComponent(root.dataset.invite || '')}`);
         const data = result.data; set('[data-server-name]', data.name); if (data.description) set('[data-server-description]', data.description); set('[data-member-count]', formatCount(data.memberCount)); set('[data-online-count]', formatCount(data.onlineCount)); set('[data-boost-level]', data.boostLevel === null ? 'Unavailable' : `Level ${data.boostLevel}`);

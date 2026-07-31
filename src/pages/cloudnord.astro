@@ -1,27 +1,26 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import SiteHeader from '../components/SiteHeader.astro';
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
 
 const affiliateLink = 'https://cloudnord.net/aff.php?code=ujzheHhtMn8FuTLx';
 const statusLink = 'https://status.cloudnord.net/report/uptime/6f4eed81d1661aad22de6cf2b43dfc5d/';
 const reviewsLink = 'https://www.trustpilot.com/review/cloudnord.net';
 ---
 
-<Layout
-    title="CloudNord Game Hosting | TazElite Server Pick"
+<PortfolioLayout
+    title="CloudNord | Game Server Hosting"
     description="Explore CloudNord game server hosting, uptime, features, locations, and independent customer reviews through TazElite's affiliate link."
-    wide
+    image="/images/cloudnord/game-banner.png"
 >
-    <SiteHeader />
-
     <div class="cloud-page">
         <div class="cloud-grid" aria-hidden="true"></div>
 
         <section class="cloud-hero" aria-labelledby="cloud-title">
             <div class="hero-copy reveal reveal-1">
-                <div class="eyebrow"><i></i>TazElite game hosting pick</div>
+                <div class="eyebrow"><i></i>CloudNord</div>
                 <img class="cloud-logo" src="/images/cloudnord/logo.png" alt="CloudNord" width="600" height="171" />
-                <h1 id="cloud-title">Launch the world.<br /><span>Skip the server headache.</span></h1>
+                <h1 id="cloud-title">CloudNord</h1>
+                <p class="service-subtitle">Game Server Hosting</p>
+                <h2 class="hero-statement">Launch the world.<br /><span>Skip the server headache.</span></h2>
                 <p>CloudNord provides managed game servers for communities that want quick setup, low-latency locations, mod support, DDoS protection, and a control panel that does not require a networking degree.</p>
                 <div class="hero-actions">
                     <a class="launch-button" href={affiliateLink} target="_blank" rel="sponsored noopener noreferrer">
@@ -56,7 +55,7 @@ const reviewsLink = 'https://www.trustpilot.com/review/cloudnord.net';
 
         <section class="signal-strip" aria-label="CloudNord highlights">
             <div><span>4.8<small>/5</small></span><p><strong>Trustpilot rating</strong>Based on 600 reviews checked July 23, 2026</p></div>
-            <div><span>99.9<small>%</small></span><p><strong>Uptime guarantee</strong>Published for CloudNord game hosting</p></div>
+            <div><span>99.9<small>%</small></span><p><strong>Uptime guarantee</strong>Published for CloudNord game server hosting</p></div>
             <div><span>3<small> days</small></span><p><strong>Refund window</strong>Try the service with a short evaluation period</p></div>
             <div><span>24<small>/7</small></span><p><strong>Server availability</strong>Hosting and support designed for always-on worlds</p></div>
         </section>
@@ -108,7 +107,7 @@ const reviewsLink = 'https://www.trustpilot.com/review/cloudnord.net';
             <div class="uptime-copy">
                 <span class="section-label">Uptime, explained</span>
                 <h2 id="uptime-heading">A guarantee is useful. A public status page is better.</h2>
-                <p>CloudNord publishes a <strong>99.9% uptime guarantee</strong> for game hosting and provides a public monitoring page. At exactly 99.9%, the theoretical allowance is roughly 44 minutes in a 30-day month, although provider terms determine how uptime is measured and credited.</p>
+                <p>CloudNord publishes a <strong>99.9% uptime guarantee</strong> for game server hosting and provides a public monitoring page. At exactly 99.9%, the theoretical allowance is roughly 44 minutes in a 30-day month, although provider terms determine how uptime is measured and credited.</p>
                 <div class="uptime-actions">
                     <a href={statusLink} target="_blank" rel="noopener noreferrer">Open CloudNord status <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5M19 5l-8 8M10 6H5v13h13v-5"/></svg></a>
                     <span><i></i> Check live status before ordering</span>
@@ -157,16 +156,13 @@ const reviewsLink = 'https://www.trustpilot.com/review/cloudnord.net';
             <a href={affiliateLink} target="_blank" rel="sponsored noopener noreferrer">View CloudNord plans <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </section>
 
-        <footer class="page-footer">
+        <aside class="service-disclaimer" aria-label="CloudNord service note">
             <p><strong>Important:</strong> Hosting performance varies by game, mods, plan resources, server location, and player connections. Review CloudNord’s current pricing, refund terms, uptime policy, and service terms before purchasing.</p>
-            <a href="/">Back to TazElite</a>
-        </footer>
+        </aside>
     </div>
-</Layout>
+</PortfolioLayout>
 
 <style>
-    :global(body) { background: #0c1120 !important; }
-
     .cloud-page {
         --navy: #11182a;
         --panel: #171f34;
