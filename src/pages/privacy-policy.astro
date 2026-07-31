@@ -1,0 +1,87 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import '../styles/legal.css';
+
+const effectiveDate = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'long',
+  timeZone: 'UTC'
+}).format(new Date());
+---
+
+<PortfolioLayout
+  title="Privacy Policy | TazElite"
+  description="Read the Privacy Policy for tazelite.kruigerlabs.xyz, including information about cookies, analytics, affiliate links, and website security."
+>
+  <header class="page-shell page-intro legal-intro">
+    <span class="page-kicker">Legal · Privacy</span>
+    <h1>Privacy Policy</h1>
+    <p>This policy explains the types of information that may be collected when you visit TazElite, how that information may be used, and the choices available to visitors.</p>
+    <p class="effective-date"><strong>Effective Date:</strong> {effectiveDate}</p>
+  </header>
+
+  <section class="section legal-section">
+    <div class="section-shell legal-layout">
+      <aside class="legal-index" data-reveal aria-label="Privacy Policy sections">
+        <span>Policy overview</span>
+        <ol>
+          <li>Information Collected</li>
+          <li>How Information Is Used</li>
+          <li>Cookies</li>
+          <li>Third-Party Services</li>
+          <li>Affiliate Links</li>
+          <li>Advertising</li>
+          <li>Security</li>
+          <li>Children’s Privacy</li>
+          <li>Contact</li>
+        </ol>
+      </aside>
+
+      <div class="legal-document">
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">01</span>
+          <div><h2>Information That May Be Collected</h2><p>Depending on how you use the website and which features are enabled, this website may collect or receive:</p><ul><li>Basic analytics information</li><li>Device information</li><li>Browser information</li><li>IP addresses</li><li>Cookies and similar browser technologies</li><li>Contact information voluntarily submitted through forms</li><li>Information you provide when contacting me</li><li>Social media interactions where applicable</li></ul><p>You are not required to submit contact information simply to browse the public pages of this website.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">02</span>
+          <div><h2>How Information Is Used</h2><p>Information collected through the website may be used to:</p><ul><li>Improve the website</li><li>Respond to inquiries</li><li>Maintain security</li><li>Prevent abuse</li><li>Improve the user experience</li><li>Analyze traffic and website performance</li></ul></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">03</span>
+          <div><h2>Cookies</h2><p>Cookies or similar browser storage technologies may be used for site functionality, analytics, performance, and visitor preferences. You may be able to limit or remove cookies through your browser settings, although disabling them may affect certain website features.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">04</span>
+          <div><h2>Third-Party Services and Embedded Content</h2><p>Third-party services may collect technical or interaction information according to their own policies when their tools, links, scripts, or embedded content are used. These providers may include, but are not limited to:</p><ul><li>Google Analytics</li><li>Netlify</li><li>Cloudflare, if enabled</li><li>Discord embeds</li><li>Twitch embeds</li><li>YouTube embeds</li><li>GitHub embeds</li><li>Other embedded content providers</li></ul><p>Third-party services operate independently, and their collection and use of information are governed by their respective privacy policies.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">05</span>
+          <div><h2>Affiliate Links</h2><p>Affiliate links may appear throughout this website. If you click an affiliate link and make an eligible purchase, I may receive a commission from the third-party provider at no additional cost to you. Affiliate relationships do not increase the price you pay.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">06</span>
+          <div><h2>Advertising</h2><p>The website may display advertisements in the future. If advertising services are added, those providers may use cookies or similar technologies to deliver, measure, or personalize advertising in accordance with their own policies and applicable requirements.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">07</span>
+          <div><h2>Security</h2><p>Reasonable efforts are taken to protect visitor information and maintain the security of this website. However, no website, network, transmission method, or storage system can be guaranteed to be completely secure.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">08</span>
+          <div><h2>Children’s Privacy</h2><p>This website is not intentionally directed toward children under 13, and I do not knowingly seek personal information from children under 13. If you believe a child has submitted personal information through this website, please contact me so the concern can be reviewed.</p></div>
+        </article>
+
+        <article class="legal-card legal-contact" data-reveal>
+          <span class="legal-number">09</span>
+          <div><h2>Contact</h2><p>Questions about this Privacy Policy or the website’s privacy practices may be sent to:</p><dl><div><dt>Email</dt><dd><a href="mailto:taz@kruigerlabsllc.com">taz@kruigerlabsllc.com</a></dd></div></dl></div>
+        </article>
+      </div>
+    </div>
+  </section>
+</PortfolioLayout>
