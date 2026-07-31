@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 const widths = [320, 360, 375, 390, 412, 768, 1024, 1280, 1440, 1920];
-const auditRoutes = ['/', '/discord', '/twitch', '/youtube', '/tiktok', '/instagram', '/contact'];
+const auditRoutes = ['/', '/about', '/experience', '/projects', '/discord', '/twitch', '/youtube', '/tiktok', '/instagram', '/contact', '/contact-success', '/cloudnord', '/sparked-host', '/vpn', '/privacy', '/privacy-policy', '/terms-of-service', '/tip'];
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -32,7 +32,7 @@ test('mobile menu scrolls to every ordered link and stays above music', async ({
   const menu = page.locator('#mobile-menu');
   await expect(menu).toHaveAttribute('aria-hidden', 'false');
   const labels = await menu.locator('nav a').allTextContents();
-  expect(labels.map((label) => label.replace('↗', '').trim())).toEqual(['Home', 'About', 'Experience', 'Projects', 'Discord', 'Twitch', 'TikTok', 'YouTube', 'Instagram', 'Contact', 'Game Hosting', 'VPN']);
+  expect(labels.map((label) => label.replace('↗', '').trim())).toEqual(['Home', 'About', 'Experience', 'Projects', 'Discord', 'Twitch', 'TikTok', 'YouTube', 'Instagram', 'Contact', 'CloudNord', 'Sparked Host', 'VPN']);
   const panel = menu.locator('.mobile-menu-panel');
   expect(await panel.evaluate((element) => element.scrollHeight > element.clientHeight)).toBeTruthy();
   await menu.getByRole('link', { name: /VPN/ }).scrollIntoViewIfNeeded();
@@ -46,11 +46,11 @@ test('mobile menu scrolls to every ordered link and stays above music', async ({
   await expect(menu).toHaveAttribute('aria-hidden', 'true');
 });
 
-test('Twitch menu survives transitions without blocking page clicks', async ({ page }) => {
+test('shared menu survives Twitch transitions without blocking page clicks', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/twitch');
-  const toggle = page.locator('.twitch-menu-toggle');
-  const menu = page.locator('#twitch-menu');
+  const toggle = page.locator('.menu-toggle');
+  const menu = page.locator('#mobile-menu');
   await expect(toggle).toBeVisible();
   await toggle.click();
   await expect(menu).toHaveAttribute('aria-hidden', 'false');

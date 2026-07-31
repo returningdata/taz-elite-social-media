@@ -6,7 +6,7 @@ const { userId = '1000470631688712243' } = Astro.props;
 <section class="presence-card" data-discord-presence data-user-id={userId} aria-labelledby="presence-title">
   <div class="presence-loading" data-presence-loading>
     <span class="presence-avatar-skeleton"></span><div><span></span><span></span></div>
-    <p>Checking live Discord presence…</p>
+    <p class="sr-only">Checking live Discord presence…</p>
   </div>
 
   <div class="presence-content" data-presence-content hidden>

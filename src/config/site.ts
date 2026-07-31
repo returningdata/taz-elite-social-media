@@ -14,7 +14,7 @@ export const siteConfig = {
     kruigerLabs: 'https://kruigerlabsllc.com'
   },
   routes: {
-    gameHosting: '/cloudnord',
+    cloudNord: '/cloudnord',
     sparkedHost: '/sparked-host',
     vpn: '/vpn'
   },
@@ -48,7 +48,7 @@ export const navigation = [
   { label: 'YouTube', href: '/youtube' },
   { label: 'Instagram', href: '/instagram' },
   { label: 'Contact', href: '/contact' },
-  { label: 'Game Hosting', href: siteConfig.routes.gameHosting, service: true },
+  { label: 'CloudNord', href: siteConfig.routes.cloudNord, service: true },
   { label: 'Sparked Host', href: siteConfig.routes.sparkedHost, service: true },
   { label: 'VPN', href: siteConfig.routes.vpn, service: true }
 ] as const;
