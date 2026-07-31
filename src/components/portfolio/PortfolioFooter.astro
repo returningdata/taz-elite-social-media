@@ -4,6 +4,11 @@ import BrandLogo from '../brand/BrandLogo.astro';
 ---
 <footer class="portfolio-footer">
   <div><a class="brand-mark" href="/"><BrandLogo size="small" class="brand-logo" /><strong>Taz Elite</strong></a><p>Technology shaped by discipline, creativity, and purpose.</p></div>
-  <div class="footer-links"><a href="/about">About</a><a href="/projects">Projects</a><a href="/contact">Contact</a><a href="/privacy">Privacy</a><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></div>
+  <div class="footer-links"><a href="/about">About</a><a href="/projects">Projects</a><a href="/contact">Contact</a><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a></div>
+  <nav class="legal-links" aria-label="Legal"><a href="/privacy-policy">Privacy Policy</a><span aria-hidden="true">•</span><a href="/terms-of-service">Terms of Service</a></nav>
   <p class="copyright">© {new Date().getFullYear()} Taz Elite. Built for the next mission.</p>
 </footer>
+
+<style>
+  .legal-links{grid-column:1/-1;display:flex;align-items:center;gap:.55rem;color:#657189;font-size:.7rem}.legal-links a{color:inherit;text-decoration:none;transition:color .2s ease}.legal-links a:hover{color:#c5cede}.legal-links a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.legal-links span{color:#465169}@media(max-width:760px){.legal-links{justify-content:flex-start}}
+</style>

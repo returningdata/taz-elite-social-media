@@ -1,0 +1,184 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import '../styles/sparked-host.css';
+
+const affiliateUrl = 'https://billing.sparkedhost.com/aff.php?aff=3352';
+const disclosure = 'Affiliate Disclosure: This page contains affiliate links. If you purchase a Sparked Host service through one of these links, I may receive a commission at no additional cost to you. I am not the owner or operator of Sparked Host.';
+
+const features = [
+  ['bolt', 'High-Performance Hardware', 'Powerful server hardware designed to provide fast and responsive hosting performance.'],
+  ['shield', 'DDoS Protection', 'Hosting infrastructure protected against disruptive network attacks.'],
+  ['globe', 'Worldwide Locations', 'Multiple hosting locations that help communities choose infrastructure closer to their players and users.'],
+  ['chat', 'Support', 'Access to hosting support when assistance is needed.'],
+  ['game', 'Game Server Hosting', 'Hosting suitable for multiplayer communities and supported game-server projects.'],
+  ['bot', 'Discord Bot Hosting', 'Hosting options for keeping Discord bots and community services online.'],
+  ['web', 'Website Hosting', 'Hosting for personal websites, community pages, dashboards, and business projects.'],
+  ['cloud', 'VPS Hosting', 'Virtual private server options for projects requiring additional flexibility and control.']
+] as const;
+
+interface HostingService {
+  icon: string;
+  name: string;
+  description: string;
+  image: string;
+  alt: string;
+  badge?: string;
+}
+
+const services: HostingService[] = [
+  {
+    icon: 'server',
+    name: 'FiveM Hosting',
+    description: 'For FiveM communities, scripts, databases, Discord integrations, APIs, management systems, and related server infrastructure.',
+    image: '/images/sparked-host/server-hardware.webp',
+    alt: 'Server hardware representing infrastructure suitable for a FiveM community',
+    badge: '/images/sparked-host/fivem-icon.webp'
+  },
+  {
+    icon: 'cube',
+    name: 'Minecraft Hosting',
+    description: 'For Java, Bedrock, modded, plugin-based, and community Minecraft servers.',
+    image: '/images/sparked-host/minecraft-hosting.webp',
+    alt: 'Official Sparked Host Minecraft hosting artwork'
+  },
+  {
+    icon: 'bot',
+    name: 'Discord Bot Hosting',
+    description: 'For Discord bots, moderation systems, community tools, API workers, and other always-online services.',
+    image: '/images/sparked-host/discord-bot-hosting.webp',
+    alt: 'Official Sparked Host Discord bot hosting artwork'
+  },
+  {
+    icon: 'web',
+    name: 'Web Hosting',
+    description: 'For websites, portfolios, community hubs, documentation sites, dashboards, and smaller business projects.',
+    image: '/images/sparked-host/web-hosting.webp',
+    alt: 'Official Sparked Host cloud artwork representing web hosting'
+  },
+  {
+    icon: 'cloud',
+    name: 'VPS Hosting',
+    description: 'For developers and server owners who require root access and greater configuration control.',
+    image: '/images/sparked-host/vps-hosting.webp',
+    alt: 'Official Sparked Host VPS hosting artwork'
+  },
+  {
+    icon: 'game',
+    name: 'Other Game Servers',
+    description: 'For supported multiplayer game-server projects available through Sparked Host.',
+    image: '/images/sparked-host/game-hosting.webp',
+    alt: 'Official Sparked Host game-server hosting artwork'
+  }
+] as const;
+
+const perfectFor = ['FiveM communities', 'Minecraft servers', 'Discord bots', 'Gaming communities', 'Content creators', 'Developers', 'Websites', 'VPS projects', 'Community dashboards', 'Other online services'];
+
+const icons: Record<string, string> = {
+  bolt: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4.5 13H11l-1 9 8.5-12H12l1-8Z"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 4.5 6v5.2c0 4.8 3.1 8.3 7.5 9.8 4.4-1.5 7.5-5 7.5-9.8V6L12 3Z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg>',
+  globe: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.2 2.5 3.3 5.5 3.3 9S14.2 18.5 12 21c-2.2-2.5-3.3-5.5-3.3-9S9.8 5.5 12 3Z"/></svg>',
+  chat: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14v10H9l-4 3v-13Z"/><path d="M8.5 9.5h7M8.5 12h4.5"/></svg>',
+  game: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h8c2.7 0 4.2 2 4.8 4.8l.7 3.2c.5 2.2-2.2 3.5-3.5 1.8l-2-2.3H8l-2 2.3C4.7 19.5 2 18.2 2.5 16l.7-3.2C3.8 10 5.3 8 8 8Z"/><path d="M7.5 11v4M5.5 13h4M16.5 12.2h.01M18.5 14.2h.01"/></svg>',
+  bot: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M8 12h.01M16 12h.01M8 16h8"/></svg>',
+  web: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 8h18M7 6h.01M10 6h.01M7 12h4M7 15h8"/></svg>',
+  cloud: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18h10a4 4 0 0 0 .7-7.9A6 6 0 0 0 6.2 8.8 4.6 4.6 0 0 0 7 18Z"/></svg>',
+  server: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="6" rx="2"/><rect x="4" y="14" width="16" height="6" rx="2"/><path d="M8 7h.01M8 17h.01M12 7h5M12 17h5"/></svg>',
+  cube: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg>'
+};
+---
+
+<PortfolioLayout
+  title="Sparked Host Affiliate | TazElite"
+  description="Explore Sparked Host options for game servers, Minecraft, Discord bots, websites, VPS projects, and online communities through my affiliate link."
+  image="/images/sparked-host/sparked-host-affiliate-og.png"
+>
+  <div class="sparked-page">
+    <section class="sparked-hero" aria-labelledby="sparked-title">
+      <div class="network-field" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="hero-copy" data-reveal>
+        <div class="partner-lockup">
+          <img src="/images/sparked-host/sparked-host-logo.svg" alt="Sparked Host official logo" width="96" height="96" />
+          <div><span>Affiliate Partner</span><strong>Sparked Host Hosting</strong></div>
+        </div>
+        <p class="kicker">🚀 Sparked Host Affiliate</p>
+        <h1 id="sparked-title">Reliable Hosting for Your Next Project</h1>
+        <p class="hero-intro">Whether you are running a FiveM server, Minecraft server, Discord bot, website, VPS, or another online project, Sparked Host offers hosting services designed for gaming communities, developers, creators, and server owners.</p>
+        <div class="hero-actions">
+          <a class="sparked-button primary" href={affiliateUrl} target="_blank" rel="noopener noreferrer sponsored">View Hosting Plans <span aria-hidden="true">↗</span></a>
+          <a class="sparked-button secondary" href="#hosting-services">Learn More <span aria-hidden="true">↓</span></a>
+        </div>
+        <p class="affiliate-note"><strong>Affiliate link:</strong> I may earn a commission from an eligible purchase at no additional cost to you.</p>
+      </div>
+      <div class="hero-visual" data-reveal>
+        <div class="server-frame image-shell">
+          <img src="/images/sparked-host/server-hardware.webp" alt="Official Sparked Host server hardware artwork" width="1200" height="675" fetchpriority="high" data-image-fallback />
+          <div class="server-overlay" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="visual-status"><span></span><strong>Infrastructure online</strong><small>Games · Bots · Web · VPS</small></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="first-disclosure" aria-label="Affiliate disclosure" data-reveal>{disclosure}</aside>
+
+    <section class="sparked-section why-section" aria-labelledby="why-title">
+      <div class="section-heading" data-reveal><p>Hosting essentials</p><h2 id="why-title">Why Sparked Host?</h2><span>A range of hosting categories for communities, creators, and technical projects.</span></div>
+      <div class="feature-grid">
+        {features.map(([icon, title, text], index) => (
+          <article class:list={['feature-card', index === 0 && 'feature-wide']} data-reveal>
+            <span class="line-icon" set:html={icons[icon]}></span><h3>{title}</h3><p>{text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="sparked-section services-section" id="hosting-services" aria-labelledby="services-title">
+      <div class="section-heading split" data-reveal><div><p>Choose your workload</p><h2 id="services-title">Hosting Services</h2></div><span>Each “View Plans” button is an affiliate link and opens Sparked Host in a new tab.</span></div>
+      <div class="service-grid">
+        {services.map((service, index) => (
+          <article class:list={['service-card', index % 3 === 0 && 'service-featured']} data-reveal>
+            <div class="service-image image-shell">
+              <img src={service.image} alt={service.alt} width="1200" height="675" loading="lazy" decoding="async" data-image-fallback />
+              {service.badge && <img class="service-badge" src={service.badge} alt="FiveM brand icon" width="80" height="80" loading="lazy" />}
+              <span class="service-number">0{index + 1}</span>
+            </div>
+            <div class="service-copy">
+              <span class="line-icon" set:html={icons[service.icon]}></span>
+              <div><h3>{service.name}</h3><p>{service.description}</p></div>
+              <div class="service-action"><a href={affiliateUrl} target="_blank" rel="noopener noreferrer sponsored">View Plans <span aria-hidden="true">↗</span></a><small>Affiliate link · Your price is not increased.</small></div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="sparked-section fit-section" aria-labelledby="fit-title">
+      <div class="fit-copy" data-reveal><p class="kicker">Built for many kinds of projects</p><h2 id="fit-title">Perfect For</h2><p>From the first community server to an always-on developer workload, Sparked Host has service categories that can fit a variety of online projects.</p></div>
+      <ul class="fit-list" data-reveal>{perfectFor.map((item, index) => <li><span>{String(index + 1).padStart(2, '0')}</span>{item}</li>)}</ul>
+    </section>
+
+    <section class="support-section" aria-labelledby="support-title" data-reveal>
+      <div class="support-orbit" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div><p class="kicker">❤️ Support My Projects</p><h2 id="support-title">Use My Sparked Host Affiliate Link</h2><p>Using my Sparked Host affiliate link helps support my projects and content at no additional cost to you.</p><p>If you purchase a service through my affiliate link, I may receive a commission from Sparked Host. Your price is not increased because you used my link.</p></div>
+      <a class="sparked-button primary" href={affiliateUrl} target="_blank" rel="noopener noreferrer sponsored">Support Me and View Sparked Host <span aria-hidden="true">↗</span></a>
+    </section>
+
+    <section class="disclosure-section" aria-labelledby="disclosure-title" data-reveal>
+      <span class="line-icon" set:html={icons.shield}></span><div><h2 id="disclosure-title">Affiliate Disclosure</h2><p>{disclosure}</p><p>This independent page does not describe TazElite as a Sparked Host employee, owner, representative, or support agent, and does not imply a direct sponsorship or endorsement.</p></div>
+    </section>
+
+    <section class="thank-you" aria-labelledby="thanks-title" data-reveal>
+      <div><p class="kicker">🎉 Thank You</p><h2 id="thanks-title">Your Signup Helps Build What Comes Next</h2><p>If you are planning to purchase hosting, I would greatly appreciate you using my affiliate link. Every eligible signup helps support future projects, content, websites, bots, and community development.</p></div>
+      <a class="sparked-button primary" href={affiliateUrl} target="_blank" rel="noopener noreferrer sponsored">Get Started with Sparked Host <span aria-hidden="true">↗</span></a>
+    </section>
+  </div>
+
+  <script>
+    const hideBrokenImage = (image: HTMLImageElement) => {
+      image.hidden = true;
+      image.closest('.image-shell')?.classList.add('image-fallback');
+    };
+    document.querySelectorAll<HTMLImageElement>('[data-image-fallback]').forEach((image) => {
+      image.addEventListener('error', () => hideBrokenImage(image), { once: true });
+    });
+  </script>
+</PortfolioLayout>

@@ -47,4 +47,17 @@ import BrandLogo from '../components/brand/BrandLogo.astro';
       <SocialCard platform="Instagram" title="Taz Elite" description="A manually approved collection of personal and creator photos." href={siteConfig.socials.instagram} accent="#df73ff" />
     </div>
   </div></section>
+
+  <section class="section partner-spotlight"><div class="section-shell">
+    <SectionHeading eyebrow="Affiliate partner" title="Hosting for the next community project." description="Explore a dedicated overview of Sparked Host services for game servers, bots, websites, VPS workloads, and online communities." />
+    <article class="sparked-promo" data-reveal>
+      <div class="sparked-promo-mark"><img src="/images/sparked-host/sparked-host-logo.svg" alt="Sparked Host official logo" width="112" height="112" loading="lazy" /></div>
+      <div class="sparked-promo-copy"><span>Affiliate Partner</span><h2>Sparked Host</h2><p>Game-server, Minecraft, Discord bot, web, and VPS hosting options gathered in one focused partner page.</p></div>
+      <a class="button primary" href="/sparked-host">Explore Sparked Host <span aria-hidden="true">→</span></a>
+    </article>
+  </div></section>
 </PortfolioLayout>
+
+<style>
+  .partner-spotlight{padding-top:1rem}.sparked-promo{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:clamp(1.2rem,4vw,3rem);align-items:center;overflow:hidden;padding:clamp(1.3rem,3vw,2.3rem);border:1px solid rgba(138,124,255,.3);border-radius:20px;background:radial-gradient(circle at 80% 0,rgba(110,231,255,.1),transparent 28%),linear-gradient(120deg,rgba(42,34,90,.72),rgba(8,14,29,.88) 58%,rgba(54,13,22,.48));box-shadow:0 22px 58px rgba(0,0,0,.2)}.sparked-promo:before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(133,151,204,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(133,151,204,.06) 1px,transparent 1px);background-size:36px 36px;mask-image:linear-gradient(90deg,#000,transparent)}.sparked-promo>*{position:relative;z-index:1}.sparked-promo-mark{display:grid;width:112px;height:112px;place-items:center;border:1px solid rgba(110,231,255,.2);border-radius:22px;background:rgba(6,10,22,.72)}.sparked-promo-mark img{width:88px;height:88px;object-fit:contain}.sparked-promo-copy span{color:#6ee7ff;font-size:.64rem;font-weight:800;letter-spacing:.17em;text-transform:uppercase}.sparked-promo-copy h2{margin:.35rem 0 .45rem;font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,4vw,3rem);letter-spacing:-.045em}.sparked-promo-copy p{max-width:620px;color:var(--muted);line-height:1.7}.sparked-promo>a{white-space:nowrap}.sparked-promo>a span{transition:transform .2s ease}.sparked-promo>a:hover span{transform:translateX(3px)}@media(max-width:760px){.sparked-promo{grid-template-columns:auto 1fr}.sparked-promo>a{grid-column:1/-1;width:100%}}@media(max-width:520px){.sparked-promo{grid-template-columns:1fr}.sparked-promo-mark{width:88px;height:88px}.sparked-promo-mark img{width:68px;height:68px}.sparked-promo>a{grid-column:auto}}
+</style>

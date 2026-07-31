@@ -15,6 +15,7 @@ export const siteConfig = {
   },
   routes: {
     gameHosting: '/cloudnord',
+    sparkedHost: '/sparked-host',
     vpn: '/vpn'
   },
   brand: {
@@ -48,5 +49,6 @@ export const navigation = [
   { label: 'Instagram', href: '/instagram' },
   { label: 'Contact', href: '/contact' },
   { label: 'Game Hosting', href: siteConfig.routes.gameHosting, service: true },
+  { label: 'Sparked Host', href: siteConfig.routes.sparkedHost, service: true },
   { label: 'VPN', href: siteConfig.routes.vpn, service: true }
 ] as const;

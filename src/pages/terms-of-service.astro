@@ -1,0 +1,93 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import '../styles/legal.css';
+
+const effectiveDate = new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'long',
+  timeZone: 'UTC'
+}).format(new Date());
+---
+
+<PortfolioLayout
+  title="Terms of Service | TazElite"
+  description="Read the Terms of Service governing the use of tazelite.kruigerlabs.xyz."
+>
+  <header class="page-shell page-intro legal-intro">
+    <span class="page-kicker">Legal · Website Use</span>
+    <h1>Terms of Service</h1>
+    <p>These Terms govern access to and use of the public pages, content, forms, links, and other features available through TazElite.</p>
+    <p class="effective-date"><strong>Effective Date:</strong> {effectiveDate}</p>
+  </header>
+
+  <section class="section legal-section">
+    <div class="section-shell legal-layout">
+      <aside class="legal-index" data-reveal aria-label="Terms of Service sections">
+        <span>Terms overview</span>
+        <ol>
+          <li>Acceptance</li>
+          <li>Website Usage</li>
+          <li>Intellectual Property</li>
+          <li>Affiliate Disclosure</li>
+          <li>Third-Party Links</li>
+          <li>Disclaimer</li>
+          <li>Limitation of Liability</li>
+          <li>Changes</li>
+          <li>Governing Law</li>
+          <li>Contact</li>
+        </ol>
+      </aside>
+
+      <div class="legal-document">
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">01</span>
+          <div><h2>Acceptance</h2><p>By accessing or using this website, you agree to these Terms of Service. If you do not agree with these Terms, you should discontinue use of the website.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">02</span>
+          <div><h2>Website Usage</h2><p>Visitors agree not to:</p><ul><li>Attempt unauthorized access to the website, connected systems, accounts, or services</li><li>Disrupt, overload, damage, or interfere with website services</li><li>Upload, transmit, or distribute malicious software or harmful code</li><li>Abuse contact forms or other communication features</li><li>Copy website content for commercial purposes without permission</li><li>Use the website in a manner that violates applicable laws or regulations</li></ul></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">03</span>
+          <div><h2>Intellectual Property</h2><p>Unless otherwise stated, all original content, branding, graphics, code, logos, designs, documentation, and written material available through this website remain the property of the website owner. Content may not be reproduced, republished, sold, or commercially distributed without permission.</p><p>Third-party trademarks, logos, products, services, and other intellectual property remain the property of their respective owners. Their appearance on this website does not transfer ownership or imply endorsement unless explicitly stated.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">04</span>
+          <div><h2>Affiliate Disclosure</h2><p>Some pages contain affiliate links. Purchases made through those links may generate commissions for the website owner. Visitors are never charged additional fees or a higher price solely because an affiliate link was used.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">05</span>
+          <div><h2>Third-Party Links</h2><p>This website may link to third-party websites, platforms, products, or services. I do not control and am not responsible for third-party content, availability, security, terms, or privacy practices. Visiting a third-party website is at the visitor’s discretion and is subject to that provider’s policies.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">06</span>
+          <div><h2>Disclaimer</h2><p>This website is provided “as is” and “as available.” No guarantee is made that:</p><ul><li>The website is always available</li><li>Information is always complete or current</li><li>Services are uninterrupted</li><li>Pages are error-free</li></ul><p>Website content is provided for general informational purposes and may be updated, corrected, or removed.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">07</span>
+          <div><h2>Limitation of Liability</h2><p>To the fullest extent permitted by applicable law, the website owner is not liable for direct, indirect, incidental, consequential, special, or other damages arising from or related to access to, inability to access, reliance on, or use of this website or its linked third-party services.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">08</span>
+          <div><h2>Changes to These Terms</h2><p>These Terms may be updated, revised, or replaced without prior notice. The latest version displayed on this website governs future use of the website after it becomes effective.</p></div>
+        </article>
+
+        <article class="legal-card" data-reveal>
+          <span class="legal-number">09</span>
+          <div><h2>Governing Law</h2><p>These Terms are governed by applicable laws within the United States, without regard to conflict-of-law principles where those principles would require the application of another jurisdiction’s laws.</p></div>
+        </article>
+
+        <article class="legal-card legal-contact" data-reveal>
+          <span class="legal-number">10</span>
+          <div><h2>Contact</h2><p>Questions regarding these Terms of Service may be sent to:</p><dl><div><dt>Email</dt><dd><a href="mailto:taz@kruigerlabsllc.com">taz@kruigerlabsllc.com</a></dd></div></dl></div>
+        </article>
+      </div>
+    </div>
+  </section>
+</PortfolioLayout>
