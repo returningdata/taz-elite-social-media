@@ -4,7 +4,7 @@ The website never sends social-media secrets to the browser. Add runtime values 
 
 ## Discord
 
-`DISCORD_INVITE_CODE` is the code after `discord.gg/` for the featured community. The repository defaults to `T3AeBNQdXp`, which currently resolves to The Elite Outpost through Discord’s public invite preview endpoint.
+`DISCORD_INVITE_CODE` is the invite code for the featured community. The repository defaults to `nottaz`, which is used to load The Elite Outpost through Discord’s public invite preview endpoint.
 
 `DISCORD_USER_ID` is the numeric Discord user ID used for personal presence. Enable Discord Developer Mode, right-click the user, and select **Copy User ID**. The repository defaults to `1000470631688712243`.
 

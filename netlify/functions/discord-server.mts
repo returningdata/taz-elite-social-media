@@ -1,6 +1,6 @@
 import { apiError, apiSuccess, fetchWithTimeout, safeDiagnostic, upstreamError } from '../lib/api';
 
-const defaultInvite = 'T3AeBNQdXp';
+const defaultInvite = 'nottaz';
 const verificationLevels = ['None', 'Low', 'Medium', 'High', 'Very High'];
 
 export default async (request: Request) => {
