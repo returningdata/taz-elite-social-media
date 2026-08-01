@@ -6,7 +6,7 @@ export const siteConfig = {
   responseTime: '24–72 hours',
   description: 'Explore the experience, projects, technology work, gaming content, and creator platforms of Taz Elite, a software developer, U.S. Army service member, technology entrepreneur, and founder of Kruiger Labs.',
   socials: {
-    discord: 'https://discord.gg/T3AeBNQdXp',
+    discord: 'https://discord.gg/nottaz',
     twitch: 'https://www.twitch.tv/tazeliteplays',
     tiktok: 'https://www.tiktok.com/@tazeliteplays?_r=1&_t=ZT-98GkY5Reag1',
     youtube: 'https://youtube.com/@tazelite-plays',
@@ -26,7 +26,7 @@ export const siteConfig = {
   },
   integrations: {
     discordUserId: '1000470631688712243',
-    discordInviteCode: 'T3AeBNQdXp',
+    discordInviteCode: 'nottaz',
     twitchLogin: 'tazeliteplays',
     youtubeChannelId: 'UCe2cGb8qKK-guxCtA7GZOEg',
     tiktokUsername: 'tazeliteplays'
