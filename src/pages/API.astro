@@ -1,0 +1,103 @@
+---
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import BrandLogo from '../components/brand/BrandLogo.astro';
+---
+
+<PortfolioLayout title="API & Site Status | Taz Elite" description="Live reachability and service status for the Taz Elite website and status API.">
+  <header class="page-shell status-hero">
+    <div class="status-brand"><BrandLogo size="large" eager /></div>
+    <div>
+      <span class="page-kicker">Live service confirmation</span>
+      <h1>API Status</h1>
+      <p>This page confirms that the website, browser experience, static assets, and Netlify status endpoint are responding.</p>
+      <div class="overall-status checking" data-overall-status role="status" aria-live="polite"><i></i><strong>Checking services…</strong></div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="section-shell status-shell">
+      <div class="status-grid" data-status-grid>
+        <article><span>Website</span><strong>Reachable</strong><p>This page loaded successfully from the deployed site.</p><i class="status-dot good"></i></article>
+        <article><span>Browser</span><strong data-browser-status>Online</strong><p data-browser-detail>JavaScript is active and checking your connection.</p><i class="status-dot good" data-browser-dot></i></article>
+        <article><span>Status API</span><strong data-api-status>Checking</strong><p data-api-detail>Waiting for the live Netlify Function response.</p><i class="status-dot checking" data-api-dot></i></article>
+        <article><span>Static Assets</span><strong>Available</strong><p>Branding and image assets loaded with the page.</p><i class="status-dot good"></i></article>
+      </div>
+
+      <aside class="status-details">
+        <div><span>Endpoint</span><code>GET /api/status</code></div>
+        <div><span>Last checked</span><strong data-checked-at>Waiting for response</strong></div>
+        <div><span>Runtime region</span><strong data-runtime-region>Checking</strong></div>
+        <button type="button" data-status-retry>Run check again</button>
+      </aside>
+    </div>
+  </section>
+</PortfolioLayout>
+
+<style>
+  .status-hero{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:clamp(1.5rem,5vw,4rem);min-height:520px;padding-block:clamp(4rem,10vw,8rem)}.status-brand{display:grid;width:clamp(150px,22vw,250px);aspect-ratio:1;place-items:center;border:1px solid rgba(91,200,255,.28);border-radius:36px;background:radial-gradient(circle,rgba(91,200,255,.15),transparent 65%),rgba(7,12,25,.74);box-shadow:0 30px 90px rgba(0,0,0,.35)}.status-brand :global(img){width:78%!important;height:78%!important;object-fit:contain}.status-hero h1{margin:.35rem 0;font-family:'Space Grotesk',sans-serif;font-size:clamp(3.5rem,10vw,7.5rem);line-height:.88;letter-spacing:-.07em}.status-hero>div:last-child>p{max-width:720px;color:var(--muted);font-size:clamp(1rem,2vw,1.2rem);line-height:1.75}.overall-status{display:inline-flex;align-items:center;gap:.7rem;margin-top:1rem;padding:.75rem 1rem;border:1px solid rgba(110,247,225,.3);border-radius:999px;background:rgba(9,38,38,.45);color:#bafff4}.overall-status i,.status-dot{display:block;width:10px;height:10px;border-radius:50%;background:#6ef7e1;box-shadow:0 0 0 5px rgba(110,247,225,.1)}.overall-status.checking i,.status-dot.checking{background:#f4c76b;box-shadow:0 0 0 5px rgba(244,199,107,.1)}.overall-status.error{border-color:rgba(255,111,135,.35);background:rgba(61,15,29,.45);color:#ffd1da}.overall-status.error i,.status-dot.error{background:#ff6f87;box-shadow:0 0 0 5px rgba(255,111,135,.1)}.status-shell{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:1rem}.status-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.status-grid article,.status-details{position:relative;padding:1.35rem;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(12,19,39,.9),rgba(6,9,19,.82));box-shadow:inset 0 1px rgba(255,255,255,.04)}.status-grid article>span,.status-details span{color:#7f8ba1;font-size:.65rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.status-grid article>strong{display:block;margin:.5rem 0;font-family:'Space Grotesk',sans-serif;font-size:1.5rem}.status-grid article p{margin:0;padding-right:1.2rem;color:var(--muted);font-size:.78rem;line-height:1.65}.status-grid .status-dot{position:absolute;top:1.35rem;right:1.35rem}.status-details{display:grid;align-content:start;gap:1rem}.status-details>div{display:grid;gap:.35rem;padding-bottom:1rem;border-bottom:1px solid var(--line)}.status-details code,.status-details strong{color:#dce5f5;font-size:.8rem;overflow-wrap:anywhere}.status-details button{min-height:46px;border:1px solid rgba(91,200,255,.32);border-radius:10px;background:rgba(91,200,255,.1);color:white;font:inherit;font-size:.78rem;font-weight:800;cursor:pointer}.status-details button:hover{background:rgba(91,200,255,.17)}@media(max-width:820px){.status-hero{grid-template-columns:1fr;min-height:auto}.status-brand{width:140px}.status-shell{grid-template-columns:1fr}}@media(max-width:540px){.status-grid{grid-template-columns:1fr}.status-hero h1{font-size:clamp(3.6rem,20vw,5.5rem)}}
+</style>
+
+<script>
+  interface StatusPayload { status: string; checkedAt: string; region: string; }
+
+  const initializeStatusPage = () => document.querySelectorAll<HTMLElement>('[data-status-grid]:not([data-initialized])').forEach((grid) => {
+    grid.dataset.initialized = 'true';
+    const page = grid.closest('.status-shell')?.parentElement?.parentElement || document;
+    const overall = document.querySelector<HTMLElement>('[data-overall-status]');
+    const apiStatus = page.querySelector<HTMLElement>('[data-api-status]');
+    const apiDetail = page.querySelector<HTMLElement>('[data-api-detail]');
+    const apiDot = page.querySelector<HTMLElement>('[data-api-dot]');
+    const browserStatus = page.querySelector<HTMLElement>('[data-browser-status]');
+    const browserDetail = page.querySelector<HTMLElement>('[data-browser-detail]');
+    const browserDot = page.querySelector<HTMLElement>('[data-browser-dot]');
+    const checkedAt = page.querySelector<HTMLElement>('[data-checked-at]');
+    const region = page.querySelector<HTMLElement>('[data-runtime-region]');
+
+    const updateBrowser = () => {
+      const online = navigator.onLine;
+      if (browserStatus) browserStatus.textContent = online ? 'Online' : 'Offline';
+      if (browserDetail) browserDetail.textContent = online ? 'Your browser reports an active network connection.' : 'Your browser reports that the network is unavailable.';
+      browserDot?.classList.toggle('error', !online);
+      browserDot?.classList.toggle('good', online);
+    };
+
+    const check = async () => {
+      overall?.classList.remove('error'); overall?.classList.add('checking');
+      if (overall) overall.querySelector('strong')!.textContent = 'Checking services…';
+      if (apiStatus) apiStatus.textContent = 'Checking';
+      apiDot?.classList.remove('good', 'error'); apiDot?.classList.add('checking');
+      try {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 8000);
+        const response = await fetch('/api/status', { headers: { Accept: 'application/json' }, cache: 'no-store', signal: controller.signal });
+        window.clearTimeout(timeout);
+        const data = await response.json() as StatusPayload;
+        if (!response.ok || data.status !== 'operational') throw new Error('Status endpoint returned an unhealthy response.');
+        if (apiStatus) apiStatus.textContent = 'Operational';
+        if (apiDetail) apiDetail.textContent = 'The live Netlify Function responded successfully.';
+        apiDot?.classList.remove('checking', 'error'); apiDot?.classList.add('good');
+        if (checkedAt) checkedAt.textContent = new Date(data.checkedAt).toLocaleString();
+        if (region) region.textContent = data.region || 'Netlify edge';
+        overall?.classList.remove('checking', 'error');
+        if (overall) overall.querySelector('strong')!.textContent = 'All core systems operational';
+      } catch {
+        if (apiStatus) apiStatus.textContent = 'Unreachable';
+        if (apiDetail) apiDetail.textContent = 'The website loaded, but the status endpoint did not answer. Try the check again.';
+        apiDot?.classList.remove('checking', 'good'); apiDot?.classList.add('error');
+        if (checkedAt) checkedAt.textContent = new Date().toLocaleString();
+        if (region) region.textContent = 'Unavailable';
+        overall?.classList.remove('checking'); overall?.classList.add('error');
+        if (overall) overall.querySelector('strong')!.textContent = 'Website reachable · API check failed';
+      }
+    };
+
+    updateBrowser();
+    window.addEventListener('online', updateBrowser);
+    window.addEventListener('offline', updateBrowser);
+    page.querySelector('[data-status-retry]')?.addEventListener('click', check);
+    check();
+  });
+
+  initializeStatusPage();
+  document.addEventListener('astro:page-load', initializeStatusPage);
+</script>
