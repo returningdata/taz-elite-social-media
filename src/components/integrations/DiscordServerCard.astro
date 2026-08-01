@@ -19,7 +19,8 @@ const { invite, inviteUrl = `https://discord.gg/${invite}`, title, description, 
 <script>
   import { errorLabel, fetchIntegration, formatCount } from '../../scripts/live-data';
   interface ServerData { name: string; description: string | null; iconUrl: string | null; bannerUrl: string | null; memberCount: number | null; onlineCount: number | null; boostLevel: number | null; }
-  document.querySelectorAll<HTMLElement>('[data-discord-server]').forEach((root) => {
+  const initializeDiscordServers = () => document.querySelectorAll<HTMLElement>('[data-discord-server]:not([data-initialized])').forEach((root) => {
+    root.dataset.initialized = 'true';
     const set = (selector: string, value: string) => { const element = root.querySelector<HTMLElement>(selector); if (element) { element.classList.remove('loading-copy', 'loading-value'); element.textContent = value; } };
     const load = async () => {
       const retry = root.querySelector<HTMLButtonElement>('[data-server-retry]'); if (retry) retry.hidden = true;
@@ -36,4 +37,7 @@ const { invite, inviteUrl = `https://discord.gg/${invite}`, title, description, 
     };
     root.querySelector('[data-server-retry]')?.addEventListener('click', load); load();
   });
+
+  initializeDiscordServers();
+  document.addEventListener('astro:page-load', initializeDiscordServers);
 </script>

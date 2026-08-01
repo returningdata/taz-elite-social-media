@@ -97,6 +97,42 @@ test('social integrations resolve to data or truthful errors', async ({ page }) 
   }
 });
 
+test('Discord and Twitch loaders resolve after client navigation', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+
+  await page.locator('a[href="/discord"]').first().click();
+  await page.waitForURL('**/discord');
+  await expect(page.locator('[data-presence-loading]')).toBeHidden({ timeout: 15000 });
+  expect(await page.locator('[data-presence-content]').isVisible() || await page.locator('[data-presence-error]').isVisible()).toBeTruthy();
+  await expect(page.locator('[data-member-count]').first()).not.toHaveClass(/loading-value/);
+
+  await page.locator('a[href="/twitch"]').first().click();
+  await page.waitForURL('**/twitch');
+  await expect(page.locator('[data-twitch-loading]')).toBeHidden({ timeout: 15000 });
+  expect(await page.locator('[data-twitch-content]').isVisible() || await page.locator('[data-twitch-error]').isVisible()).toBeTruthy();
+});
+
+test('approved photos remain fully visible inside bordered frames', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/about');
+  const photo = page.locator('.photo-card img').first();
+  await expect(photo).toBeVisible();
+  await expect(photo).toHaveCSS('object-fit', 'contain');
+  await expect(page.locator('.photo-card').first()).not.toHaveCSS('border-top-width', '0px');
+});
+
+test('API status page confirms website and function reachability', async ({ page }) => {
+  await page.goto('/API');
+  await expect(page).toHaveTitle(/API & Site Status/);
+  await expect(page.locator('[data-api-status]')).toHaveText('Operational', { timeout: 10000 });
+  await expect(page.locator('[data-overall-status]')).toContainText('All core systems operational');
+
+  const response = await page.request.get('/api/status');
+  expect(response.ok()).toBeTruthy();
+  expect(await response.json()).toMatchObject({ status: 'operational', reachable: true });
+});
+
 test('branding, protected pages, and music player remain intact', async ({ page }) => {
   await page.setViewportSize({ width: 412, height: 915 });
   for (const route of ['/', '/twitch', '/cloudnord', '/vpn']) {

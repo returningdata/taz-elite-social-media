@@ -116,6 +116,10 @@ const twitchUrl = `https://www.twitch.tv/${username}`;
   .offline-panel{position:relative;isolation:isolate}.offline-panel>.offline-banner{position:absolute;inset:0;z-index:-1;width:100%;height:100%;object-fit:cover;opacity:.075;filter:saturate(.8)}.offline-panel>*:not(.offline-banner){position:relative;z-index:1}.player-shell{background:#050308 url('/images/brand/taz-elite-logo-512.webp') center/120px no-repeat}
 </style>
 
+<style is:global>
+  .hub-loading[hidden],.hub-content[hidden],.hub-error[hidden],.live-player[hidden],.offline-panel[hidden]{display:none!important}
+</style>
+
 <script>
   import { errorLabel, fetchIntegration, formatCount, formatDate } from '../scripts/live-data';
 
@@ -167,7 +171,8 @@ const twitchUrl = `https://www.twitch.tv/${username}`;
     });
   };
 
-  document.querySelectorAll<HTMLElement>('[data-twitch-hub]').forEach((root) => {
+  const initializeTwitchHubs = () => document.querySelectorAll<HTMLElement>('[data-twitch-hub]:not([data-initialized])').forEach((root) => {
+    root.dataset.initialized = 'true';
     const username = root.dataset.username || 'tazeliteplays';
     const loading = root.querySelector<HTMLElement>('[data-twitch-loading]');
     const content = root.querySelector<HTMLElement>('[data-twitch-content]');
@@ -206,4 +211,7 @@ const twitchUrl = `https://www.twitch.tv/${username}`;
     };
     root.querySelector('[data-twitch-retry]')?.addEventListener('click', load); load();
   });
+
+  initializeTwitchHubs();
+  document.addEventListener('astro:page-load', initializeTwitchHubs);
 </script>
